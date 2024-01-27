@@ -8,7 +8,6 @@ export class DbAddCategory implements AddCategory {
     private readonly addCategoryRepositorie: IDbAddCategoryRepository,
   ) {}
   async execute(payload: AddCategoryModel): Promise<CategoryModel> {
-    await this.addCategoryRepositorie.create(payload);
-    return;
+    return await this.addCategoryRepositorie.create(payload);
   }
 }

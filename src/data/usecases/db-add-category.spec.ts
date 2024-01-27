@@ -36,18 +36,34 @@ const makeSut = (): SutTypes => {
 };
 
 describe('DbAddCategory usecase', () => {
+  const fakeRequestData = {
+    title: 'any_title',
+    description: 'any_description',
+    ownerId: 'any_ownerId',
+  };
+
   test('Should call AddCategoryRepository with correct values', async () => {
     const { sut, addCategoryRepositoryStub } = makeSut();
     const addSpy = jest.spyOn(addCategoryRepositoryStub, 'create');
-    sut.execute({
-      title: 'any_title',
-      description: 'any_description',
-      ownerId: 'any_ownerId',
-    });
-    expect(addSpy).toBeCalledWith({
-      title: 'any_title',
-      description: 'any_description',
-      ownerId: 'any_ownerId',
-    });
+    await sut.execute(fakeRequestData);
+    expect(addSpy).toBeCalledWith(fakeRequestData);
+  });
+
+  test('Should throws if AddCategoryRepository throws', async () => {
+    const { sut, addCategoryRepositoryStub } = makeSut();
+    jest
+      .spyOn(addCategoryRepositoryStub, 'create')
+      .mockReturnValueOnce(
+        new Promise((resolver, reject) => reject(new Error())),
+      );
+    const promise = sut.execute(fakeRequestData);
+    expect(promise).rejects.toThrow();
+  });
+
+  test('Should category on success', async () => {
+    const { sut } = makeSut();
+
+    const response = await sut.execute(fakeRequestData);
+    expect(response).toEqual(makeFakeCategory());
   });
 });
