@@ -3,24 +3,23 @@ import { CategoryModel } from '../../domain/models/category';
 import { AddCategoryModel } from '../../presentation/dtos/category/add-category.dto';
 import { DbListCategory } from './db-list-category';
 
-const makeFakeCategory = (): CategoryModel[] => {
-  return [
-    {
-      id: 'any_id',
-      title: 'any_title',
-      description: 'any_description',
-      ownerId: 'any_ownerId',
-    },
-  ];
-};
+const makeFakeCategory = (): CategoryModel => ({
+  id: 'any_id',
+  title: 'any_title',
+  description: 'any_description',
+  ownerId: 'any_ownerId',
+});
 
 const makeCategoryMongoRepository = (): CategoryMongoRepository => {
   class CategoryRepositoryStub implements CategoryMongoRepository {
+    update(id: string, payload: AddCategoryModel): Promise<void> {
+      return new Promise((resolve) => resolve());
+    }
     getAll(): Promise<CategoryModel[]> {
-      return new Promise((resolve) => resolve(makeFakeCategory()));
+      return new Promise((resolve) => resolve([makeFakeCategory()]));
     }
     create(payload: AddCategoryModel): Promise<CategoryModel> {
-      throw new Error('Method not implemented.');
+      return new Promise((resolve) => resolve(makeFakeCategory()));
     }
   }
 
@@ -65,6 +64,6 @@ describe('DbListCategory usecase', () => {
     const { sut } = makeSut();
 
     const response = await sut.getAll();
-    expect(response).toEqual(makeFakeCategory());
+    expect(response).toEqual([makeFakeCategory()]);
   });
 });

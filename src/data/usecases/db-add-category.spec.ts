@@ -1,4 +1,4 @@
-import { CategoryMongoRepository } from 'src/infra/db/mongodb/category/category-mongo-repository';
+import { CategoryMongoRepository } from '../../infra/db/mongodb/category/category-mongo-repository';
 import { CategoryModel } from '../../domain/models/category';
 import { AddCategoryModel } from '../../presentation/dtos/category/add-category.dto';
 import { DbAddCategory } from './db-add-category';
@@ -12,6 +12,9 @@ const makeFakeCategory = (): CategoryModel => ({
 
 const makeCategoryMongoRepository = (): CategoryMongoRepository => {
   class CategoryRepositoryStub implements CategoryMongoRepository {
+    update(id: string, payload: AddCategoryModel): Promise<void> {
+      return new Promise((resolve) => resolve());
+    }
     getAll(): Promise<CategoryModel[]> {
       throw new Error('Method not implemented.');
     }
