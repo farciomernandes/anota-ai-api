@@ -1,6 +1,6 @@
+import { CategoryMongoRepository } from 'src/infra/db/mongodb/category/category-mongo-repository';
 import { CategoryModel } from '../../domain/models/category';
 import { AddCategoryModel } from '../../presentation/dtos/category/add-category.dto';
-import { IDbAddCategoryRepository } from '../protocols/db/add-category-respository';
 import { DbAddCategory } from './db-add-category';
 
 const makeFakeCategory = (): CategoryModel => ({
@@ -10,8 +10,11 @@ const makeFakeCategory = (): CategoryModel => ({
   ownerId: 'any_ownerId',
 });
 
-const makeAddCategoryRepository = (): IDbAddCategoryRepository => {
-  class CategoryRepositoryStub implements IDbAddCategoryRepository {
+const makeCategoryMongoRepository = (): CategoryMongoRepository => {
+  class CategoryRepositoryStub implements CategoryMongoRepository {
+    getAll(): Promise<CategoryModel[]> {
+      throw new Error('Method not implemented.');
+    }
     create(payload: AddCategoryModel): Promise<CategoryModel> {
       return new Promise((resolve) => resolve(makeFakeCategory()));
     }
@@ -22,11 +25,11 @@ const makeAddCategoryRepository = (): IDbAddCategoryRepository => {
 
 interface SutTypes {
   sut: DbAddCategory;
-  addCategoryRepositoryStub: IDbAddCategoryRepository;
+  addCategoryRepositoryStub: CategoryMongoRepository;
 }
 
 const makeSut = (): SutTypes => {
-  const addCategoryRepositoryStub = makeAddCategoryRepository();
+  const addCategoryRepositoryStub = makeCategoryMongoRepository();
   const sut = new DbAddCategory(addCategoryRepositoryStub);
 
   return {
