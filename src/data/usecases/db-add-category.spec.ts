@@ -1,5 +1,5 @@
-import { CategoryModel } from 'src/domain/models/category';
-import { AddCategoryModel } from 'src/presentation/dtos/category/add-category.dto';
+import { CategoryModel } from '../../domain/models/category';
+import { AddCategoryModel } from '../../presentation/dtos/category/add-category.dto';
 import { IDbAddCategoryRepository } from '../protocols/db/add-category-respository';
 import { DbAddCategory } from './db-add-category';
 
@@ -45,7 +45,7 @@ describe('DbAddCategory usecase', () => {
   test('Should call AddCategoryRepository with correct values', async () => {
     const { sut, addCategoryRepositoryStub } = makeSut();
     const addSpy = jest.spyOn(addCategoryRepositoryStub, 'create');
-    await sut.execute(fakeRequestData);
+    await sut.create(fakeRequestData);
     expect(addSpy).toBeCalledWith(fakeRequestData);
   });
 
@@ -56,14 +56,14 @@ describe('DbAddCategory usecase', () => {
       .mockReturnValueOnce(
         new Promise((resolver, reject) => reject(new Error())),
       );
-    const promise = sut.execute(fakeRequestData);
+    const promise = sut.create(fakeRequestData);
     expect(promise).rejects.toThrow();
   });
 
   test('Should category on success', async () => {
     const { sut } = makeSut();
 
-    const response = await sut.execute(fakeRequestData);
+    const response = await sut.create(fakeRequestData);
     expect(response).toEqual(makeFakeCategory());
   });
 });
