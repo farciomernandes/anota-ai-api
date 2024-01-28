@@ -45,14 +45,14 @@ describe('DbAddCategory usecase', () => {
     ownerId: 'any_ownerId',
   };
 
-  test('Should call AddCategoryRepository with correct values', async () => {
+  test('Should call CategoryMongoRepository with correct values', async () => {
     const { sut, addCategoryRepositoryStub } = makeSut();
     const addSpy = jest.spyOn(addCategoryRepositoryStub, 'create');
     await sut.create(fakeRequestData);
     expect(addSpy).toBeCalledWith(fakeRequestData);
   });
 
-  test('Should throws if AddCategoryRepository throws', async () => {
+  test('Should throws if CategoryMongoRepository throws', async () => {
     const { sut, addCategoryRepositoryStub } = makeSut();
     jest
       .spyOn(addCategoryRepositoryStub, 'create')
@@ -63,7 +63,7 @@ describe('DbAddCategory usecase', () => {
     expect(promise).rejects.toThrow();
   });
 
-  test('Should category on success', async () => {
+  test('Should return category on success', async () => {
     const { sut } = makeSut();
 
     const response = await sut.create(fakeRequestData);
