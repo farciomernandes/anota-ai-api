@@ -3,8 +3,8 @@ module.exports = {
     collectCoverageFrom: [
       '<rootDir>/src/**/*.ts',
       '!<rootDir>/src/main/**',
-      '!<rootDir>/src/**/*-protocols.ts',
-      '!<rootDir>/**/protocols/**'
+      '!<rootDir>/src/infra/ioc/**',
+      '!<rootDir>/src/data/protocols/**',
     ],
     coverageDirectory: "coverage",
     testEnvironment: 'node',
