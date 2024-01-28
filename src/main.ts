@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './main/app.module';
+import { AppModule } from './app.module';
 import { MongoHelper } from './infra/db/mongodb/helpers/mongo-helper';
 
 async function bootstrap() {
