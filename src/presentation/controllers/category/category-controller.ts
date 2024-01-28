@@ -6,7 +6,7 @@ import { IDbAddCategoryRepository } from '../../../data/protocols/db/add-categor
 import { IDbListCategoryRepository } from '../../../data/protocols/db/list-category-respository';
 
 @ApiTags('category')
-@Controller('category')
+@Controller('api/v1/category')
 export class CategoryController {
   constructor(
     private readonly dbAddCategory: IDbAddCategoryRepository,
@@ -23,7 +23,7 @@ export class CategoryController {
   }
 
   @Get()
-  async getAll(): Promise<any> {
+  async getAll(): Promise<CategoryModel[]> {
     try {
       return await this.dbListCategory.getAll();
     } catch (error) {
