@@ -46,7 +46,18 @@ describe('Category Mongo Repository', () => {
 
   test('Should list categories on success', async () => {
     const { sut } = makeSut();
+
+    const fakeCategory1 = makeFakeCategory();
+    const fakeCategory2 = makeFakeCategory();
+    await categoryCollection.insertMany([fakeCategory1, fakeCategory2]);
+
     const response = await sut.getAll();
-    expect(response).toEqual([]);
+
+    const expectedOutput = [
+      MongoHelper.map(fakeCategory1),
+      MongoHelper.map(fakeCategory2),
+    ];
+
+    expect(response).toEqual(expectedOutput);
   });
 });
