@@ -4,6 +4,6 @@ import { AddCategoryModel } from '../../../presentation/dtos/category/add-catego
 export abstract class IDbUpdateCategoryRepository {
   abstract update(
     id: string,
-    payload: AddCategoryModel,
+    payload: Omit<AddCategoryModel, 'ownerId'>,
   ): Promise<CategoryModel>;
 }

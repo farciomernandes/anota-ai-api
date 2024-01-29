@@ -36,7 +36,7 @@ export class CategoryController {
   @Put('/:id')
   async update(
     @Param('id') id: string,
-    @Body() payload: AddCategoryModel,
+    @Body() payload: Omit<AddCategoryModel, 'ownerId'>,
   ): Promise<CategoryModel> {
     try {
       return await this.dbUpdateCategory.update(id, payload);

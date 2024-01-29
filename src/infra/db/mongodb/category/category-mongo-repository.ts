@@ -29,7 +29,10 @@ export class CategoryMongoRepository
     return categoriesArray.map((category) => MongoHelper.map(category));
   }
 
-  async update(id: string, payload: AddCategoryModel): Promise<CategoryModel> {
+  async update(
+    id: string,
+    payload: Omit<AddCategoryModel, 'ownerId'>,
+  ): Promise<CategoryModel> {
     const categoryCollection = await MongoHelper.getCollection('categories');
     await categoryCollection.updateOne(
       {
@@ -43,6 +46,6 @@ export class CategoryMongoRepository
       },
     );
 
-    return await MongoHelper.findOne('categories', new ObjectId(id));
+    return await MongoHelper.findOne('categories', id);
   }
 }
