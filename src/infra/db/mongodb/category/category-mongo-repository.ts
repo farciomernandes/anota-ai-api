@@ -22,7 +22,7 @@ export class CategoryMongoRepository
     try {
       const categoryCollection = await MongoHelper.getCollection('categories');
       const result = await (await categoryCollection).insertOne(payload);
-      const category = await MongoHelper.findOne(
+      const category = await MongoHelper.findItemById(
         'categories',
         result.insertedId,
       );
@@ -65,7 +65,7 @@ export class CategoryMongoRepository
         throw new BadRequestException(`Category with ${id} id not found.`);
       }
 
-      return await MongoHelper.findOne('categories', id);
+      return await MongoHelper.findItemById('categories', id);
     } catch (error) {
       throw error;
     }

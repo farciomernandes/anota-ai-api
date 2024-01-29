@@ -2,8 +2,7 @@ import { Collection, MongoClient, ObjectId } from 'mongodb';
 
 interface MongoHelper {
   client: MongoClient | null;
-
-  url: string | null;
+  url: string;
 
   connect(url: string): Promise<void>;
 
@@ -11,14 +10,14 @@ interface MongoHelper {
 
   getCollection(name: string): Promise<Collection>;
 
-  findOne(collectionName: string, itemId: any): Promise<any>;
+  findItemById(collectionName: string, itemId: any): Promise<any>;
 
   map(collection: any): any;
 }
 
 export const MongoHelper: MongoHelper = {
-  client: null as MongoClient,
-  url: null as string,
+  client: null,
+  url: '',
 
   async connect(url: string): Promise<void> {
     this.url = url;
@@ -26,25 +25,39 @@ export const MongoHelper: MongoHelper = {
   },
 
   async disconnect(): Promise<void> {
-    if (this.client) {
-      await this.client.close();
-      this.client = null;
+    try {
+      if (this.client) {
+        await this.client.close();
+        this.client = null;
+      }
+    } catch (error) {
+      console.error('Error disconnecting from MongoDB:', error);
     }
   },
 
   async getCollection(name: string): Promise<Collection> {
-    if (!this.client) {
-      this.client = await MongoClient.connect(this.url);
+    try {
+      if (!this.client) {
+        await this.connect(this.url);
+      }
+      return this.client.db().collection(name);
+    } catch (error) {
+      console.error(`Error getting collection '${name}':`, error);
+      throw error;
     }
-    return this.client.db().collection(name);
   },
 
-  async findOne(collectionName: string, itemId: any): Promise<any> {
-    const collection = await this.getCollection(collectionName);
-    const insertedDocument = await collection.findOne({
-      _id: new ObjectId(itemId),
-    });
-    return insertedDocument;
+  async findItemById(collectionName: string, itemId: any): Promise<any> {
+    try {
+      const collection = await this.getCollection(collectionName);
+      const insertedDocument = await collection.findOne({
+        _id: new ObjectId(itemId),
+      });
+      return insertedDocument;
+    } catch (error) {
+      console.error(`Error finding item by id in '${collectionName}':`, error);
+      throw error;
+    }
   },
 
   map(collection: any): any {
