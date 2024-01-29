@@ -12,8 +12,8 @@ const makeFakeCategory = (): CategoryModel => ({
 
 const makeCategoryMongoRepository = (): CategoryMongoRepository => {
   class CategoryRepositoryStub implements CategoryMongoRepository {
-    update(id: string, payload: AddCategoryModel): Promise<void> {
-      return new Promise((resolve) => resolve());
+    update(id: string, payload: AddCategoryModel): Promise<CategoryModel> {
+      return new Promise((resolve) => resolve(makeFakeCategory()));
     }
     getAll(): Promise<CategoryModel[]> {
       return new Promise((resolve) => resolve([makeFakeCategory()]));

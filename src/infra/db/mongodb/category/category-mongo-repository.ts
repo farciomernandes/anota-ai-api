@@ -17,8 +17,8 @@ export class CategoryMongoRepository
   async create(payload: AddCategoryModel): Promise<CategoryModel> {
     const categoryCollection = await MongoHelper.getCollection('categories');
     const result = await (await categoryCollection).insertOne(payload);
-    const account = await MongoHelper.findOne('categories', result.insertedId);
-    return MongoHelper.map(account);
+    const category = await MongoHelper.findOne('categories', result.insertedId);
+    return MongoHelper.map(category);
   }
 
   async getAll(): Promise<CategoryModel[]> {
@@ -29,7 +29,7 @@ export class CategoryMongoRepository
     return categoriesArray.map((category) => MongoHelper.map(category));
   }
 
-  async update(id: string, payload: AddCategoryModel): Promise<void> {
+  async update(id: string, payload: AddCategoryModel): Promise<CategoryModel> {
     const categoryCollection = await MongoHelper.getCollection('categories');
     await categoryCollection.updateOne(
       {
@@ -37,9 +37,12 @@ export class CategoryMongoRepository
       },
       {
         $set: {
-          payload,
+          title: payload.title,
+          description: payload.description,
         },
       },
     );
+
+    return await MongoHelper.findOne('categories', new ObjectId(id));
   }
 }

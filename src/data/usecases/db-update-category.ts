@@ -1,12 +1,19 @@
-import { AddCategoryModel } from 'src/presentation/dtos/category/add-category.dto';
+import { AddCategoryModel } from '../../presentation/dtos/category/add-category.dto';
 import { IDbUpdateCategoryRepository } from '../protocols/db/update-category-respository';
-import { CategoryMongoRepository } from 'src/infra/db/mongodb/category/category-mongo-repository';
+import { CategoryMongoRepository } from '../../infra/db/mongodb/category/category-mongo-repository';
+import { Injectable } from '@nestjs/common';
+import { CategoryModel } from '../../domain/models/category';
 
+@Injectable()
 export class DbUpdateCategory implements IDbUpdateCategoryRepository {
   constructor(
     private readonly categoryMongoRepository: CategoryMongoRepository,
   ) {}
-  async update(id: string, payload: AddCategoryModel): Promise<void> {
-    await this.categoryMongoRepository.update(id, payload);
+  async update(id: string, payload: AddCategoryModel): Promise<CategoryModel> {
+    try {
+      return await this.categoryMongoRepository.update(id, payload);
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 }

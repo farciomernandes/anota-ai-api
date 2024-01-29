@@ -1,4 +1,4 @@
-import { CategoryModel } from 'src/domain/models/category';
+import { CategoryModel } from '../../../domain/models/category';
 
 export abstract class IDbListCategoryRepository {
   abstract getAll(): Promise<CategoryModel[]>;
