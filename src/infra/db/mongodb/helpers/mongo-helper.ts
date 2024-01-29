@@ -1,4 +1,4 @@
-import { Collection, MongoClient, ObjectId } from 'mongodb';
+import { Collection, MongoClient } from 'mongodb';
 
 interface MongoHelper {
   client: MongoClient | null;
@@ -9,8 +9,6 @@ interface MongoHelper {
   disconnect(): Promise<void>;
 
   getCollection(name: string): Promise<Collection>;
-
-  findItemById(collectionName: string, itemId: any): Promise<any>;
 
   map(collection: any): any;
 }
@@ -43,19 +41,6 @@ export const MongoHelper: MongoHelper = {
       return this.client.db().collection(name);
     } catch (error) {
       console.error(`Error getting collection '${name}':`, error);
-      throw error;
-    }
-  },
-
-  async findItemById(collectionName: string, itemId: any): Promise<any> {
-    try {
-      const collection = await this.getCollection(collectionName);
-      const insertedDocument = await collection.findOne({
-        _id: new ObjectId(itemId),
-      });
-      return insertedDocument;
-    } catch (error) {
-      console.error(`Error finding item by id in '${collectionName}':`, error);
       throw error;
     }
   },

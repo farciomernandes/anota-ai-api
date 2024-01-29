@@ -72,6 +72,6 @@ describe('Category Mongo Repository', () => {
 
     expect(response.title).toEqual(updatedCategory.title);
     expect(response.description).toEqual(updatedCategory.description);
-    expect(response.id).toEqual(fakeCategory.id);
+    expect(response.id).toEqual(category.insertedId);
   });
 });

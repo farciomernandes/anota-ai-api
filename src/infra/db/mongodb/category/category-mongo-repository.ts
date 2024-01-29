@@ -22,10 +22,9 @@ export class CategoryMongoRepository
     try {
       const categoryCollection = await MongoHelper.getCollection('categories');
       const result = await (await categoryCollection).insertOne(payload);
-      const category = await MongoHelper.findItemById(
-        'categories',
-        result.insertedId,
-      );
+      const category = await categoryCollection.findOne({
+        _id: result.insertedId,
+      });
       return MongoHelper.map(category);
     } catch (error) {
       throw new InternalServerErrorException(error);
@@ -64,8 +63,13 @@ export class CategoryMongoRepository
       if (categoryUpdated.matchedCount == 0) {
         throw new BadRequestException(`Category with ${id} id not found.`);
       }
+      return MongoHelper.map(
+        await categoryCollection.findOne({
+          _id: new ObjectId(id),
+        }),
+      );
 
-      return await MongoHelper.findItemById('categories', id);
+      return;
     } catch (error) {
       throw error;
     }
