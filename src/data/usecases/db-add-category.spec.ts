@@ -1,30 +1,9 @@
 import { CategoryMongoRepository } from '../../infra/db/mongodb/category/category-mongo-repository';
-import { CategoryModel } from '../../domain/models/category';
-import { AddCategoryModel } from '../../presentation/dtos/category/add-category.dto';
 import { DbAddCategory } from './db-add-category';
-
-const makeFakeCategory = (): CategoryModel => ({
-  id: 'any_id',
-  title: 'any_title',
-  description: 'any_description',
-  ownerId: 'any_ownerId',
-});
-
-const makeCategoryMongoRepository = (): CategoryMongoRepository => {
-  class CategoryRepositoryStub implements CategoryMongoRepository {
-    update(id: string, payload: AddCategoryModel): Promise<CategoryModel> {
-      return new Promise((resolve) => resolve(makeFakeCategory()));
-    }
-    getAll(): Promise<CategoryModel[]> {
-      throw new Error('Method not implemented.');
-    }
-    create(payload: AddCategoryModel): Promise<CategoryModel> {
-      return new Promise((resolve) => resolve(makeFakeCategory()));
-    }
-  }
-
-  return new CategoryRepositoryStub();
-};
+import {
+  makeCategoryMongoRepository,
+  makeFakeCategory,
+} from './db-mock-helper-category';
 
 interface SutTypes {
   sut: DbAddCategory;

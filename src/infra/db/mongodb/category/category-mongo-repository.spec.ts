@@ -1,14 +1,7 @@
 import { Collection } from 'mongodb';
 import { MongoHelper } from '../helpers/mongo-helper';
 import { CategoryMongoRepository } from './category-mongo-repository';
-import { CategoryModel } from '../../../../domain/models/category';
-
-const makeFakeCategory = (): CategoryModel => ({
-  id: 'any_id',
-  title: 'any_title',
-  description: 'any_description',
-  ownerId: 'any_ownerId',
-});
+import { makeFakeCategory } from '../../../../data/usecases/db-mock-helper-category';
 
 interface SutTypes {
   sut: CategoryMongoRepository;
@@ -59,5 +52,26 @@ describe('Category Mongo Repository', () => {
     ];
 
     expect(response).toEqual(expectedOutput);
+  });
+
+  test('Should update category on success', async () => {
+    const { sut } = makeSut();
+
+    const fakeCategory = makeFakeCategory();
+    const category = await categoryCollection.insertOne(fakeCategory);
+
+    const updatedCategory = {
+      title: 'other_title',
+      description: 'other_description',
+    };
+
+    const response = await sut.update(
+      String(category.insertedId),
+      updatedCategory,
+    );
+
+    expect(response.title).toEqual(updatedCategory.title);
+    expect(response.description).toEqual(updatedCategory.description);
+    expect(response.id).toEqual(fakeCategory.id);
   });
 });
