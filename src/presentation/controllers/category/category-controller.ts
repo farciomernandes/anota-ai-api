@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CategoryModel } from '../../../domain/models/category';
 import { AddCategoryModel } from '../../../presentation/dtos/category/add-category.dto';
@@ -20,7 +28,7 @@ export class CategoryController {
     try {
       return await this.dbAddCategory.create(payload);
     } catch (error) {
-      console.log(error);
+      throw new HttpException(error.response, error.status);
     }
   }
 
@@ -29,7 +37,7 @@ export class CategoryController {
     try {
       return await this.dbListCategory.getAll();
     } catch (error) {
-      console.log(error);
+      throw new HttpException(error.response, error.status);
     }
   }
 
@@ -41,7 +49,7 @@ export class CategoryController {
     try {
       return await this.dbUpdateCategory.update(id, payload);
     } catch (error) {
-      console.log(error);
+      throw new HttpException(error.response, error.status);
     }
   }
 }

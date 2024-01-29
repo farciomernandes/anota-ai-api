@@ -3,7 +3,11 @@ import { IDbAddCategoryRepository } from '../../../../data/protocols/db/add-cate
 import { CategoryModel } from '../../../../domain/models/category';
 import { AddCategoryModel } from '../../../../presentation/dtos/category/add-category.dto';
 import { MongoHelper } from '../helpers/mongo-helper';
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { IDbUpdateCategoryRepository } from '../../../../data/protocols/db/update-category-respository';
 import { ObjectId } from 'mongodb';
 
@@ -15,37 +19,55 @@ export class CategoryMongoRepository
     IDbUpdateCategoryRepository
 {
   async create(payload: AddCategoryModel): Promise<CategoryModel> {
-    const categoryCollection = await MongoHelper.getCollection('categories');
-    const result = await (await categoryCollection).insertOne(payload);
-    const category = await MongoHelper.findOne('categories', result.insertedId);
-    return MongoHelper.map(category);
+    try {
+      const categoryCollection = await MongoHelper.getCollection('categories');
+      const result = await (await categoryCollection).insertOne(payload);
+      const category = await MongoHelper.findOne(
+        'categories',
+        result.insertedId,
+      );
+      return MongoHelper.map(category);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 
   async getAll(): Promise<CategoryModel[]> {
-    const categoryCollection = await MongoHelper.getCollection('categories');
-    const categoriesCursor = await categoryCollection.find();
-    const categoriesArray = await categoriesCursor.toArray(); // Converter para um array
+    try {
+      const categoryCollection = await MongoHelper.getCollection('categories');
+      const categoriesCursor = await categoryCollection.find();
+      const categoriesArray = await categoriesCursor.toArray();
 
-    return categoriesArray.map((category) => MongoHelper.map(category));
+      return categoriesArray.map((category) => MongoHelper.map(category));
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 
   async update(
     id: string,
     payload: Omit<AddCategoryModel, 'ownerId'>,
   ): Promise<CategoryModel> {
-    const categoryCollection = await MongoHelper.getCollection('categories');
-    await categoryCollection.updateOne(
-      {
-        _id: new ObjectId(id),
-      },
-      {
-        $set: {
-          title: payload.title,
-          description: payload.description,
+    try {
+      const categoryCollection = await MongoHelper.getCollection('categories');
+      const categoryUpdated = await categoryCollection.updateOne(
+        {
+          _id: new ObjectId(id),
         },
-      },
-    );
+        {
+          $set: {
+            title: payload.title,
+            description: payload.description,
+          },
+        },
+      );
+      if (categoryUpdated.matchedCount == 0) {
+        throw new BadRequestException(`Category with ${id} id not found.`);
+      }
 
-    return await MongoHelper.findOne('categories', id);
+      return await MongoHelper.findOne('categories', id);
+    } catch (error) {
+      throw error;
+    }
   }
 }

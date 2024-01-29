@@ -10,10 +10,6 @@ export class DbUpdateCategory implements IDbUpdateCategoryRepository {
     private readonly categoryMongoRepository: CategoryMongoRepository,
   ) {}
   async update(id: string, payload: AddCategoryModel): Promise<CategoryModel> {
-    try {
-      return await this.categoryMongoRepository.update(id, payload);
-    } catch (error) {
-      throw new Error(error);
-    }
+    return await this.categoryMongoRepository.update(id, payload);
   }
 }
