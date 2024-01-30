@@ -11,13 +11,19 @@ export const makeFakeCategory = (): CategoryModel => ({
 
 export const makeCategoryMongoRepository = (): CategoryMongoRepository => {
   class CategoryRepositoryStub implements CategoryMongoRepository {
-    update(id: string, payload: AddCategoryModel): Promise<CategoryModel> {
+    async delete(id: string): Promise<CategoryModel> {
       return Promise.resolve(makeFakeCategory());
     }
-    getAll(): Promise<CategoryModel[]> {
+    async update(
+      id: string,
+      payload: AddCategoryModel,
+    ): Promise<CategoryModel> {
+      return Promise.resolve(makeFakeCategory());
+    }
+    async getAll(): Promise<CategoryModel[]> {
       return Promise.resolve([makeFakeCategory()]);
     }
-    create(payload: AddCategoryModel): Promise<CategoryModel> {
+    async create(payload: AddCategoryModel): Promise<CategoryModel> {
       return Promise.resolve(makeFakeCategory());
     }
   }

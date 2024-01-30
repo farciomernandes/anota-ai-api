@@ -10,13 +10,15 @@ import {
 } from '@nestjs/common';
 import { IDbUpdateCategoryRepository } from '../../../../data/protocols/db/update-category-respository';
 import { ObjectId } from 'mongodb';
+import { IDbDeleteCategoryRepository } from '../../../../data/protocols/db/delete-category-respository';
 
 @Injectable()
 export class CategoryMongoRepository
   implements
     IDbAddCategoryRepository,
     IDbListCategoryRepository,
-    IDbUpdateCategoryRepository
+    IDbUpdateCategoryRepository,
+    IDbDeleteCategoryRepository
 {
   async create(payload: AddCategoryModel): Promise<CategoryModel> {
     try {
@@ -68,10 +70,34 @@ export class CategoryMongoRepository
           _id: new ObjectId(id),
         }),
       );
-
-      return;
     } catch (error) {
       throw error;
+    }
+  }
+
+  async delete(id: string): Promise<CategoryModel> {
+    try {
+      if (!id || !/^[0-9a-fA-F]{24}$/.test(id)) {
+        throw new BadRequestException('Invalid category ID format.');
+      }
+
+      const categoryCollection = await MongoHelper.getCollection('categories');
+      const category = MongoHelper.map(
+        await categoryCollection.findOne({
+          _id: new ObjectId(id),
+        }),
+      );
+      const result = await categoryCollection.deleteOne({
+        _id: new ObjectId(id),
+      });
+
+      if (result.deletedCount === 0) {
+        throw new BadRequestException(`Category with id ${id} not found.`);
+      }
+
+      return category;
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
     }
   }
 }

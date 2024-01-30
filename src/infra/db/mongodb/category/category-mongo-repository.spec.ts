@@ -74,4 +74,14 @@ describe('Category Mongo Repository', () => {
     expect(response.description).toEqual(updatedCategory.description);
     expect(response.id).toEqual(category.insertedId);
   });
+
+  test('Should delete category on success', async () => {
+    const { sut } = makeSut();
+    const category = await categoryCollection.insertOne(makeFakeCategory());
+    const response = await sut.delete(String(category.insertedId));
+
+    expect(response.title).toEqual(makeFakeCategory().title);
+    expect(response.description).toEqual(makeFakeCategory().description);
+    expect(response.id).toEqual(category.insertedId);
+  });
 });
