@@ -29,7 +29,7 @@ export class CategoryMongoRepository
       });
       return MongoHelper.map(category);
     } catch (error) {
-      throw new InternalServerErrorException(error);
+      throw new InternalServerErrorException(error.message);
     }
   }
 
@@ -41,7 +41,7 @@ export class CategoryMongoRepository
 
       return categoriesArray.map((category) => MongoHelper.map(category));
     } catch (error) {
-      throw new InternalServerErrorException(error);
+      throw new InternalServerErrorException(error.message);
     }
   }
 
@@ -71,7 +71,7 @@ export class CategoryMongoRepository
         }),
       );
     } catch (error) {
-      throw error;
+      throw new InternalServerErrorException(error.message);
     }
   }
 

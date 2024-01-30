@@ -2,6 +2,10 @@ import { Collection } from 'mongodb';
 import { MongoHelper } from '../helpers/mongo-helper';
 import { CategoryMongoRepository } from './category-mongo-repository';
 import { makeFakeCategory } from '../../../../data/usecases/db-mock-helper-category';
+import {
+  BadRequestException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 
 interface SutTypes {
   sut: CategoryMongoRepository;
@@ -37,6 +41,15 @@ describe('Category Mongo Repository', () => {
     expect(count).toBe(1);
   });
 
+  test('Should return InternalServerError throws if create throw InternalServerError', async () => {
+    const { sut } = makeSut();
+    jest
+      .spyOn(sut, 'create')
+      .mockReturnValueOnce(Promise.reject(new InternalServerErrorException()));
+    const promise = sut.create(makeFakeCategory());
+    await expect(promise).rejects.toThrow(InternalServerErrorException);
+  });
+
   test('Should list categories on success', async () => {
     const { sut } = makeSut();
 
@@ -52,6 +65,15 @@ describe('Category Mongo Repository', () => {
     ];
 
     expect(response).toEqual(expectedOutput);
+  });
+
+  test('Should return InternalServerError throws if getAll throw InternalServerError', async () => {
+    const { sut } = makeSut();
+    jest
+      .spyOn(sut, 'getAll')
+      .mockReturnValueOnce(Promise.reject(new InternalServerErrorException()));
+    const promise = sut.getAll();
+    await expect(promise).rejects.toThrow(InternalServerErrorException);
   });
 
   test('Should update category on success', async () => {
@@ -75,6 +97,39 @@ describe('Category Mongo Repository', () => {
     expect(response.id).toEqual(category.insertedId);
   });
 
+  test('Should return BadRequestExepction throws if update throw BadRequestExepction', async () => {
+    const { sut } = makeSut();
+    jest
+      .spyOn(sut, 'update')
+      .mockReturnValueOnce(
+        Promise.reject(
+          new BadRequestException(
+            `Category with ${makeFakeCategory().id} id not found.`,
+          ),
+        ),
+      );
+    const promise = sut.update(makeFakeCategory().id, makeFakeCategory());
+    await expect(promise).rejects.toThrow(BadRequestException);
+  });
+
+  test('Should return InternalServerError throws if update throw InternalServerError', async () => {
+    const { sut } = makeSut();
+    jest
+      .spyOn(sut, 'update')
+      .mockReturnValueOnce(Promise.reject(new InternalServerErrorException()));
+    const promise = sut.update(makeFakeCategory().id, makeFakeCategory());
+    await expect(promise).rejects.toThrow(InternalServerErrorException);
+  });
+
+  test('Should return InternalServerError throws if update throws', async () => {
+    const { sut } = makeSut();
+    jest
+      .spyOn(sut, 'update')
+      .mockReturnValueOnce(Promise.reject(new InternalServerErrorException()));
+    const promise = sut.update(makeFakeCategory().id, makeFakeCategory());
+    await expect(promise).rejects.toThrow(InternalServerErrorException);
+  });
+
   test('Should delete category on success', async () => {
     const { sut } = makeSut();
     const category = await categoryCollection.insertOne(makeFakeCategory());
@@ -83,5 +138,40 @@ describe('Category Mongo Repository', () => {
     expect(response.title).toEqual(makeFakeCategory().title);
     expect(response.description).toEqual(makeFakeCategory().description);
     expect(response.id).toEqual(category.insertedId);
+  });
+
+  test('Should return BadRequestExepction on deleted if invalid id', async () => {
+    const { sut } = makeSut();
+    jest
+      .spyOn(sut, 'delete')
+      .mockReturnValueOnce(
+        Promise.reject(new BadRequestException('Invalid category ID format.')),
+      );
+    const promise = sut.delete(makeFakeCategory().id);
+    await expect(promise).rejects.toThrow(BadRequestException);
+  });
+
+  test('Should return BadRequestExepction if id not found ', async () => {
+    const { sut } = makeSut();
+    jest
+      .spyOn(sut, 'delete')
+      .mockReturnValueOnce(
+        Promise.reject(
+          new BadRequestException(
+            `Category with id ${makeFakeCategory().id} not found.`,
+          ),
+        ),
+      );
+    const promise = sut.delete(makeFakeCategory().id);
+    await expect(promise).rejects.toThrow(BadRequestException);
+  });
+
+  test('Should return InternalServerError throws if delete throw InternalServerError', async () => {
+    const { sut } = makeSut();
+    jest
+      .spyOn(sut, 'delete')
+      .mockReturnValueOnce(Promise.reject(new InternalServerErrorException()));
+    const promise = sut.delete(makeFakeCategory().id);
+    await expect(promise).rejects.toThrow(InternalServerErrorException);
   });
 });
