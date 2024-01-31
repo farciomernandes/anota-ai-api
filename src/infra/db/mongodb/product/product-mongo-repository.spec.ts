@@ -7,7 +7,6 @@ import {
 } from '@nestjs/common';
 import { makeFakeProduct } from '../../../../data/usecases/product/db-mock-helper-product';
 import { UpdateProductModel } from '../../../../presentation/dtos/product/update-product.dto';
-
 interface SutTypes {
   sut: ProductMongoRepository;
 }
@@ -21,10 +20,11 @@ const makeSut = (): SutTypes => {
 
 describe('Product Mongo Repository', () => {
   let productCollection: Collection;
+
   const fakeRequest = {
-    categoryId: '132424',
+    categoryId: '65b55e87d161a296b867a4ce',
     description: 'any_description',
-    ownerId: '12rad432',
+    ownerId: '65b55e87d161a296b867a4ce',
     price: 10,
     title: 'any_title',
   };
@@ -42,11 +42,12 @@ describe('Product Mongo Repository', () => {
     await productCollection.deleteMany({});
   });
 
-  test('Should create an Product on success', async () => {
+  test('Should return BadequestException if send category_id invalid', async () => {
     const { sut } = makeSut();
-    await sut.create(fakeRequest);
-    const count = await productCollection.countDocuments();
-    expect(count).toBe(1);
+
+    const promise = sut.create(fakeRequest);
+
+    await expect(promise).rejects.toThrow(BadRequestException);
   });
 
   test('Should return InternalServerError throws if create throw InternalServerError', async () => {

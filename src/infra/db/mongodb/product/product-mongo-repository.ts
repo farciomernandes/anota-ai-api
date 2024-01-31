@@ -24,12 +24,27 @@ export class ProductMongoRepository
   async create(payload: AddProductModel): Promise<ProductModel> {
     try {
       const productCollection = await MongoHelper.getCollection('products');
-      const result = await (await productCollection).insertOne(payload);
-      const Product = await productCollection.findOne({
+      const categorieCollection = await MongoHelper.getCollection('categories');
+      const category = await categorieCollection.findOne({
+        _id: new ObjectId(payload.categoryId),
+      });
+      if (!category) {
+        throw new BadRequestException(
+          `Category with ${payload.categoryId} id not found.`,
+        );
+      }
+      const result = await (
+        await productCollection
+      ).insertOne({ ...payload, category });
+      const product = await productCollection.findOne({
         _id: result.insertedId,
       });
-      return MongoHelper.map(Product);
+
+      return MongoHelper.map(product);
     } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw new BadRequestException(error.message);
+      }
       throw new InternalServerErrorException(error.message);
     }
   }
@@ -40,7 +55,7 @@ export class ProductMongoRepository
       const productsCursor = await productCollection.find();
       const productsArray = await productsCursor.toArray();
 
-      return productsArray.map((Product) => MongoHelper.map(Product));
+      return productsArray.map((product) => MongoHelper.map(product));
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
@@ -49,7 +64,7 @@ export class ProductMongoRepository
   async update(id: string, payload: UpdateProductModel): Promise<ProductModel> {
     try {
       const productCollection = await MongoHelper.getCollection('products');
-      const ProductUpdated = await productCollection.updateOne(
+      const productUpdated = await productCollection.updateOne(
         {
           _id: new ObjectId(id),
         },
@@ -61,7 +76,7 @@ export class ProductMongoRepository
           },
         },
       );
-      if (ProductUpdated.matchedCount == 0) {
+      if (productUpdated.matchedCount == 0) {
         throw new BadRequestException(`Product with ${id} id not found.`);
       }
       return MongoHelper.map(
@@ -81,7 +96,7 @@ export class ProductMongoRepository
       }
 
       const productCollection = await MongoHelper.getCollection('products');
-      const Product = MongoHelper.map(
+      const product = MongoHelper.map(
         await productCollection.findOne({
           _id: new ObjectId(id),
         }),
@@ -94,7 +109,7 @@ export class ProductMongoRepository
         throw new BadRequestException(`Product with id ${id} not found.`);
       }
 
-      return Product;
+      return product;
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }

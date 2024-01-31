@@ -9,12 +9,13 @@ import {
   Put,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { ProductModel } from '../../../domain/models/Product';
-import { AddProductModel } from '../../dtos/Product/add-product.dto';
-import { IDbAddProductRepository } from '../../../data/protocols/db/add-product-respository';
-import { IDbListProductRepository } from '../../../data/protocols/db/list-product-respository';
-import { IDbUpdateProductRepository } from '../../../data/protocols/db/update-product-respository';
-import { IDbDeleteProductRepository } from '../../../data/protocols/db/delete-product-respository';
+import { ProductModel } from '../../../domain/models/product';
+import { AddProductModel } from '../../dtos/product/add-product.dto';
+import { IDbAddProductRepository } from '../../../data/protocols/db/product/add-product-respository';
+import { IDbListProductRepository } from '../../../data/protocols/db/product/list-product-respository';
+import { IDbUpdateProductRepository } from '../../../data/protocols/db/product/update-product-respository';
+import { IDbDeleteProductRepository } from '../../../data/protocols/db/product/delete-product-respository';
+import { UpdateProductModel } from '../../../presentation/dtos/product/update-product.dto';
 
 @ApiTags('Product')
 @Controller('api/v1/product')
@@ -47,7 +48,7 @@ export class ProductController {
   @Put('/:id')
   async update(
     @Param('id') id: string,
-    @Body() payload: Omit<AddProductModel, 'ownerId'>,
+    @Body() payload: UpdateProductModel,
   ): Promise<ProductModel> {
     try {
       return await this.dbUpdateProduct.update(id, payload);
