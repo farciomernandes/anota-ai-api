@@ -7,24 +7,27 @@ import {
 import { AddProductModel } from '../../../presentation/dtos/product/add-product.dto';
 import { BadRequestException } from '@nestjs/common';
 import { makeCategoryMongoRepository } from '../category/db-mock-helper-category';
+import { CategoryMongoRepository } from '../../../infra/db/mongodb/category/category-mongo-repository';
 
 interface SutTypes {
   sut: DbAddProduct;
   addProductRepositoryStub: ProductMongoRepository;
+  categoryRepositoryStub: CategoryMongoRepository;
 }
 
 const makeSut = (): SutTypes => {
   const addProductRepositoryStub = makeProductMongoRepository();
-  const addCategoryRepositoryStub = makeCategoryMongoRepository();
+  const categoryRepositoryStub = makeCategoryMongoRepository();
 
   const sut = new DbAddProduct(
     addProductRepositoryStub,
-    addCategoryRepositoryStub,
+    categoryRepositoryStub,
   );
 
   return {
     sut,
     addProductRepositoryStub,
+    categoryRepositoryStub,
   };
 };
 
@@ -63,6 +66,18 @@ describe('DbAddProduct usecase', () => {
     jest
       .spyOn(addProductRepositoryStub, 'findByTitle')
       .mockReturnValueOnce(Promise.resolve(true));
+    const promise = sut.create(fakeRequestData);
+    await expect(promise).rejects.toThrowError(BadRequestException);
+  });
+
+  test('Should return BadRequestException if categoryId does not exist', async () => {
+    const { sut, categoryRepositoryStub } = makeSut();
+    jest.mock('../../../infra/db/mongodb/category/category-mongo-repository');
+
+    jest
+      .spyOn(categoryRepositoryStub, 'findById')
+      .mockImplementationOnce(() => null);
+
     const promise = sut.create(fakeRequestData);
     await expect(promise).rejects.toThrowError(BadRequestException);
   });
