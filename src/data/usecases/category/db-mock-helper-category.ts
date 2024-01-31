@@ -13,6 +13,9 @@ export const makeFakeCategory = (): CategoryModel => {
 
 export const makeCategoryMongoRepository = (): CategoryMongoRepository => {
   class CategoryRepositoryStub implements CategoryMongoRepository {
+    findById(id: string): Promise<CategoryModel> {
+      return Promise.resolve(makeFakeCategory());
+    }
     async findByTitle(title: string): Promise<boolean> {
       return false;
     }

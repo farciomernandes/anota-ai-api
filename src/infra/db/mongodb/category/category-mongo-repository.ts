@@ -60,6 +60,19 @@ export class CategoryMongoRepository
     }
   }
 
+  async findById(id: string): Promise<CategoryModel> {
+    try {
+      const categoryCollection = await MongoHelper.getCollection('categories');
+      const category = await categoryCollection.findOne({
+        _id: new ObjectId(id),
+      });
+
+      return MongoHelper.map(category);
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
   async update(
     id: string,
     payload: Omit<AddCategoryModel, 'ownerId'>,

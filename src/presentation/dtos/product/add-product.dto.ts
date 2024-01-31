@@ -37,12 +37,14 @@ export class AddProductModel {
   ownerId: string;
 
   @ApiProperty({
-    type: CategoryModel,
+    type: String,
     example: 'asG-1gmlç2em0-mdasjd',
   })
   @IsNotEmpty()
   @Expose()
   categoryId: string;
+
+  category?: CategoryModel;
 
   static toDto(payload: AddProductModel): AddProductModel {
     return plainToInstance(AddProductModel, payload, {
