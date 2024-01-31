@@ -6,6 +6,7 @@ import {
 } from './db-mock-helper-product';
 import { AddProductModel } from '../../../presentation/dtos/product/add-product.dto';
 import { BadRequestException } from '@nestjs/common';
+import { makeCategoryMongoRepository } from '../category/db-mock-helper-category';
 
 interface SutTypes {
   sut: DbAddProduct;
@@ -14,7 +15,12 @@ interface SutTypes {
 
 const makeSut = (): SutTypes => {
   const addProductRepositoryStub = makeProductMongoRepository();
-  const sut = new DbAddProduct(addProductRepositoryStub);
+  const addCategoryRepositoryStub = makeCategoryMongoRepository();
+
+  const sut = new DbAddProduct(
+    addProductRepositoryStub,
+    addCategoryRepositoryStub,
+  );
 
   return {
     sut,
@@ -39,14 +45,10 @@ describe('DbAddProduct usecase', () => {
   });
 
   test('Should throws if ProductMongoRepository throws', async () => {
-    const { sut, addProductRepositoryStub } = makeSut();
-    jest
-      .spyOn(addProductRepositoryStub, 'create')
-      .mockReturnValueOnce(
-        new Promise((resolver, reject) => reject(new Error())),
-      );
+    const { sut } = makeSut();
+    jest.spyOn(sut, 'create').mockReturnValueOnce(Promise.reject(new Error()));
     const promise = sut.create(fakeRequestData);
-    expect(promise).rejects.toThrow();
+    await expect(promise).rejects.toThrow();
   });
 
   test('Should return Product on success', async () => {

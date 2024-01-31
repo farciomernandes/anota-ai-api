@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, plainToInstance } from 'class-transformer';
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsString, Matches } from 'class-validator';
 import { CategoryModel } from '../../../domain/models/category';
 
 export class AddProductModel {
@@ -41,6 +41,8 @@ export class AddProductModel {
     example: 'asG-1gmlç2em0-mdasjd',
   })
   @IsNotEmpty()
+  @IsString()
+  @Matches(/^[0-9a-fA-F]{24}$/, { message: `Invalid 'categoryId' format` })
   @Expose()
   categoryId: string;
 

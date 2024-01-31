@@ -9,11 +9,13 @@ import { IDbAddProductRepository } from '../../data/protocols/db/product/add-pro
 import { IDbListProductRepository } from '../../data/protocols/db/product/list-product-respository';
 import { IDbUpdateProductRepository } from '../../data/protocols/db/product/update-product-respository';
 import { IDbDeleteProductRepository } from '../../data/protocols/db/product/delete-product-respository';
+import { CategoryMongoRepository } from '../db/mongodb/category/category-mongo-repository';
 
 @Module({
   imports: [],
   providers: [
     ProductMongoRepository,
+    CategoryMongoRepository,
     DbAddProduct,
     DbListProduct,
     DbUpdateProduct,

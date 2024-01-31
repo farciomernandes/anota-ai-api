@@ -1,4 +1,3 @@
-import { Collection } from 'mongodb';
 import { MongoHelper } from '../helpers/mongo-helper';
 import { ProductMongoRepository } from './product-mongo-repository';
 import {
@@ -7,6 +6,9 @@ import {
 } from '@nestjs/common';
 import { makeFakeProduct } from '../../../../data/usecases/product/db-mock-helper-product';
 import { UpdateProductModel } from '../../../../presentation/dtos/product/update-product.dto';
+import { makeFakeCategory } from '../../../../data/usecases/category/db-mock-helper-category';
+import { Collection } from 'mongodb';
+
 interface SutTypes {
   sut: ProductMongoRepository;
 }
@@ -20,6 +22,7 @@ const makeSut = (): SutTypes => {
 
 describe('Product Mongo Repository', () => {
   let productCollection: Collection;
+  let categoryCollection: Collection;
 
   const fakeRequest = {
     categoryId: '65b55e87d161a296b867a4ce',
@@ -39,11 +42,29 @@ describe('Product Mongo Repository', () => {
 
   beforeEach(async () => {
     productCollection = await MongoHelper.getCollection('products');
+    categoryCollection = await MongoHelper.getCollection('categories');
     await productCollection.deleteMany({});
   });
 
-  test('Should return BadequestException if send category_id invalid', async () => {
+  test('Should create Product on success', async () => {
     const { sut } = makeSut();
+
+    const fakeProduct = makeFakeProduct();
+    const category = await categoryCollection.insertOne(makeFakeCategory());
+    const response = await sut.create({
+      ...fakeProduct,
+      categoryId: category.insertedId.toHexString(),
+    });
+
+    expect(response.title).toEqual(fakeProduct.title);
+  });
+
+  test('Should return BadRequestException if send category_id invalid', async () => {
+    const { sut } = makeSut();
+
+    jest
+      .spyOn(sut, 'create')
+      .mockReturnValueOnce(Promise.reject(new BadRequestException()));
 
     const promise = sut.create(fakeRequest);
 
@@ -52,9 +73,12 @@ describe('Product Mongo Repository', () => {
 
   test('Should return InternalServerError throws if create throw InternalServerError', async () => {
     const { sut } = makeSut();
+
+    jest.mock('../helpers/mongo-helper');
     jest
-      .spyOn(sut, 'create')
-      .mockReturnValueOnce(Promise.reject(new InternalServerErrorException()));
+      .spyOn(MongoHelper, 'getCollection')
+      .mockRejectedValueOnce(new InternalServerErrorException());
+
     const promise = sut.create(fakeRequest);
     await expect(promise).rejects.toThrow(InternalServerErrorException);
   });
@@ -78,9 +102,11 @@ describe('Product Mongo Repository', () => {
 
   test('Should return InternalServerError throws if getAll throw InternalServerError', async () => {
     const { sut } = makeSut();
+    jest.mock('../helpers/mongo-helper');
     jest
-      .spyOn(sut, 'getAll')
-      .mockReturnValueOnce(Promise.reject(new InternalServerErrorException()));
+      .spyOn(MongoHelper, 'getCollection')
+      .mockRejectedValueOnce(new InternalServerErrorException());
+
     const promise = sut.getAll();
     await expect(promise).rejects.toThrow(InternalServerErrorException);
   });
@@ -125,9 +151,11 @@ describe('Product Mongo Repository', () => {
 
   test('Should return InternalServerError throws if update throw InternalServerError', async () => {
     const { sut } = makeSut();
+    jest.mock('../helpers/mongo-helper');
     jest
-      .spyOn(sut, 'update')
-      .mockReturnValueOnce(Promise.reject(new InternalServerErrorException()));
+      .spyOn(MongoHelper, 'getCollection')
+      .mockRejectedValueOnce(new InternalServerErrorException());
+
     const promise = sut.update(makeFakeProduct().id, makeFakeProduct());
     await expect(promise).rejects.toThrow(InternalServerErrorException);
   });
@@ -143,46 +171,41 @@ describe('Product Mongo Repository', () => {
 
   test('Should delete Product on success', async () => {
     const { sut } = makeSut();
-    const Product = await productCollection.insertOne(makeFakeProduct());
-    const response = await sut.delete(String(Product.insertedId));
+    const product = await productCollection.insertOne(makeFakeProduct());
+    const response = await sut.delete(product.insertedId.toHexString());
 
     expect(response.title).toEqual(makeFakeProduct().title);
     expect(response.description).toEqual(makeFakeProduct().description);
-    expect(response.id).toEqual(Product.insertedId);
+    expect(response.id).toEqual(product.insertedId);
   });
 
   test('Should return BadRequestExepction on deleted if invalid id', async () => {
     const { sut } = makeSut();
-    jest
-      .spyOn(sut, 'delete')
-      .mockReturnValueOnce(
-        Promise.reject(new BadRequestException('Invalid Product ID format.')),
-      );
-    const promise = sut.delete(makeFakeProduct().id);
+
+    const promise = sut.delete('invalid_id');
     await expect(promise).rejects.toThrow(BadRequestException);
   });
 
-  test('Should return BadRequestExepction if id not found ', async () => {
+  test('Should return BadRequestException on deled if id not found', async () => {
     const { sut } = makeSut();
-    jest
-      .spyOn(sut, 'delete')
-      .mockReturnValueOnce(
-        Promise.reject(
-          new BadRequestException(
-            `Product with id ${makeFakeProduct().id} not found.`,
-          ),
-        ),
-      );
+
+    jest.mock('../helpers/mongo-helper');
+
+    jest.spyOn(MongoHelper, 'map').mockImplementationOnce(() => false);
+
     const promise = sut.delete(makeFakeProduct().id);
     await expect(promise).rejects.toThrow(BadRequestException);
   });
 
   test('Should return InternalServerError throws if delete throw InternalServerError', async () => {
     const { sut } = makeSut();
-    jest
-      .spyOn(sut, 'delete')
-      .mockReturnValueOnce(Promise.reject(new InternalServerErrorException()));
-    const promise = sut.delete(makeFakeProduct().id);
+
+    jest.mock('../helpers/mongo-helper');
+    jest.spyOn(MongoHelper, 'map').mockImplementationOnce(() => {
+      throw new InternalServerErrorException();
+    });
+
+    const promise = sut.delete('5f1a67b143a9d661826f8ce7');
     await expect(promise).rejects.toThrow(InternalServerErrorException);
   });
 });
