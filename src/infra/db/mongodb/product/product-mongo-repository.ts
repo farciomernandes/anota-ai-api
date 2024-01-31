@@ -61,6 +61,21 @@ export class ProductMongoRepository
     }
   }
 
+  async findByTitle(title: string): Promise<boolean> {
+    try {
+      const productCollection = await MongoHelper.getCollection('products');
+      const product = await productCollection.findOne({
+        title,
+      });
+      if (!product) {
+        return false;
+      }
+      return true;
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
   async update(id: string, payload: UpdateProductModel): Promise<ProductModel> {
     try {
       const productCollection = await MongoHelper.getCollection('products');

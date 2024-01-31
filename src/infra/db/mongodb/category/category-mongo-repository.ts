@@ -45,6 +45,21 @@ export class CategoryMongoRepository
     }
   }
 
+  async findByTitle(title: string): Promise<boolean> {
+    try {
+      const categoryCollection = await MongoHelper.getCollection('categories');
+      const category = await categoryCollection.findOne({
+        title,
+      });
+      if (!category) {
+        return false;
+      }
+      return true;
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
   async update(
     id: string,
     payload: Omit<AddCategoryModel, 'ownerId'>,
