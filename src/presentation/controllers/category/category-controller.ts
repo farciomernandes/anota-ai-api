@@ -11,10 +11,10 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { CategoryModel } from '../../../domain/models/category';
 import { AddCategoryModel } from '../../../presentation/dtos/category/add-category.dto';
-import { IDbAddCategoryRepository } from '../../../data/protocols/db/add-category-respository';
-import { IDbListCategoryRepository } from '../../../data/protocols/db/list-category-respository';
-import { IDbUpdateCategoryRepository } from '../../../data/protocols/db/update-category-respository';
-import { IDbDeleteCategoryRepository } from '../../../data/protocols/db/delete-category-respository';
+import { IDbAddCategoryRepository } from '../../../data/protocols/db/category/add-category-respository';
+import { IDbListCategoryRepository } from '../../../data/protocols/db/category/list-category-respository';
+import { IDbUpdateCategoryRepository } from '../../../data/protocols/db/category/update-category-respository';
+import { IDbDeleteCategoryRepository } from '../../../data/protocols/db/category/delete-category-respository';
 
 @ApiTags('category')
 @Controller('api/v1/category')

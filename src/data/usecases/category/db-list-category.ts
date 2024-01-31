@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CategoryMongoRepository } from '../../infra/db/mongodb/category/category-mongo-repository';
-import { IDbListCategoryRepository } from '../protocols/db/list-category-respository';
+import { CategoryMongoRepository } from '../../../infra/db/mongodb/category/category-mongo-repository';
+import { IDbListCategoryRepository } from '../../protocols/db/category/list-category-respository';
 
 @Injectable()
 export class DbListCategory implements IDbListCategoryRepository {

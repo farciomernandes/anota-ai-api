@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { CategoryModel } from '../../domain/models/category';
-import { CategoryMongoRepository } from '../../infra/db/mongodb/category/category-mongo-repository';
-import { IDbDeleteCategoryRepository } from '../protocols/db/delete-category-respository';
+import { CategoryModel } from '../../../domain/models/category';
+import { CategoryMongoRepository } from '../../../infra/db/mongodb/category/category-mongo-repository';
+import { IDbDeleteCategoryRepository } from '../../protocols/db/category/delete-category-respository';
 
 @Injectable()
 export class DbDeleteCategory implements IDbDeleteCategoryRepository {

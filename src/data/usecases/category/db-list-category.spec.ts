@@ -1,4 +1,4 @@
-import { CategoryMongoRepository } from '../../infra/db/mongodb/category/category-mongo-repository';
+import { CategoryMongoRepository } from '../../../infra/db/mongodb/category/category-mongo-repository';
 import { DbListCategory } from './db-list-category';
 import {
   makeCategoryMongoRepository,

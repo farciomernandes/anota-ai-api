@@ -1,13 +1,15 @@
-import { AddCategoryModel } from '../../presentation/dtos/category/add-category.dto';
-import { CategoryModel } from '../../domain/models/category';
-import { CategoryMongoRepository } from '../../infra/db/mongodb/category/category-mongo-repository';
+import { AddCategoryModel } from '../../../presentation/dtos/category/add-category.dto';
+import { CategoryModel } from '../../../domain/models/category';
+import { CategoryMongoRepository } from '../../../infra/db/mongodb/category/category-mongo-repository';
 
-export const makeFakeCategory = (): CategoryModel => ({
-  id: 'any_id',
-  title: 'any_title',
-  description: 'any_description',
-  ownerId: 'any_ownerId',
-});
+export const makeFakeCategory = (): CategoryModel => {
+  const category = new CategoryModel();
+  category.id = 'any_id';
+  category.title = 'any_title';
+  category.ownerId = 'any_ownerId';
+  category.description = 'any_description';
+  return category;
+};
 
 export const makeCategoryMongoRepository = (): CategoryMongoRepository => {
   class CategoryRepositoryStub implements CategoryMongoRepository {

@@ -1,19 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, plainToInstance } from 'class-transformer';
 import { IsNotEmpty } from 'class-validator';
+import { CategoryModel } from '../../../domain/models/category';
 
-export class CategoryModel {
+export class AddProductModel {
   @ApiProperty({
     type: String,
-    example: 'gm56omomasppk64p',
-  })
-  @IsNotEmpty()
-  @Expose()
-  id: string;
-
-  @ApiProperty({
-    type: String,
-    example: 'title',
+    example: 'Nome',
   })
   @IsNotEmpty()
   @Expose()
@@ -43,8 +36,16 @@ export class CategoryModel {
   @Expose()
   ownerId: string;
 
-  static toDto(payload: CategoryModel): CategoryModel {
-    return plainToInstance(CategoryModel, payload, {
+  @ApiProperty({
+    type: CategoryModel,
+    example: 'asG-1gmlç2em0-mdasjd',
+  })
+  @IsNotEmpty()
+  @Expose()
+  categoryId: string;
+
+  static toDto(payload: AddProductModel): AddProductModel {
+    return plainToInstance(AddProductModel, payload, {
       excludeExtraneousValues: true,
     });
   }
