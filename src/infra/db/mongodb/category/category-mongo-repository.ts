@@ -87,16 +87,18 @@ export class CategoryMongoRepository
           _id: new ObjectId(id),
         }),
       );
-      const result = await categoryCollection.deleteOne({
+      await categoryCollection.deleteOne({
         _id: new ObjectId(id),
       });
 
-      if (result.deletedCount === 0) {
-        throw new BadRequestException(`Category with id ${id} not found.`);
-      }
-
       return category;
     } catch (error) {
+      if (
+        (error.message =
+          "Cannot destructure property '_id' of 'collection' as it is null.")
+      ) {
+        throw new BadRequestException(`Category with id ${id} not found.`);
+      }
       throw new InternalServerErrorException(error.message);
     }
   }

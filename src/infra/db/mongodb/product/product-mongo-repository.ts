@@ -96,21 +96,25 @@ export class ProductMongoRepository
       }
 
       const productCollection = await MongoHelper.getCollection('products');
+
       const product = MongoHelper.map(
         await productCollection.findOne({
           _id: new ObjectId(id),
         }),
       );
-      const result = await productCollection.deleteOne({
+
+      await productCollection.deleteOne({
         _id: new ObjectId(id),
       });
 
-      if (result.deletedCount === 0) {
-        throw new BadRequestException(`Product with id ${id} not found.`);
-      }
-
       return product;
     } catch (error) {
+      if (
+        (error.message =
+          "Cannot destructure property '_id' of 'collection' as it is null.")
+      ) {
+        throw new BadRequestException(`Product with id ${id} not found.`);
+      }
       throw new InternalServerErrorException(error.message);
     }
   }
