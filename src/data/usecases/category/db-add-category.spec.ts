@@ -1,9 +1,12 @@
+import { BadRequestException } from '@nestjs/common';
 import { CategoryMongoRepository } from '../../../infra/db/mongodb/category/category-mongo-repository';
 import { DbAddCategory } from './db-add-category';
 import {
   makeCategoryMongoRepository,
   makeFakeCategory,
 } from './db-mock-helper-category';
+import { MongoHelper } from '../../../infra/db/mongodb/helpers/mongo-helper';
+import { Collection } from 'mongodb';
 
 interface SutTypes {
   sut: DbAddCategory;
@@ -22,10 +25,25 @@ const makeSut = (): SutTypes => {
 
 describe('DbAddCategory usecase', () => {
   const fakeRequestData = {
-    title: 'any_title',
+    title: `any_title`,
     description: 'any_description',
     ownerId: 'any_ownerId',
   };
+
+  let categoryCollection: Collection;
+
+  beforeAll(async () => {
+    await MongoHelper.connect(process.env.MONGO_URL);
+  });
+
+  afterAll(async () => {
+    await MongoHelper.disconnect();
+  });
+
+  beforeEach(async () => {
+    categoryCollection = await MongoHelper.getCollection('categories');
+    await categoryCollection.deleteMany({});
+  });
 
   test('Should call CategoryMongoRepository with correct values', async () => {
     const { sut, addCategoryRepositoryStub } = makeSut();
@@ -34,20 +52,17 @@ describe('DbAddCategory usecase', () => {
     expect(addSpy).toBeCalledWith(fakeRequestData);
   });
 
-  test('Should throws if CategoryMongoRepository throws', async () => {
+  test('Should return BadRequestException if try create category if already exist title', async () => {
     const { sut, addCategoryRepositoryStub } = makeSut();
     jest
-      .spyOn(addCategoryRepositoryStub, 'create')
-      .mockReturnValueOnce(
-        new Promise((resolver, reject) => reject(new Error())),
-      );
+      .spyOn(addCategoryRepositoryStub, 'findByTitle')
+      .mockReturnValueOnce(Promise.resolve(true));
     const promise = sut.create(fakeRequestData);
-    expect(promise).rejects.toThrow();
+    await expect(promise).rejects.toThrowError(BadRequestException);
   });
 
   test('Should return category on success', async () => {
     const { sut } = makeSut();
-
     const response = await sut.create(fakeRequestData);
     expect(response).toEqual(makeFakeCategory());
   });

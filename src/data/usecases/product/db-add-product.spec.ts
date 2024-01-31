@@ -5,6 +5,7 @@ import {
   makeProductMongoRepository,
 } from './db-mock-helper-product';
 import { AddProductModel } from '../../../presentation/dtos/product/add-product.dto';
+import { BadRequestException } from '@nestjs/common';
 
 interface SutTypes {
   sut: DbAddProduct;
@@ -53,5 +54,14 @@ describe('DbAddProduct usecase', () => {
 
     const response = await sut.create(fakeRequestData);
     expect(response).toEqual(makeFakeProduct());
+  });
+
+  test('Should return BadRequestException if try create category if already exist title', async () => {
+    const { sut, addProductRepositoryStub } = makeSut();
+    jest
+      .spyOn(addProductRepositoryStub, 'findByTitle')
+      .mockReturnValueOnce(Promise.resolve(true));
+    const promise = sut.create(fakeRequestData);
+    await expect(promise).rejects.toThrowError(BadRequestException);
   });
 });
