@@ -43,8 +43,11 @@ describe('Category Mongo Repository', () => {
 
   test('Should return InternalServerError throws if create throw InternalServerError', async () => {
     const { sut } = makeSut();
+
+    jest.mock('../helpers/mongo-helper');
+
     jest
-      .spyOn(sut, 'create')
+      .spyOn(MongoHelper, 'getCollection')
       .mockReturnValueOnce(Promise.reject(new InternalServerErrorException()));
     const promise = sut.create(makeFakeCategory());
     await expect(promise).rejects.toThrow(InternalServerErrorException);
@@ -69,9 +72,13 @@ describe('Category Mongo Repository', () => {
 
   test('Should return InternalServerError throws if getAll throw InternalServerError', async () => {
     const { sut } = makeSut();
+
+    jest.mock('../helpers/mongo-helper');
+
     jest
-      .spyOn(sut, 'getAll')
+      .spyOn(MongoHelper, 'getCollection')
       .mockReturnValueOnce(Promise.reject(new InternalServerErrorException()));
+
     const promise = sut.getAll();
     await expect(promise).rejects.toThrow(InternalServerErrorException);
   });
@@ -112,20 +119,14 @@ describe('Category Mongo Repository', () => {
     await expect(promise).rejects.toThrow(BadRequestException);
   });
 
-  test('Should return InternalServerError throws if update throw InternalServerError', async () => {
-    const { sut } = makeSut();
-    jest
-      .spyOn(sut, 'update')
-      .mockReturnValueOnce(Promise.reject(new InternalServerErrorException()));
-    const promise = sut.update(makeFakeCategory().id, makeFakeCategory());
-    await expect(promise).rejects.toThrow(InternalServerErrorException);
-  });
-
   test('Should return InternalServerError throws if update throws', async () => {
     const { sut } = makeSut();
+    jest.mock('../helpers/mongo-helper');
+
     jest
-      .spyOn(sut, 'update')
+      .spyOn(MongoHelper, 'getCollection')
       .mockReturnValueOnce(Promise.reject(new InternalServerErrorException()));
+
     const promise = sut.update(makeFakeCategory().id, makeFakeCategory());
     await expect(promise).rejects.toThrow(InternalServerErrorException);
   });
@@ -173,5 +174,20 @@ describe('Category Mongo Repository', () => {
       .mockReturnValueOnce(Promise.reject(new InternalServerErrorException()));
     const promise = sut.delete(makeFakeCategory().id);
     await expect(promise).rejects.toThrow(InternalServerErrorException);
+  });
+
+  test('Should return true if findByTitle searched category on success', async () => {
+    const { sut } = makeSut();
+
+    await categoryCollection.insertOne(makeFakeCategory());
+    const response = await sut.findByTitle(makeFakeCategory().title);
+    expect(response).toEqual(true);
+  });
+
+  test('Should return false if findByTitle not searched category on success', async () => {
+    const { sut } = makeSut();
+
+    const response = await sut.findByTitle(makeFakeCategory().title);
+    expect(response).toEqual(false);
   });
 });

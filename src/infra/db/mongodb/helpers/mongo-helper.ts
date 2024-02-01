@@ -23,26 +23,17 @@ export const MongoHelper: MongoHelper = {
   },
 
   async disconnect(): Promise<void> {
-    try {
-      if (this.client) {
-        await this.client.close();
-        this.client = null;
-      }
-    } catch (error) {
-      console.error('Error disconnecting from MongoDB:', error);
+    if (this.client) {
+      await this.client.close();
+      this.client = null;
     }
   },
 
   async getCollection(name: string): Promise<Collection> {
-    try {
-      if (!this.client) {
-        await this.connect(this.url);
-      }
-      return this.client.db().collection(name);
-    } catch (error) {
-      console.error(`Error getting collection '${name}':`, error);
-      throw error;
+    if (!this.client) {
+      await this.connect(this.url);
     }
+    return this.client.db().collection(name);
   },
 
   map(collection: any): any {
