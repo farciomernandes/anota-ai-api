@@ -7,7 +7,8 @@ module.exports = {
       '!<rootDir>/src/main.ts',
       '!<rootDir>/src/infra/ioc/**',
       '!<rootDir>/src/data/protocols/**',
-      '!<rootDir>/src/presentation/**'
+      '!<rootDir>/src/presentation/**',
+      '!<rootDir>/src/domain/**'
     ],
     coverageDirectory: "coverage",
     testEnvironment: 'node',

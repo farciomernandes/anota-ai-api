@@ -160,13 +160,20 @@ describe('Product Mongo Repository', () => {
     await expect(promise).rejects.toThrow(InternalServerErrorException);
   });
 
-  test('Should return InternalServerError throws if update throws', async () => {
+  test('Should throw BadRequestException if no product is found to update', async () => {
     const { sut } = makeSut();
-    jest
-      .spyOn(sut, 'update')
-      .mockReturnValueOnce(Promise.reject(new InternalServerErrorException()));
-    const promise = sut.update(makeFakeProduct().id, makeFakeProduct());
-    await expect(promise).rejects.toThrow(InternalServerErrorException);
+    const nonExistentProductId = 'non_existent_id';
+
+    // Mockando o comportamento do update para simular que nenhum produto foi encontrado
+    jest.spyOn(sut, 'update').mockImplementationOnce(async (id, payload) => {
+      return new Promise((resolve, reject) => {
+        reject(new BadRequestException(`Product with ${id} id not found.`));
+      });
+    });
+
+    const promise = sut.update(nonExistentProductId, makeFakeProduct());
+
+    await expect(promise).rejects.toThrow(BadRequestException);
   });
 
   test('Should delete Product on success', async () => {
@@ -179,14 +186,14 @@ describe('Product Mongo Repository', () => {
     expect(response.id).toEqual(product.insertedId);
   });
 
-  test('Should return BadRequestExepction on deleted if invalid id', async () => {
+  test('Should return BadRequestExepction on delete if invalid id', async () => {
     const { sut } = makeSut();
 
     const promise = sut.delete('invalid_id');
     await expect(promise).rejects.toThrow(BadRequestException);
   });
 
-  test('Should return BadRequestException on deled if id not found', async () => {
+  test('Should return BadRequestException on delete if id not found', async () => {
     const { sut } = makeSut();
 
     jest.mock('../helpers/mongo-helper');
@@ -206,6 +213,38 @@ describe('Product Mongo Repository', () => {
     });
 
     const promise = sut.delete('5f1a67b143a9d661826f8ce7');
+    await expect(promise).rejects.toThrow(InternalServerErrorException);
+  });
+
+  test('Should return true if findByTitle seach a procut', async () => {
+    const { sut } = makeSut();
+    const findSpy = jest.spyOn(sut, 'findByTitle');
+    await productCollection.insertOne(makeFakeProduct());
+
+    const response = await sut.findByTitle(makeFakeProduct().title);
+
+    expect(findSpy).toHaveBeenLastCalledWith(makeFakeProduct().title);
+    expect(response).toBe(true);
+  });
+
+  test('Should return false if findByTitle not find a procut', async () => {
+    const { sut } = makeSut();
+    const findSpy = jest.spyOn(sut, 'findByTitle');
+    const response = await sut.findByTitle(makeFakeProduct().title);
+
+    expect(findSpy).toHaveBeenLastCalledWith(makeFakeProduct().title);
+    expect(response).toBe(false);
+  });
+
+  test('Should return false if findByTitle not find a procut', async () => {
+    const { sut } = makeSut();
+
+    jest.mock('../helpers/mongo-helper');
+    jest.spyOn(MongoHelper, 'getCollection').mockImplementationOnce(() => {
+      throw new InternalServerErrorException();
+    });
+    const promise = sut.findByTitle(makeFakeProduct().title);
+
     await expect(promise).rejects.toThrow(InternalServerErrorException);
   });
 });

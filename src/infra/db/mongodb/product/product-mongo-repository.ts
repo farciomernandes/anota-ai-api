@@ -67,7 +67,7 @@ export class ProductMongoRepository
   async update(id: string, payload: UpdateProductModel): Promise<ProductModel> {
     try {
       const productCollection = await MongoHelper.getCollection('products');
-      const productUpdated = await productCollection.updateOne(
+      await productCollection.updateOne(
         {
           _id: new ObjectId(id),
         },
@@ -79,9 +79,7 @@ export class ProductMongoRepository
           },
         },
       );
-      if (productUpdated.matchedCount == 0) {
-        throw new BadRequestException(`Product with ${id} id not found.`);
-      }
+
       return MongoHelper.map(
         await productCollection.findOne({
           _id: new ObjectId(id),
