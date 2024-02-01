@@ -152,6 +152,13 @@ describe('Category Mongo Repository', () => {
     await expect(promise).rejects.toThrow(BadRequestException);
   });
 
+  test('Should return InternalServerError throws in delete if send invalid_id in delete', async () => {
+    const { sut } = makeSut();
+
+    const response = sut.delete('invalid_id');
+    await expect(response).rejects.toThrow(BadRequestException);
+  });
+
   test('Should return BadRequestExepction if id not found ', async () => {
     const { sut } = makeSut();
     jest
@@ -167,13 +174,17 @@ describe('Category Mongo Repository', () => {
     await expect(promise).rejects.toThrow(BadRequestException);
   });
 
-  test('Should return InternalServerError throws if delete throw InternalServerError', async () => {
+  test('Should return InternalServerError throws if findByTitle throw InternalServerError', async () => {
     const { sut } = makeSut();
+
+    jest.mock('../helpers/mongo-helper');
+
     jest
-      .spyOn(sut, 'delete')
+      .spyOn(MongoHelper, 'getCollection')
       .mockReturnValueOnce(Promise.reject(new InternalServerErrorException()));
-    const promise = sut.delete(makeFakeCategory().id);
-    await expect(promise).rejects.toThrow(InternalServerErrorException);
+
+    const response = sut.findByTitle(makeFakeCategory().title);
+    await expect(response).rejects.toThrow(InternalServerErrorException);
   });
 
   test('Should return true if findByTitle searched category on success', async () => {
@@ -189,5 +200,28 @@ describe('Category Mongo Repository', () => {
 
     const response = await sut.findByTitle(makeFakeCategory().title);
     expect(response).toEqual(false);
+  });
+
+  test('Should return true if findById searched category on success', async () => {
+    const { sut } = makeSut();
+
+    const category = await categoryCollection.insertOne(makeFakeCategory());
+    const response = await sut.findById(category.insertedId.toHexString());
+    expect(response.title).toEqual(makeFakeCategory().title);
+    expect(response.description).toEqual(makeFakeCategory().description);
+    expect(response.ownerId).toEqual(makeFakeCategory().ownerId);
+  });
+
+  test('Should return InternalServerError throws if findByTitle throw InternalServerError', async () => {
+    const { sut } = makeSut();
+
+    jest.mock('../helpers/mongo-helper');
+
+    jest
+      .spyOn(MongoHelper, 'getCollection')
+      .mockReturnValueOnce(Promise.reject(new InternalServerErrorException()));
+
+    const response = sut.findById(makeFakeCategory().title);
+    await expect(response).rejects.toThrow(InternalServerErrorException);
   });
 });
