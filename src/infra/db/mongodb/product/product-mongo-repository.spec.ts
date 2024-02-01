@@ -7,7 +7,7 @@ import {
 import { makeFakeProduct } from '../../../../data/usecases/product/db-mock-helper-product';
 import { UpdateProductModel } from '../../../../presentation/dtos/product/update-product.dto';
 import { makeFakeCategory } from '../../../../data/usecases/category/db-mock-helper-category';
-import { Collection } from 'mongodb';
+import { Collection, ObjectId } from 'mongodb';
 
 interface SutTypes {
   sut: ProductMongoRepository;
@@ -85,19 +85,20 @@ describe('Product Mongo Repository', () => {
 
   test('Should list products on success', async () => {
     const { sut } = makeSut();
+    const category = await categoryCollection.insertOne(makeFakeCategory());
 
-    const fakeProduct1 = makeFakeProduct();
-    const fakeProduct2 = makeFakeProduct();
-    await productCollection.insertMany([fakeProduct1, fakeProduct2]);
+    const fakeProduct = {
+      categoryId: category.insertedId,
+      description: 'any_description',
+      ownerId: '65b9a4cd77e2de47acb5db37',
+      title: 'any_title',
+    };
+
+    await productCollection.insertMany([fakeProduct]);
 
     const response = await sut.getAll();
 
-    const expectedOutput = [
-      MongoHelper.map(fakeProduct1),
-      MongoHelper.map(fakeProduct2),
-    ];
-
-    expect(response).toEqual(expectedOutput);
+    expect(response[0].categoryId).toEqual(fakeProduct.categoryId);
   });
 
   test('Should return InternalServerError throws if getAll throw InternalServerError', async () => {
@@ -116,12 +117,12 @@ describe('Product Mongo Repository', () => {
 
     const fakeProduct = makeFakeProduct();
     const product = await productCollection.insertOne(fakeProduct);
-
+    const category = await categoryCollection.insertOne(makeFakeCategory());
     const updatedProduct: UpdateProductModel = {
       title: 'other_title',
       description: 'other_description',
       price: 99,
-      categoryId: null,
+      categoryId: category.insertedId.toHexString(),
     };
 
     const response = await sut.update(

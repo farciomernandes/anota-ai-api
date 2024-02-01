@@ -37,11 +37,19 @@ export class ProductModel {
 
   @ApiProperty({
     type: String,
-    example: 'asG-1gmlç2em0-mdasjd',
+    example: '65bb7e942d26288721fdbb32',
   })
   @IsNotEmpty()
   @Expose()
   ownerId: string;
+
+  @ApiProperty({
+    type: String,
+    example: '65bb7e942d26288721fdbb32',
+  })
+  @IsNotEmpty()
+  @Expose()
+  categoryId: string;
 
   @ApiProperty({
     type: CategoryModel,

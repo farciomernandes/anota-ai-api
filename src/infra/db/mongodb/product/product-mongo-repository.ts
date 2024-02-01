@@ -24,14 +24,25 @@ export class ProductMongoRepository
   async create(payload: AddProductModel): Promise<ProductModel> {
     try {
       const productCollection = await MongoHelper.getCollection('products');
+      const categoryCollection = await MongoHelper.getCollection('categories');
 
-      const result = await productCollection.insertOne(payload);
+      const result = await productCollection.insertOne({
+        ...payload,
+        categoryId: new ObjectId(payload.categoryId),
+      });
 
       const product = await productCollection.findOne({
         _id: result.insertedId,
       });
 
-      return MongoHelper.map(product);
+      const category = await categoryCollection.findOne({
+        _id: new ObjectId(payload.categoryId),
+      });
+
+      return MongoHelper.map({
+        ...product,
+        category: MongoHelper.map(category),
+      });
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
@@ -40,10 +51,25 @@ export class ProductMongoRepository
   async getAll(): Promise<ProductModel[]> {
     try {
       const productCollection = await MongoHelper.getCollection('products');
-      const productsCursor = await productCollection.find();
-      const productsArray = await productsCursor.toArray();
+      const productsWithCategories = await productCollection
+        .aggregate([
+          {
+            $lookup: {
+              from: 'categories',
+              localField: 'categoryId',
+              foreignField: '_id',
+              as: 'category',
+            },
+          },
+          {
+            $unwind: '$category',
+          },
+        ])
+        .toArray();
 
-      return productsArray.map((product) => MongoHelper.map(product));
+      console.log('productsWithCategories ', productsWithCategories);
+
+      return productsWithCategories.map((product) => MongoHelper.map(product));
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
@@ -66,25 +92,31 @@ export class ProductMongoRepository
 
   async update(id: string, payload: UpdateProductModel): Promise<ProductModel> {
     try {
+      const body: any = payload;
       const productCollection = await MongoHelper.getCollection('products');
-      const update_product = payload;
-      if (payload.categoryId) {
-        const categoryCollection = await MongoHelper.getCollection(
-          'categories',
-        );
-        const category = await categoryCollection.findOne({
-          _id: new ObjectId(payload.categoryId),
-        });
 
-        update_product.category = MongoHelper.map(category);
+      const categoryCollection = await MongoHelper.getCollection('categories');
+      const category = await categoryCollection.findOne({
+        _id: new ObjectId(payload.categoryId),
+      });
+
+      if (!category) {
+        throw new BadRequestException(
+          `Category ID ${payload.categoryId} not found!`,
+        );
       }
+
+      if (payload.categoryId) {
+        body.categoryId = new ObjectId(payload.categoryId);
+      }
+
       await productCollection.updateOne(
         {
           _id: new ObjectId(id),
         },
         {
           $set: {
-            ...update_product,
+            ...payload,
           },
         },
       );

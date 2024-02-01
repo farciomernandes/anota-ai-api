@@ -27,7 +27,6 @@ export class DbAddProduct implements IDbAddProductRepository {
         `Category with ${payload.categoryId} id not found.`,
       );
     }
-    payload.category = category;
 
     const created = await this.productRepository.create(payload);
 

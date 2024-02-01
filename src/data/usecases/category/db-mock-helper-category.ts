@@ -4,9 +4,9 @@ import { CategoryMongoRepository } from '../../../infra/db/mongodb/category/cate
 
 export const makeFakeCategory = (): CategoryModel => {
   const category = new CategoryModel();
-  category.id = 'any_id';
+  category.id = '65bbfb669aa71009ff86302d';
   category.title = 'any_title';
-  category.ownerId = 'any_ownerId';
+  category.ownerId = '65bbfb669aa71009ff86302d';
   category.description = 'any_description';
   return category;
 };

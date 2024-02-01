@@ -9,6 +9,7 @@ export const makeFakeProduct = (): ProductModel => {
   product.title = 'any_title';
   product.ownerId = '65b9a4cd77e2de47acb5db37';
   product.description = 'any_description';
+  product.categoryId = makeFakeCategory().id;
   product.category = makeFakeCategory();
   return product;
 };

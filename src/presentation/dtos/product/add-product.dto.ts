@@ -46,8 +46,6 @@ export class AddProductModel {
   @Expose()
   categoryId: string;
 
-  category?: CategoryModel;
-
   static toDto(payload: AddProductModel): AddProductModel {
     return plainToInstance(AddProductModel, payload, {
       excludeExtraneousValues: true,
