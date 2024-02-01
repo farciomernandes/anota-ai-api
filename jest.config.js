@@ -8,7 +8,8 @@ module.exports = {
       '!<rootDir>/src/infra/ioc/**',
       '!<rootDir>/src/data/protocols/**',
       '!<rootDir>/src/presentation/**',
-      '!<rootDir>/src/domain/**'
+      '!<rootDir>/src/domain/**',
+      '!<rootDir>/src/infra/enviroments/**'
     ],
     coverageDirectory: "coverage",
     testEnvironment: 'node',

@@ -146,7 +146,7 @@ describe('Product Mongo Repository', () => {
           ),
         ),
       );
-    console.log('SACAA -> ', makeFakeProduct());
+
     const promise = sut.update(makeFakeProduct().id, {
       categoryId: makeFakeProduct().category.id,
       description: makeFakeProduct().description,

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as AWS from 'aws-sdk';
 import { ProxySendMessage } from '../../data/protocols/sns/send-message';
@@ -35,7 +35,7 @@ export class SnsProxy implements ProxySendMessage {
       return data.MessageId;
     } catch (error) {
       console.error('Erro ao enviar a mensagem para o tópico SNS:', error);
-      throw error;
+      throw new InternalServerErrorException(error.message);
     }
   }
 }
