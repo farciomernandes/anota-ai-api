@@ -121,6 +121,7 @@ describe('Product Mongo Repository', () => {
       title: 'other_title',
       description: 'other_description',
       price: 99,
+      categoryId: null,
     };
 
     const response = await sut.update(
@@ -145,7 +146,13 @@ describe('Product Mongo Repository', () => {
           ),
         ),
       );
-    const promise = sut.update(makeFakeProduct().id, makeFakeProduct());
+    console.log('SACAA -> ', makeFakeProduct());
+    const promise = sut.update(makeFakeProduct().id, {
+      categoryId: makeFakeProduct().category.id,
+      description: makeFakeProduct().description,
+      price: makeFakeProduct().price,
+      title: makeFakeProduct().title,
+    });
     await expect(promise).rejects.toThrow(BadRequestException);
   });
 
@@ -156,7 +163,12 @@ describe('Product Mongo Repository', () => {
       .spyOn(MongoHelper, 'getCollection')
       .mockRejectedValueOnce(new InternalServerErrorException());
 
-    const promise = sut.update(makeFakeProduct().id, makeFakeProduct());
+    const promise = sut.update(makeFakeProduct().id, {
+      categoryId: makeFakeProduct().category.id,
+      description: makeFakeProduct().description,
+      price: makeFakeProduct().price,
+      title: makeFakeProduct().title,
+    });
     await expect(promise).rejects.toThrow(InternalServerErrorException);
   });
 
@@ -170,7 +182,12 @@ describe('Product Mongo Repository', () => {
       });
     });
 
-    const promise = sut.update(nonExistentProductId, makeFakeProduct());
+    const promise = sut.update(nonExistentProductId, {
+      categoryId: makeFakeProduct().category.id,
+      description: makeFakeProduct().description,
+      price: makeFakeProduct().price,
+      title: makeFakeProduct().title,
+    });
 
     await expect(promise).rejects.toThrow(BadRequestException);
   });

@@ -85,8 +85,7 @@ export class CategoryMongoRepository
         },
         {
           $set: {
-            title: payload.title,
-            description: payload.description,
+            ...payload,
           },
         },
       );

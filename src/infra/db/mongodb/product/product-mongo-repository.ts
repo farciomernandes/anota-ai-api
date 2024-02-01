@@ -67,15 +67,24 @@ export class ProductMongoRepository
   async update(id: string, payload: UpdateProductModel): Promise<ProductModel> {
     try {
       const productCollection = await MongoHelper.getCollection('products');
+      const update_product = payload;
+      if (payload.categoryId) {
+        const categoryCollection = await MongoHelper.getCollection(
+          'categories',
+        );
+        const category = await categoryCollection.findOne({
+          _id: new ObjectId(payload.categoryId),
+        });
+
+        update_product.category = MongoHelper.map(category);
+      }
       await productCollection.updateOne(
         {
           _id: new ObjectId(id),
         },
         {
           $set: {
-            title: payload.title,
-            description: payload.description,
-            price: payload.price,
+            ...update_product,
           },
         },
       );

@@ -38,7 +38,7 @@ export class AddProductModel {
 
   @ApiProperty({
     type: String,
-    example: 'asG-1gmlç2em0-mdasjd',
+    example: '65b55e7ed161a296b867a4cd',
   })
   @IsNotEmpty()
   @IsString()

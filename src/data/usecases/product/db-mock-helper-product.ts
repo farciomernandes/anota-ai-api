@@ -1,6 +1,7 @@
 import { AddProductModel } from '../../../presentation/dtos/product/add-product.dto';
 import { ProductModel } from '../../../domain/models/product';
 import { ProductMongoRepository } from '../../../infra/db/mongodb/product/product-mongo-repository';
+import { makeFakeCategory } from '../category/db-mock-helper-category';
 
 export const makeFakeProduct = (): ProductModel => {
   const product = new ProductModel();
@@ -8,6 +9,7 @@ export const makeFakeProduct = (): ProductModel => {
   product.title = 'any_title';
   product.ownerId = '65b9a4cd77e2de47acb5db37';
   product.description = 'any_description';
+  product.category = makeFakeCategory();
   return product;
 };
 
