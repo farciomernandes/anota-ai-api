@@ -10,10 +10,12 @@ import { IDbListProductRepository } from '../../data/protocols/db/product/list-p
 import { IDbUpdateProductRepository } from '../../data/protocols/db/product/update-product-respository';
 import { IDbDeleteProductRepository } from '../../data/protocols/db/product/delete-product-respository';
 import { CategoryMongoRepository } from '../db/mongodb/category/category-mongo-repository';
+import { SnsProxy } from '../proxy/sns-proxy';
 
 @Module({
   imports: [],
   providers: [
+    SnsProxy,
     ProductMongoRepository,
     CategoryMongoRepository,
     DbAddProduct,
