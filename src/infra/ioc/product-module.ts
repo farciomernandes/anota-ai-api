@@ -11,6 +11,7 @@ import { IDbUpdateProductRepository } from '../../data/protocols/db/product/upda
 import { IDbDeleteProductRepository } from '../../data/protocols/db/product/delete-product-respository';
 import { CategoryMongoRepository } from '../db/mongodb/category/category-mongo-repository';
 import { SnsProxy } from '../proxy/sns-proxy';
+import { ProxySendMessage } from 'src/data/protocols/sns/send-message';
 
 @Module({
   imports: [],
@@ -22,6 +23,10 @@ import { SnsProxy } from '../proxy/sns-proxy';
     DbListProduct,
     DbUpdateProduct,
     DbDeleteProduct,
+    {
+      provide: ProxySendMessage,
+      useClass: SnsProxy,
+    },
     {
       provide: IDbAddProductRepository,
       useClass: DbAddProduct,

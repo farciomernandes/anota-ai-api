@@ -1,22 +1,29 @@
+import { makeSnsProxyMock } from '../../../infra/proxy/sqs-proxy-mock-helper';
+import { ProxySendMessage } from '../../../data/protocols/sns/send-message';
 import { ProductMongoRepository } from '../../../infra/db/mongodb/product/product-mongo-repository';
 import {
   makeProductMongoRepository,
   makeFakeProduct,
 } from '../product/db-mock-helper-product';
 import { DbUpdateProduct } from './db-update-product';
+import { ConfigService } from '@nestjs/config';
 
 interface SutTypes {
   sut: DbUpdateProduct;
   updateProductRepositoryStub: ProductMongoRepository;
+  snsProxyStub: ProxySendMessage;
 }
 
 const makeSut = (): SutTypes => {
   const updateProductRepositoryStub = makeProductMongoRepository();
-  const sut = new DbUpdateProduct(updateProductRepositoryStub);
+  const snsProxyStub = makeSnsProxyMock({} as ConfigService);
+
+  const sut = new DbUpdateProduct(updateProductRepositoryStub, snsProxyStub);
 
   return {
     sut,
     updateProductRepositoryStub,
+    snsProxyStub,
   };
 };
 

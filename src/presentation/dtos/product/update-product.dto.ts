@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, plainToInstance } from 'class-transformer';
 import { IsOptional } from 'class-validator';
-import { CategoryModel } from 'src/domain/models/category';
+import { CategoryModel } from '../../../domain/models/category';
 
 export class UpdateProductModel {
   @ApiProperty({

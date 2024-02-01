@@ -11,6 +11,7 @@ import { DbUpdateCategory } from '../../data/usecases/category/db-update-categor
 import { IDbUpdateCategoryRepository } from '../../data/protocols/db/category/update-category-respository';
 import { DbDeleteCategory } from '../../data/usecases/category/db-delete-category';
 import { IDbDeleteCategoryRepository } from '../../data/protocols/db/category/delete-category-respository';
+import { SnsProxy } from '../proxy/sns-proxy';
 
 @Module({
   imports: [],

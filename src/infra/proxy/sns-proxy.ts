@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import * as AWS from 'aws-sdk'; // Use '* as' para importar o AWS
+import * as AWS from 'aws-sdk';
+import { ProxySendMessage } from '../../data/protocols/sns/send-message';
 
 @Injectable()
-export class SnsProxy {
+export class SnsProxy implements ProxySendMessage {
   private sns: AWS.SNS;
   private topicArn: string;
 
