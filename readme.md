@@ -32,18 +32,6 @@ Essa API é um projeto para estudo de Clean Architecture, TDD e AWS, SQS, SNS, B
 * Use Cases
 * Continuous Integration
 
-> ## Bibliotecas e Ferramentas
-
-* NPM
-* Typescript
-* Git
-* Docker
-* Jest
-* MongoDb
-* Husky
-* Lint Staged
-* Eslint
-* Standard Javascript Style
 
 > ## Testes
 
