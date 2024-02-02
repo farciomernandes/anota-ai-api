@@ -1,9 +1,11 @@
+import { ConfigService } from '@nestjs/config';
 import { CategoryMongoRepository } from '../../../infra/db/mongodb/category/category-mongo-repository';
 import {
   makeCategoryMongoRepository,
   makeFakeCategory,
 } from './db-mock-helper-category';
 import { DbUpdateCategory } from './db-update-category';
+import { makeSnsProxyMock } from '../../../infra/proxy/sns-proxy-mock-helper';
 
 interface SutTypes {
   sut: DbUpdateCategory;
@@ -12,7 +14,8 @@ interface SutTypes {
 
 const makeSut = (): SutTypes => {
   const updateCategoryRepositoryStub = makeCategoryMongoRepository();
-  const sut = new DbUpdateCategory(updateCategoryRepositoryStub);
+  const snsProxyStub = makeSnsProxyMock({} as ConfigService);
+  const sut = new DbUpdateCategory(updateCategoryRepositoryStub, snsProxyStub);
 
   return {
     sut,

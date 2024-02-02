@@ -93,19 +93,23 @@ export class ProductMongoRepository
       const body: any = payload;
       const productCollection = await MongoHelper.getCollection('products');
 
-      const categoryCollection = await MongoHelper.getCollection('categories');
-      const category = await categoryCollection.findOne({
-        _id: new ObjectId(payload.categoryId),
-      });
-
-      if (!category) {
-        throw new BadRequestException(
-          `Category ID ${payload.categoryId} not found!`,
-        );
-      }
-
       if (payload.categoryId) {
-        body.categoryId = new ObjectId(payload.categoryId);
+        const categoryCollection = await MongoHelper.getCollection(
+          'categories',
+        );
+        const category = await categoryCollection.findOne({
+          _id: new ObjectId(payload.categoryId),
+        });
+
+        if (!category) {
+          throw new BadRequestException(
+            `Category ID ${payload.categoryId} not found!`,
+          );
+        }
+
+        if (payload.categoryId) {
+          body.categoryId = new ObjectId(payload.categoryId);
+        }
       }
 
       await productCollection.updateOne(
