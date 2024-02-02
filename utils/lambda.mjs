@@ -4,7 +4,7 @@ import {
   PutObjectCommand,
 } from '@aws-sdk/client-s3';
 
-const client = new S3Client({ region: 'us-east-1' });
+const client = new S3Client({ region: 'us-east-2' });
 
 export const handler = async (event) => {
   try {
@@ -21,7 +21,7 @@ export const handler = async (event) => {
         const catalog = await getS3Object(bucketName, filename);
         const catalogData = JSON.parse(catalog);
 
-        if (body.type == 'produto') {
+        if (body.type == 'product') {
           updateOrAddItem(catalogData.products, body);
         } else {
           updateOrAddItem(catalogData.categories, body);
