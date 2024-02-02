@@ -67,8 +67,6 @@ export class ProductMongoRepository
         ])
         .toArray();
 
-      console.log('productsWithCategories ', productsWithCategories);
-
       return productsWithCategories.map((product) => MongoHelper.map(product));
     } catch (error) {
       throw new InternalServerErrorException(error.message);
