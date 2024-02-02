@@ -8,9 +8,9 @@ import { AddProductModel } from '../../../presentation/dtos/product/add-product.
 import { BadRequestException } from '@nestjs/common';
 import { makeCategoryMongoRepository } from '../category/db-mock-helper-category';
 import { CategoryMongoRepository } from '../../../infra/db/mongodb/category/category-mongo-repository';
-import { makeSnsProxyMock } from '../../../infra/proxy/sqs-proxy-mock-helper';
 import { ConfigService } from '@nestjs/config';
 import { ProxySendMessage } from '../../../data/protocols/sns/send-message';
+import { makeSnsProxyMock } from '../../../infra/proxy/sns-proxy-mock-helper';
 
 interface SutTypes {
   sut: DbAddProduct;

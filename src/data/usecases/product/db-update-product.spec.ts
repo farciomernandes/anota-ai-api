@@ -1,4 +1,4 @@
-import { makeSnsProxyMock } from '../../../infra/proxy/sqs-proxy-mock-helper';
+import { makeSnsProxyMock } from '../../../infra/proxy/sns-proxy-mock-helper';
 import { ProxySendMessage } from '../../../data/protocols/sns/send-message';
 import { ProductMongoRepository } from '../../../infra/db/mongodb/product/product-mongo-repository';
 import {
