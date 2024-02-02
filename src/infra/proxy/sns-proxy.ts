@@ -23,10 +23,10 @@ export class SnsProxy implements ProxySendMessage {
     this.topicArn = this.configService.get<string>('AWS_SNS_TOPIC_CATALOG_ARN');
   }
 
-  async sendSnsMessage(message: string): Promise<string> {
+  async sendSnsMessage(payload: any, type: string): Promise<string> {
     try {
       const params = {
-        Message: message,
+        Message: JSON.stringify({ ...payload, type }),
         TopicArn: this.topicArn,
       };
 

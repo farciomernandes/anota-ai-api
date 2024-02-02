@@ -30,7 +30,7 @@ export class DbAddProduct implements IDbAddProductRepository {
 
     const created = await this.productRepository.create(payload);
 
-    await this.snsProxy.sendSnsMessage(created.ownerId);
+    await this.snsProxy.sendSnsMessage(created, 'product');
 
     return created;
   }

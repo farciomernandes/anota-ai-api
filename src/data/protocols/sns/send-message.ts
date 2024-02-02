@@ -1,3 +1,3 @@
 export abstract class ProxySendMessage {
-  abstract sendSnsMessage(message: string): Promise<string>;
+  abstract sendSnsMessage(payload: any, type: string): Promise<string>;
 }

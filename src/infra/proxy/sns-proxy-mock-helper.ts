@@ -8,7 +8,7 @@ export class SnsProxyMock implements ProxySendMessage {
     this.topicArn = 'AWS_SNS_TOPIC_CATALOG_ARN';
   }
 
-  async sendSnsMessage(message: string): Promise<string> {
+  async sendSnsMessage(payloa: any, type: string): Promise<string> {
     const fakeData = {
       MessageId: 'fakeMessageId123',
     };

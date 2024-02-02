@@ -13,7 +13,7 @@ export class DbUpdateProduct implements IDbUpdateProductRepository {
   ) {}
   async update(id: string, payload: UpdateProductModel): Promise<ProductModel> {
     const updated = await this.productMongoRepository.update(id, payload);
-    await this.snsProxy.sendSnsMessage(updated.ownerId);
+    await this.snsProxy.sendSnsMessage(updated, 'product');
     return updated;
   }
 }
