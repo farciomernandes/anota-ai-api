@@ -4,7 +4,11 @@
 
 # **Anota-Ai-App**
 
-> ## Princípios Implementados (Ou quase)
+Essa API é um projeto para estudo de Clean Architecture, TDD e AWS. Ele simula um sistema de gerenciamento de catálogo de produtos em um aplicativo de mercado.
+
+<br /><br />
+
+> ## Princípios Implementados
 
 * Single Responsibility Principle (SRP)
 * Open Closed Principle (OCP)
@@ -17,8 +21,6 @@
 > ## Design Patterns
 
 * Factory
-* Decorator
-* Proxy
 * Dependency Injection
 
 > ## Metodologias e Designs
@@ -43,7 +45,7 @@
 * Eslint
 * Standard Javascript Style
 
-> ## Testes quase 100%
+> ## Testes
 
 * Testes Unitários
 * Mocks
