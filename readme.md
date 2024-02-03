@@ -4,7 +4,11 @@
 
 # **Anota-Ai-App**
 
-Essa API é um projeto para estudo de Clean Architecture, TDD e AWS, SQS, SNS, Bucket. Ele simula um sistema de gerenciamento de catálogo de produtos em um aplicativo de mercado.
+Essa API é um projeto simples para estudo de Clean Architecture, TDD e AWS, SQS, SNS, Bucket. Ele simula um sistema de gerenciamento de catálogo de produtos em um aplicativo de mercado.
+
+[![Coverage](./utils/print.png)]
+[![Coverage](./utils/coverage.png)]
+[![Coverage](./utils/swagger.png)]
 
 <br /><br />
 
@@ -41,7 +45,8 @@ Essa API é um projeto para estudo de Clean Architecture, TDD e AWS, SQS, SNS, B
 * Spies
 * Fakes
 
+
 [![Code Style: Standard](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
 [![License: GPLv3](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
 [![Open Source](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://opensource.org/)
-[![Coverage](./utils/coverage.png)](link-para-cobertura-de-testes)
+
