@@ -5,7 +5,7 @@ import { IsNotEmpty } from 'class-validator';
 export class CategoryModel {
   @ApiProperty({
     type: String,
-    example: 'gm56omomasppk64p',
+    example: '65bd52691a0f4c3b57819a4b',
   })
   @IsNotEmpty()
   @Expose()
@@ -28,16 +28,8 @@ export class CategoryModel {
   description: string;
 
   @ApiProperty({
-    type: Number,
-    example: 10,
-  })
-  @IsNotEmpty()
-  @Expose()
-  price: number;
-
-  @ApiProperty({
     type: String,
-    example: 'asG-1gmlç2em0-mdasjd',
+    example: '65bd52691a0f4c3b57819a4b',
   })
   @IsNotEmpty()
   @Expose()

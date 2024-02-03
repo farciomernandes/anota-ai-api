@@ -5,7 +5,7 @@ import { CategoryModel } from './category';
 export class ProductModel {
   @ApiProperty({
     type: String,
-    example: 'dhjgn6ç52l',
+    example: '65bd52691a0f4c3b57819a4b',
   })
   @IsNotEmpty()
   @Expose()

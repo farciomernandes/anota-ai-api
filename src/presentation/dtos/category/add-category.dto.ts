@@ -21,7 +21,7 @@ export class AddCategoryModel {
 
   @ApiProperty({
     type: String,
-    example: 'asG-1gmlç2em0-mdasjd',
+    example: '65bd52691a0f4c3b57819a4b',
   })
   @IsNotEmpty()
   @Expose()

@@ -4,11 +4,12 @@ import {
   Delete,
   Get,
   HttpException,
+  HttpStatus,
   Param,
   Post,
   Put,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { CategoryModel } from '../../../domain/models/category';
 import { AddCategoryModel } from '../../../presentation/dtos/category/add-category.dto';
 import { IDbAddCategoryRepository } from '../../../data/protocols/db/category/add-category-respository';
@@ -16,7 +17,7 @@ import { IDbListCategoryRepository } from '../../../data/protocols/db/category/l
 import { IDbUpdateCategoryRepository } from '../../../data/protocols/db/category/update-category-respository';
 import { IDbDeleteCategoryRepository } from '../../../data/protocols/db/category/delete-category-respository';
 
-@ApiTags('category')
+@ApiTags('Category')
 @Controller('api/v1/category')
 export class CategoryController {
   constructor(
@@ -27,6 +28,16 @@ export class CategoryController {
   ) {}
 
   @Post()
+  @ApiBody({
+    type: AddCategoryModel,
+    description:
+      'Insert item in existing cart or create new cart with this item',
+  })
+  @ApiOkResponse({
+    description: 'Returns categorys.',
+    status: HttpStatus.OK,
+    type: CategoryModel,
+  })
   async create(@Body() payload: AddCategoryModel): Promise<CategoryModel> {
     try {
       return await this.dbAddCategory.create(payload);
@@ -36,6 +47,12 @@ export class CategoryController {
   }
 
   @Get()
+  @ApiOkResponse({
+    description: 'Returns categorys.',
+    status: HttpStatus.OK,
+    type: CategoryModel,
+    isArray: true,
+  })
   async getAll(): Promise<CategoryModel[]> {
     try {
       return await this.dbListCategory.getAll();
@@ -45,6 +62,13 @@ export class CategoryController {
   }
 
   @Put('/:id')
+  @ApiBody({
+    type: AddCategoryModel,
+  })
+  @ApiOkResponse({
+    status: HttpStatus.OK,
+    type: CategoryModel,
+  })
   async update(
     @Param('id') id: string,
     @Body() payload: Omit<AddCategoryModel, 'ownerId'>,
@@ -57,6 +81,10 @@ export class CategoryController {
   }
 
   @Delete('/:id')
+  @ApiOkResponse({
+    status: HttpStatus.OK,
+    type: CategoryModel,
+  })
   async delete(@Param('id') id: string): Promise<CategoryModel> {
     try {
       const response = await this.dbDeleteCategory.delete(id);

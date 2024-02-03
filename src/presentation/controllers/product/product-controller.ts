@@ -4,11 +4,12 @@ import {
   Delete,
   Get,
   HttpException,
+  HttpStatus,
   Param,
   Post,
   Put,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { ProductModel } from '../../../domain/models/product';
 import { AddProductModel } from '../../dtos/product/add-product.dto';
 import { IDbAddProductRepository } from '../../../data/protocols/db/product/add-product-respository';
@@ -28,6 +29,16 @@ export class ProductController {
   ) {}
 
   @Post()
+  @ApiBody({
+    type: AddProductModel,
+    description:
+      'Insert item in existing cart or create new cart with this item',
+  })
+  @ApiOkResponse({
+    description: 'Returns products.',
+    status: HttpStatus.OK,
+    type: ProductModel,
+  })
   async create(@Body() payload: AddProductModel): Promise<ProductModel> {
     try {
       return await this.dbAddProduct.create(payload);
@@ -37,6 +48,11 @@ export class ProductController {
   }
 
   @Get()
+  @ApiOkResponse({
+    description: 'Returns products.',
+    status: HttpStatus.OK,
+    type: ProductModel,
+  })
   async getAll(): Promise<ProductModel[]> {
     try {
       return await this.dbListProduct.getAll();
@@ -46,6 +62,11 @@ export class ProductController {
   }
 
   @Put('/:id')
+  @Post()
+  @ApiOkResponse({
+    status: HttpStatus.OK,
+    type: ProductModel,
+  })
   async update(
     @Param('id') id: string,
     @Body() payload: UpdateProductModel,
@@ -58,6 +79,10 @@ export class ProductController {
   }
 
   @Delete('/:id')
+  @ApiOkResponse({
+    status: HttpStatus.OK,
+    type: ProductModel,
+  })
   async delete(@Param('id') id: string): Promise<ProductModel> {
     try {
       const response = await this.dbDeleteProduct.delete(id);
