@@ -7,7 +7,6 @@
 Essa API é um projeto simples para estudo de Clean Architecture, TDD e AWS, SQS, SNS, Bucket. Ele simula um sistema de gerenciamento de catálogo de produtos em um aplicativo de mercado.
 
 [![Coverage](./utils/print.png)]
-[![Coverage](./utils/coverage.png)]
 [![Coverage](./utils/swagger.png)]
 
 <br /><br />
