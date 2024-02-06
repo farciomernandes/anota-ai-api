@@ -1,5 +1,5 @@
 import { ConfigService } from '@nestjs/config';
-import { ProxySendMessage } from '../../data/protocols/sns/send-message';
+import { ProxySendMessage } from '@/data/protocols/sns/send-message';
 
 export class SnsProxyMock implements ProxySendMessage {
   private topicArn: string;

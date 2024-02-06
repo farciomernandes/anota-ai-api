@@ -1,7 +1,7 @@
 import { Collection } from 'mongodb';
 import { MongoHelper } from '../helpers/mongo-helper';
 import { CategoryMongoRepository } from './category-mongo-repository';
-import { makeFakeCategory } from '../../../../data/usecases/category/db-mock-helper-category';
+import { makeFakeCategory } from '@/data/usecases/category/db-mock-helper-category';
 import {
   BadRequestException,
   InternalServerErrorException,

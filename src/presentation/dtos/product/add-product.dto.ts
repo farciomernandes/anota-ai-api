@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, plainToInstance } from 'class-transformer';
 import { IsNotEmpty, IsString, Matches } from 'class-validator';
-import { CategoryModel } from '../../../domain/models/category';
 
 export class AddProductModel {
   @ApiProperty({

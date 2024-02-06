@@ -1,9 +1,11 @@
+import { makeSnsProxyMock } from '@/infra/proxy/sns-proxy-mock-helper';
 import { ProductMongoRepository } from '../../../infra/db/mongodb/product/product-mongo-repository';
 import {
   makeProductMongoRepository,
   makeFakeProduct,
 } from '../product/db-mock-helper-product';
 import { DbDeleteProduct } from './db-delete-product';
+import { ConfigService } from '@nestjs/config';
 
 interface SutTypes {
   sut: DbDeleteProduct;
@@ -12,7 +14,9 @@ interface SutTypes {
 
 const makeSut = (): SutTypes => {
   const deleteProductRepositoryStub = makeProductMongoRepository();
-  const sut = new DbDeleteProduct(deleteProductRepositoryStub);
+  const snsProxyStub = makeSnsProxyMock({} as ConfigService);
+
+  const sut = new DbDeleteProduct(deleteProductRepositoryStub, snsProxyStub);
 
   return {
     sut,

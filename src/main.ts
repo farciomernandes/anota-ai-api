@@ -1,10 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { MongoHelper } from './infra/db/mongodb/helpers/mongo-helper';
+import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as basicAuth from 'express-basic-auth';
-import { ConfigService } from '@nestjs/config'; // Certifique-se de importar corretamente
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   try {

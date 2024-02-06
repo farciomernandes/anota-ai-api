@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "nest build",
+    "build": "nest build -p ts-config-build.json",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint-staged-custom": "git diff --name-only HEAD^ HEAD | grep 'commit add' | xargs npx lint-staged",
     "start": "nest start",

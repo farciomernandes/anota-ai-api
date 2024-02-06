@@ -1,9 +1,9 @@
-import { AddCategoryModel } from '../../../presentation/dtos/category/add-category.dto';
-import { IDbUpdateCategoryRepository } from '../../protocols/db/category/update-category-respository';
-import { CategoryMongoRepository } from '../../../infra/db/mongodb/category/category-mongo-repository';
+import { AddCategoryModel } from '@/presentation/dtos/category/add-category.dto';
+import { IDbUpdateCategoryRepository } from '@/data/protocols/db/category/update-category-respository';
+import { CategoryMongoRepository } from '@/infra/db/mongodb/category/category-mongo-repository';
 import { Injectable } from '@nestjs/common';
-import { CategoryModel } from '../../../domain/models/category';
-import { ProxySendMessage } from '../../../data/protocols/sns/send-message';
+import { CategoryModel } from '@/domain/models/category';
+import { ProxySendMessage } from '@/data/protocols/sns/send-message';
 
 @Injectable()
 export class DbUpdateCategory implements IDbUpdateCategoryRepository {
