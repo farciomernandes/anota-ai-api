@@ -1,11 +1,11 @@
-import { makeSnsProxyMock } from '@/infra/proxy/sns-proxy-mock-helper';
 import { ProductMongoRepository } from '../../../infra/db/mongodb/product/product-mongo-repository';
 import {
   makeProductMongoRepository,
   makeFakeProduct,
-} from '../product/db-mock-helper-product';
+} from '../../../domain/test/mock/db-mock-helper-product';
 import { DbDeleteProduct } from './db-delete-product';
 import { ConfigService } from '@nestjs/config';
+import { makeSnsProxyMock } from '@/domain/test/mock/sns-proxy-mock-helper';
 
 type SutTypes = {
   sut: DbDeleteProduct;

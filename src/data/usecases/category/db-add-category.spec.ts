@@ -4,11 +4,11 @@ import { DbAddCategory } from './db-add-category';
 import {
   makeCategoryMongoRepository,
   makeFakeCategory,
-} from './db-mock-helper-category';
+} from '../../../domain/test/mock/db-mock-helper-category';
 import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper';
 import { Collection } from 'mongodb';
 import { ConfigService } from '@nestjs/config';
-import { makeSnsProxyMock } from '@/infra/proxy/sns-proxy-mock-helper';
+import { makeSnsProxyMock } from '@/domain/test/mock/sns-proxy-mock-helper';
 
 type SutTypes = {
   sut: DbAddCategory;

@@ -3,14 +3,14 @@ import { DbAddProduct } from './db-add-product';
 import {
   makeFakeProduct,
   makeProductMongoRepository,
-} from './db-mock-helper-product';
+} from '../../../domain/test/mock/db-mock-helper-product';
 import { AddProductModel } from '../../../presentation/dtos/product/add-product.dto';
 import { BadRequestException } from '@nestjs/common';
-import { makeCategoryMongoRepository } from '../category/db-mock-helper-category';
+import { makeCategoryMongoRepository } from '../../../domain/test/mock/db-mock-helper-category';
 import { CategoryMongoRepository } from '../../../infra/db/mongodb/category/category-mongo-repository';
 import { ConfigService } from '@nestjs/config';
 import { ProxySendMessage } from '../../../data/protocols/sns/send-message';
-import { makeSnsProxyMock } from '../../../infra/proxy/sns-proxy-mock-helper';
+import { makeSnsProxyMock } from '../../../domain/test/mock/sns-proxy-mock-helper';
 
 type SutTypes = {
   sut: DbAddProduct;

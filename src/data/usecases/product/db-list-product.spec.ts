@@ -2,7 +2,7 @@ import { ProductMongoRepository } from '../../../infra/db/mongodb/product/produc
 import {
   makeProductMongoRepository,
   makeFakeProduct,
-} from '../product/db-mock-helper-product';
+} from '../../../domain/test/mock/db-mock-helper-product';
 import { DbListProduct } from './db-list-product';
 
 type SutTypes = {

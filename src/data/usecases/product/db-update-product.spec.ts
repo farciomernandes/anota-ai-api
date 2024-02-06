@@ -1,10 +1,10 @@
-import { makeSnsProxyMock } from '../../../infra/proxy/sns-proxy-mock-helper';
+import { makeSnsProxyMock } from '../../../domain/test/mock/sns-proxy-mock-helper';
 import { ProxySendMessage } from '../../../data/protocols/sns/send-message';
 import { ProductMongoRepository } from '../../../infra/db/mongodb/product/product-mongo-repository';
 import {
   makeProductMongoRepository,
   makeFakeProduct,
-} from '../product/db-mock-helper-product';
+} from '../../../domain/test/mock/db-mock-helper-product';
 import { DbUpdateProduct } from './db-update-product';
 import { ConfigService } from '@nestjs/config';
 
