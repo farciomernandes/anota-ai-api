@@ -18,10 +18,13 @@ export const handler = async (event) => {
       try {
         var bucketName = 'anotaai-catalog-market';
         var filename = `${ownerId}-catalog.json`;
+
         const catalog = await getS3Object(bucketName, filename);
         const catalogData = JSON.parse(catalog);
 
-        if (body.type == 'product') {
+        if (body.type === 'remove:product') {
+          removeItem(catalogData.products, body.id);
+        } else if (body.type == 'product') {
           updateOrAddItem(catalogData.products, body);
         } else {
           updateOrAddItem(catalogData.categories, body);
@@ -91,6 +94,13 @@ async function putS3Object(dstBucket, dstKey, content) {
   } catch (error) {
     console.log(error);
     return;
+  }
+}
+
+async function removeItem(catalog, id) {
+  const index = catalog.findIndex((item) => item.id === id);
+  if (index !== -1) {
+    catalog.splice(index, 1);
   }
 }
 
