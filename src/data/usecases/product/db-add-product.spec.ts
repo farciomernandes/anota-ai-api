@@ -1,16 +1,16 @@
-import { ProductMongoRepository } from '../../../infra/db/mongodb/product/product-mongo-repository';
+import { ProductMongoRepository } from '@/infra/db/mongodb/product/product-mongo-repository';
 import { DbAddProduct } from './db-add-product';
 import {
   makeFakeProduct,
   makeProductMongoRepository,
-} from '../../../domain/test/mock/db-mock-helper-product';
-import { AddProductModel } from '../../../presentation/dtos/product/add-product.dto';
+} from '@/domain/test/mock/db-mock-helper-product';
+import { AddProductModel } from '@/presentation/dtos/product/add-product.dto';
 import { BadRequestException } from '@nestjs/common';
-import { makeCategoryMongoRepository } from '../../../domain/test/mock/db-mock-helper-category';
-import { CategoryMongoRepository } from '../../../infra/db/mongodb/category/category-mongo-repository';
+import { makeCategoryMongoRepository } from '@/domain/test/mock/db-mock-helper-category';
+import { CategoryMongoRepository } from '@/infra/db/mongodb/category/category-mongo-repository';
 import { ConfigService } from '@nestjs/config';
-import { ProxySendMessage } from '../../../data/protocols/sns/send-message';
-import { makeSnsProxyMock } from '../../../domain/test/mock/sns-proxy-mock-helper';
+import { ProxySendMessage } from '@/data/protocols/sns/send-message';
+import { makeSnsProxyMock } from '@/domain/test/mock/sns-proxy-mock-helper';
 
 type SutTypes = {
   sut: DbAddProduct;
@@ -78,7 +78,7 @@ describe('DbAddProduct usecase', () => {
 
   test('Should return BadRequestException if categoryId does not exist', async () => {
     const { sut, categoryRepositoryStub } = makeSut();
-    jest.mock('../../../infra/db/mongodb/category/category-mongo-repository');
+    jest.mock('@/infra/db/mongodb/category/category-mongo-repository');
 
     jest
       .spyOn(categoryRepositoryStub, 'findById')

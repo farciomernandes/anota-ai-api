@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { ProductModel } from '@/domain/models/product';
-import { AddProductModel } from '../../dtos/product/add-product.dto';
+import { AddProductModel } from '@/presentation/dtos/product/add-product.dto';
 import { IDbAddProductRepository } from '@/data/protocols/db/product/add-product-respository';
 import { IDbListProductRepository } from '@/data/protocols/db/product/list-product-respository';
 import { IDbUpdateProductRepository } from '@/data/protocols/db/product/update-product-respository';

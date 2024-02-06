@@ -1,11 +1,11 @@
 import { Collection } from 'mongodb';
-import { MongoHelper } from '../helpers/mongo-helper';
 import { CategoryMongoRepository } from './category-mongo-repository';
 import {
   BadRequestException,
   InternalServerErrorException,
 } from '@nestjs/common';
 import { makeFakeCategory } from '@/domain/test/mock/db-mock-helper-category';
+import { MongoHelper } from '../helpers/mongo-helper';
 
 type SutTypes = {
   sut: CategoryMongoRepository;

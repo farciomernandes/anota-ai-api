@@ -1,8 +1,8 @@
-import { ProductMongoRepository } from '../../../infra/db/mongodb/product/product-mongo-repository';
+import { ProductMongoRepository } from '@/infra/db/mongodb/product/product-mongo-repository';
 import {
   makeProductMongoRepository,
   makeFakeProduct,
-} from '../../../domain/test/mock/db-mock-helper-product';
+} from '@/domain/test/mock/db-mock-helper-product';
 import { DbListProduct } from './db-list-product';
 
 type SutTypes = {

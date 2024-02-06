@@ -1,5 +1,3 @@
-// category.module.ts
-
 import { Module } from '@nestjs/common';
 import { DbAddCategory } from '@/data/usecases/category/db-add-category';
 import { CategoryController } from '@/presentation/controllers/category/category-controller';

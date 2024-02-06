@@ -4,7 +4,7 @@ import { DbAddCategory } from './db-add-category';
 import {
   makeCategoryMongoRepository,
   makeFakeCategory,
-} from '../../../domain/test/mock/db-mock-helper-category';
+} from '@/domain/test/mock/db-mock-helper-category';
 import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper';
 import { Collection } from 'mongodb';
 import { ConfigService } from '@nestjs/config';

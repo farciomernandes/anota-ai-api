@@ -3,7 +3,7 @@ import { DbListCategory } from './db-list-category';
 import {
   makeCategoryMongoRepository,
   makeFakeCategory,
-} from '../../../domain/test/mock/db-mock-helper-category';
+} from '@/domain/test/mock/db-mock-helper-category';
 
 type SutTypes = {
   sut: DbListCategory;

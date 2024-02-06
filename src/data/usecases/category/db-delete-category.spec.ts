@@ -2,7 +2,7 @@ import { CategoryMongoRepository } from '@/infra/db/mongodb/category/category-mo
 import {
   makeCategoryMongoRepository,
   makeFakeCategory,
-} from '../../../domain/test/mock/db-mock-helper-category';
+} from '@/domain/test/mock/db-mock-helper-category';
 import { DbDeleteCategory } from './db-delete-category';
 
 type SutTypes = {

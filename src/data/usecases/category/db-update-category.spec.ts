@@ -3,7 +3,7 @@ import { CategoryMongoRepository } from '@/infra/db/mongodb/category/category-mo
 import {
   makeCategoryMongoRepository,
   makeFakeCategory,
-} from '../../../domain/test/mock/db-mock-helper-category';
+} from '@/domain/test/mock/db-mock-helper-category';
 import { DbUpdateCategory } from './db-update-category';
 import { makeSnsProxyMock } from '@/domain/test/mock/sns-proxy-mock-helper';
 

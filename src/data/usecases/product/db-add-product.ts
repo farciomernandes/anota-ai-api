@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { ProductModel } from '../../../domain/models/product';
-import { AddProductModel } from '../../../presentation/dtos/product/add-product.dto';
-import { IDbAddProductRepository } from '../../protocols/db/product/add-product-respository';
-import { ProductMongoRepository } from '../../../infra/db/mongodb/product/product-mongo-repository';
-import { CategoryMongoRepository } from '../../../infra/db/mongodb/category/category-mongo-repository';
-import { ProxySendMessage } from '../../../data/protocols/sns/send-message';
+import { ProductModel } from '@/domain/models/product';
+import { AddProductModel } from '@/presentation/dtos/product/add-product.dto';
+import { IDbAddProductRepository } from '@/data/protocols/db/product/add-product-respository';
+import { ProductMongoRepository } from '@/infra/db/mongodb/product/product-mongo-repository';
+import { CategoryMongoRepository } from '@/infra/db/mongodb/category/category-mongo-repository';
+import { ProxySendMessage } from '@/data/protocols/sns/send-message';
 @Injectable()
 export class DbAddProduct implements IDbAddProductRepository {
   constructor(

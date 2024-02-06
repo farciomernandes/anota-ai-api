@@ -1,8 +1,8 @@
-import { ProductMongoRepository } from '../../../infra/db/mongodb/product/product-mongo-repository';
+import { ProductMongoRepository } from '@/infra/db/mongodb/product/product-mongo-repository';
 import {
   makeProductMongoRepository,
   makeFakeProduct,
-} from '../../../domain/test/mock/db-mock-helper-product';
+} from '@/domain/test/mock/db-mock-helper-product';
 import { DbDeleteProduct } from './db-delete-product';
 import { ConfigService } from '@nestjs/config';
 import { makeSnsProxyMock } from '@/domain/test/mock/sns-proxy-mock-helper';
