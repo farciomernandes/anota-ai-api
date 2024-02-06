@@ -9,9 +9,9 @@ import { UpdateProductModel } from '@/presentation/dtos/product/update-product.d
 import { makeFakeCategory } from '@/data/usecases/category/db-mock-helper-category';
 import { Collection } from 'mongodb';
 
-interface SutTypes {
+type SutTypes = {
   sut: ProductMongoRepository;
-}
+};
 const makeSut = (): SutTypes => {
   const sut = new ProductMongoRepository();
 

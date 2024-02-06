@@ -5,10 +5,10 @@ import {
 } from '../product/db-mock-helper-product';
 import { DbListProduct } from './db-list-product';
 
-interface SutTypes {
+type SutTypes = {
   sut: DbListProduct;
   listProductRepositoryStub: ProductMongoRepository;
-}
+};
 
 const makeSut = (): SutTypes => {
   const listProductRepositoryStub = makeProductMongoRepository();

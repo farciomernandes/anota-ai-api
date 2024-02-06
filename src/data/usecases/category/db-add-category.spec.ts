@@ -10,10 +10,10 @@ import { Collection } from 'mongodb';
 import { ConfigService } from '@nestjs/config';
 import { makeSnsProxyMock } from '@/infra/proxy/sns-proxy-mock-helper';
 
-interface SutTypes {
+type SutTypes = {
   sut: DbAddCategory;
   addCategoryRepositoryStub: CategoryMongoRepository;
-}
+};
 
 const makeSut = (): SutTypes => {
   const addCategoryRepositoryStub = makeCategoryMongoRepository();

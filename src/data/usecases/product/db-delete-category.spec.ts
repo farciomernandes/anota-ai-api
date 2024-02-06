@@ -7,10 +7,10 @@ import {
 import { DbDeleteProduct } from './db-delete-product';
 import { ConfigService } from '@nestjs/config';
 
-interface SutTypes {
+type SutTypes = {
   sut: DbDeleteProduct;
   deleteProductRepositoryStub: ProductMongoRepository;
-}
+};
 
 const makeSut = (): SutTypes => {
   const deleteProductRepositoryStub = makeProductMongoRepository();

@@ -5,10 +5,10 @@ import {
   makeFakeCategory,
 } from './db-mock-helper-category';
 
-interface SutTypes {
+type SutTypes = {
   sut: DbListCategory;
   listCategoryRepositoryStub: CategoryMongoRepository;
-}
+};
 
 const makeSut = (): SutTypes => {
   const listCategoryRepositoryStub = makeCategoryMongoRepository();

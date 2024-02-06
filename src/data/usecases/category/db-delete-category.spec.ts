@@ -5,10 +5,10 @@ import {
 } from './db-mock-helper-category';
 import { DbDeleteCategory } from './db-delete-category';
 
-interface SutTypes {
+type SutTypes = {
   sut: DbDeleteCategory;
   deleteCategoryRepositoryStub: CategoryMongoRepository;
-}
+};
 
 const makeSut = (): SutTypes => {
   const deleteCategoryRepositoryStub = makeCategoryMongoRepository();

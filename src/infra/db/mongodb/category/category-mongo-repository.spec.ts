@@ -7,9 +7,9 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 
-interface SutTypes {
+type SutTypes = {
   sut: CategoryMongoRepository;
-}
+};
 const makeSut = (): SutTypes => {
   const sut = new CategoryMongoRepository();
 

@@ -8,11 +8,11 @@ import {
 import { DbUpdateProduct } from './db-update-product';
 import { ConfigService } from '@nestjs/config';
 
-interface SutTypes {
+type SutTypes = {
   sut: DbUpdateProduct;
   updateProductRepositoryStub: ProductMongoRepository;
   snsProxyStub: ProxySendMessage;
-}
+};
 
 const makeSut = (): SutTypes => {
   const updateProductRepositoryStub = makeProductMongoRepository();

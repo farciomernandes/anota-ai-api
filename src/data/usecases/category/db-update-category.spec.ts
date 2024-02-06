@@ -7,10 +7,10 @@ import {
 import { DbUpdateCategory } from './db-update-category';
 import { makeSnsProxyMock } from '@/infra/proxy/sns-proxy-mock-helper';
 
-interface SutTypes {
+type SutTypes = {
   sut: DbUpdateCategory;
   updateCategoryRepositoryStub: CategoryMongoRepository;
-}
+};
 
 const makeSut = (): SutTypes => {
   const updateCategoryRepositoryStub = makeCategoryMongoRepository();

@@ -12,12 +12,12 @@ import { ConfigService } from '@nestjs/config';
 import { ProxySendMessage } from '../../../data/protocols/sns/send-message';
 import { makeSnsProxyMock } from '../../../infra/proxy/sns-proxy-mock-helper';
 
-interface SutTypes {
+type SutTypes = {
   sut: DbAddProduct;
   addProductRepositoryStub: ProductMongoRepository;
   categoryRepositoryStub: CategoryMongoRepository;
   snsProxyStub: ProxySendMessage;
-}
+};
 
 const makeSut = (): SutTypes => {
   const addProductRepositoryStub = makeProductMongoRepository();
