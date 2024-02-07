@@ -1,11 +1,11 @@
 import { Collection } from 'mongodb';
-import { CategoryMongoRepository } from './category-mongo-repository';
+import { CategoryMongoRepository } from '../../../infra/db/mongodb/category/category-mongo-repository';
 import {
   BadRequestException,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { makeFakeCategory } from '@/domain/test/mock/db-mock-helper-category';
-import { MongoHelper } from '../helpers/mongo-helper';
+import { MongoHelper } from '../../../infra/db/mongodb/helpers/mongo-helper';
+import { makeFakeCategory } from '@/test/mock/db-mock-helper-category';
 
 type SutTypes = {
   sut: CategoryMongoRepository;
@@ -44,7 +44,7 @@ describe('Category Mongo Repository', () => {
   test('Should return InternalServerError throws if create throw InternalServerError', async () => {
     const { sut } = makeSut();
 
-    jest.mock('../helpers/mongo-helper');
+    jest.mock('@/infra/db/mongodb/helpers/mongo-helper');
 
     jest
       .spyOn(MongoHelper, 'getCollection')
@@ -73,7 +73,7 @@ describe('Category Mongo Repository', () => {
   test('Should return InternalServerError throws if getAll throw InternalServerError', async () => {
     const { sut } = makeSut();
 
-    jest.mock('../helpers/mongo-helper');
+    jest.mock('@/infra/db/mongodb/helpers/mongo-helper');
 
     jest
       .spyOn(MongoHelper, 'getCollection')
@@ -121,7 +121,7 @@ describe('Category Mongo Repository', () => {
 
   test('Should return InternalServerError throws if update throws', async () => {
     const { sut } = makeSut();
-    jest.mock('../helpers/mongo-helper');
+    jest.mock('@/infra/db/mongodb/helpers/mongo-helper');
 
     jest
       .spyOn(MongoHelper, 'getCollection')
@@ -177,7 +177,7 @@ describe('Category Mongo Repository', () => {
   test('Should return InternalServerError throws if findByTitle throw InternalServerError', async () => {
     const { sut } = makeSut();
 
-    jest.mock('../helpers/mongo-helper');
+    jest.mock('@/infra/db/mongodb/helpers/mongo-helper');
 
     jest
       .spyOn(MongoHelper, 'getCollection')
@@ -215,7 +215,7 @@ describe('Category Mongo Repository', () => {
   test('Should return InternalServerError throws if findByTitle throw InternalServerError', async () => {
     const { sut } = makeSut();
 
-    jest.mock('../helpers/mongo-helper');
+    jest.mock('@/infra/db/mongodb/helpers/mongo-helper');
 
     jest
       .spyOn(MongoHelper, 'getCollection')

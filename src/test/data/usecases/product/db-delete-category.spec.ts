@@ -1,11 +1,12 @@
 import { ProductMongoRepository } from '@/infra/db/mongodb/product/product-mongo-repository';
-import {
-  makeProductMongoRepository,
-  makeFakeProduct,
-} from '@/domain/test/mock/db-mock-helper-product';
-import { DbDeleteProduct } from './db-delete-product';
+
+import { DbDeleteProduct } from '../../../../data/usecases/product/db-delete-product';
 import { ConfigService } from '@nestjs/config';
-import { makeSnsProxyMock } from '@/domain/test/mock/sns-proxy-mock-helper';
+import { makeSnsProxyMock } from '@/test/mock/sns-proxy-mock-helper';
+import {
+  makeFakeProduct,
+  makeProductMongoRepository,
+} from '@/test/mock/db-mock-helper-product';
 
 type SutTypes = {
   sut: DbDeleteProduct;

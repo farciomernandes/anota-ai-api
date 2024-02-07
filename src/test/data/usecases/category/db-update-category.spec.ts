@@ -1,11 +1,11 @@
 import { ConfigService } from '@nestjs/config';
 import { CategoryMongoRepository } from '@/infra/db/mongodb/category/category-mongo-repository';
+import { DbUpdateCategory } from '../../../../data/usecases/category/db-update-category';
+import { makeSnsProxyMock } from '@/test/mock/sns-proxy-mock-helper';
 import {
   makeCategoryMongoRepository,
   makeFakeCategory,
-} from '@/domain/test/mock/db-mock-helper-category';
-import { DbUpdateCategory } from './db-update-category';
-import { makeSnsProxyMock } from '@/domain/test/mock/sns-proxy-mock-helper';
+} from '@/test/mock/db-mock-helper-category';
 
 type SutTypes = {
   sut: DbUpdateCategory;

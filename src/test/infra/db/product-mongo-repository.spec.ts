@@ -1,13 +1,13 @@
-import { MongoHelper } from '../helpers/mongo-helper';
-import { ProductMongoRepository } from './product-mongo-repository';
+import { MongoHelper } from '../../../infra/db/mongodb/helpers/mongo-helper';
+import { ProductMongoRepository } from '../../../infra/db/mongodb/product/product-mongo-repository';
 import {
   BadRequestException,
   InternalServerErrorException,
 } from '@nestjs/common';
 import { UpdateProductModel } from '@/presentation/dtos/product/update-product.dto';
 import { Collection } from 'mongodb';
-import { makeFakeProduct } from '@/domain/test/mock/db-mock-helper-product';
-import { makeFakeCategory } from '@/domain/test/mock/db-mock-helper-category';
+import { makeFakeCategory } from '@/test/mock/db-mock-helper-category';
+import { makeFakeProduct } from '@/test/mock/db-mock-helper-product';
 
 type SutTypes = {
   sut: ProductMongoRepository;
@@ -74,7 +74,7 @@ describe('Product Mongo Repository', () => {
   test('Should return InternalServerError throws if create throw InternalServerError', async () => {
     const { sut } = makeSut();
 
-    jest.mock('../helpers/mongo-helper');
+    jest.mock('@/infra/db/mongodb/helpers/mongo-helper');
     jest
       .spyOn(MongoHelper, 'getCollection')
       .mockRejectedValueOnce(new InternalServerErrorException());
@@ -103,7 +103,7 @@ describe('Product Mongo Repository', () => {
 
   test('Should return InternalServerError throws if getAll throw InternalServerError', async () => {
     const { sut } = makeSut();
-    jest.mock('../helpers/mongo-helper');
+    jest.mock('@/infra/db/mongodb/helpers/mongo-helper');
     jest
       .spyOn(MongoHelper, 'getCollection')
       .mockRejectedValueOnce(new InternalServerErrorException());
@@ -159,7 +159,7 @@ describe('Product Mongo Repository', () => {
 
   test('Should return InternalServerError throws if update throw InternalServerError', async () => {
     const { sut } = makeSut();
-    jest.mock('../helpers/mongo-helper');
+    jest.mock('@/infra/db/mongodb/helpers/mongo-helper');
     jest
       .spyOn(MongoHelper, 'getCollection')
       .mockRejectedValueOnce(new InternalServerErrorException());
@@ -213,7 +213,7 @@ describe('Product Mongo Repository', () => {
   test('Should return BadRequestException on delete if id not found', async () => {
     const { sut } = makeSut();
 
-    jest.mock('../helpers/mongo-helper');
+    jest.mock('@/infra/db/mongodb/helpers/mongo-helper');
 
     jest.spyOn(MongoHelper, 'map').mockImplementationOnce(() => false);
 
@@ -224,7 +224,7 @@ describe('Product Mongo Repository', () => {
   test('Should return InternalServerError throws if delete throw InternalServerError', async () => {
     const { sut } = makeSut();
 
-    jest.mock('../helpers/mongo-helper');
+    jest.mock('@/infra/db/mongodb/helpers/mongo-helper');
     jest.spyOn(MongoHelper, 'map').mockImplementationOnce(() => {
       throw new InternalServerErrorException();
     });
@@ -256,7 +256,7 @@ describe('Product Mongo Repository', () => {
   test('Should return false if findByTitle not find a procut', async () => {
     const { sut } = makeSut();
 
-    jest.mock('../helpers/mongo-helper');
+    jest.mock('@/infra/db/mongodb/helpers/mongo-helper');
     jest.spyOn(MongoHelper, 'getCollection').mockImplementationOnce(() => {
       throw new InternalServerErrorException();
     });

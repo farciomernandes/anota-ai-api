@@ -1,16 +1,17 @@
 import { ProductMongoRepository } from '@/infra/db/mongodb/product/product-mongo-repository';
-import { DbAddProduct } from './db-add-product';
-import {
-  makeFakeProduct,
-  makeProductMongoRepository,
-} from '@/domain/test/mock/db-mock-helper-product';
+import { DbAddProduct } from '../../../../data/usecases/product/db-add-product';
+
 import { AddProductModel } from '@/presentation/dtos/product/add-product.dto';
 import { BadRequestException } from '@nestjs/common';
-import { makeCategoryMongoRepository } from '@/domain/test/mock/db-mock-helper-category';
 import { CategoryMongoRepository } from '@/infra/db/mongodb/category/category-mongo-repository';
 import { ConfigService } from '@nestjs/config';
 import { ProxySendMessage } from '@/data/protocols/sns/send-message';
-import { makeSnsProxyMock } from '@/domain/test/mock/sns-proxy-mock-helper';
+import { makeSnsProxyMock } from '@/test/mock/sns-proxy-mock-helper';
+import {
+  makeFakeProduct,
+  makeProductMongoRepository,
+} from '@/test/mock/db-mock-helper-product';
+import { makeCategoryMongoRepository } from '@/test/mock/db-mock-helper-category';
 
 type SutTypes = {
   sut: DbAddProduct;

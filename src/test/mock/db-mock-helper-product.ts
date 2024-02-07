@@ -1,7 +1,7 @@
-import { AddProductModel } from '@/presentation/dtos/product/add-product.dto';
 import { ProductModel } from '@/domain/models/product';
-import { ProductMongoRepository } from '@/infra/db/mongodb/product/product-mongo-repository';
 import { makeFakeCategory } from './db-mock-helper-category';
+import { ProductMongoRepository } from '@/infra/db/mongodb/product/product-mongo-repository';
+import { AddProductModel } from '@/presentation/dtos/product/add-product.dto';
 
 export const makeFakeProduct = (): ProductModel => {
   const product = new ProductModel();

@@ -1,9 +1,9 @@
 import { CategoryMongoRepository } from '@/infra/db/mongodb/category/category-mongo-repository';
-import { DbListCategory } from './db-list-category';
+import { DbListCategory } from '../../../../data/usecases/category/db-list-category';
 import {
   makeCategoryMongoRepository,
   makeFakeCategory,
-} from '@/domain/test/mock/db-mock-helper-category';
+} from '@/test/mock/db-mock-helper-category';
 
 type SutTypes = {
   sut: DbListCategory;

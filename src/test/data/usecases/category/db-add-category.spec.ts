@@ -1,14 +1,15 @@
 import { BadRequestException } from '@nestjs/common';
 import { CategoryMongoRepository } from '@/infra/db/mongodb/category/category-mongo-repository';
-import { DbAddCategory } from './db-add-category';
-import {
-  makeCategoryMongoRepository,
-  makeFakeCategory,
-} from '@/domain/test/mock/db-mock-helper-category';
+import { DbAddCategory } from '../../../../data/usecases/category/db-add-category';
+
 import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper';
 import { Collection } from 'mongodb';
 import { ConfigService } from '@nestjs/config';
-import { makeSnsProxyMock } from '@/domain/test/mock/sns-proxy-mock-helper';
+import { makeSnsProxyMock } from '@/test/mock/sns-proxy-mock-helper';
+import {
+  makeCategoryMongoRepository,
+  makeFakeCategory,
+} from '@/test/mock/db-mock-helper-category';
 
 type SutTypes = {
   sut: DbAddCategory;
