@@ -86,6 +86,7 @@ async function putS3Object(dstBucket, dstKey, content) {
       Key: dstKey,
       Body: content,
       ContentType: 'application/json',
+      ACL: 'public-read',
     });
 
     const putResult = await client.send(putCommand);
