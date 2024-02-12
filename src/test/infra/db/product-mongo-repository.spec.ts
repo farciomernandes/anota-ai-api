@@ -30,6 +30,7 @@ describe('Product Mongo Repository', () => {
     ownerId: '65b55e87d161a296b867a4ce',
     price: 10,
     title: 'any_title',
+    file: 'any_file',
   };
 
   beforeAll(async () => {
@@ -54,6 +55,7 @@ describe('Product Mongo Repository', () => {
     const response = await sut.create({
       ...fakeProduct,
       categoryId: category.insertedId.toHexString(),
+      file: undefined,
     });
 
     expect(response.title).toEqual(fakeProduct.title);

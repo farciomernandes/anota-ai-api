@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as AWS from 'aws-sdk';
-import { ProxySendMessage } from '@/data/protocols/sns/send-message';
+import { ProxySendMessage } from '@/data/protocols/aws/sns/send-message';
 
 @Injectable()
 export class SnsProxy implements ProxySendMessage {

@@ -10,7 +10,7 @@ import { IDbUpdateCategoryRepository } from '@/data/protocols/db/category/update
 import { DbDeleteCategory } from '@/data/usecases/category/db-delete-category';
 import { IDbDeleteCategoryRepository } from '@/data/protocols/db/category/delete-category-respository';
 import { SnsProxy } from '../proxy/sns-proxy';
-import { ProxySendMessage } from '@/data/protocols/sns/send-message';
+import { ProxySendMessage } from '@/data/protocols/aws/sns/send-message';
 
 @Module({
   imports: [],

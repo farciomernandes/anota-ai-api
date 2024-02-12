@@ -59,6 +59,15 @@ export class ProductModel {
   @Expose()
   category: CategoryModel;
 
+  @ApiProperty({
+    type: String,
+    example:
+      'https://anota-ai-beta-images.s3.us-east-2.amazonaws.com/image.png',
+  })
+  @IsNotEmpty()
+  @Expose()
+  image_url: string;
+
   static toDto(payload: ProductModel): ProductModel {
     return plainToInstance(ProductModel, payload, {
       excludeExtraneousValues: true,

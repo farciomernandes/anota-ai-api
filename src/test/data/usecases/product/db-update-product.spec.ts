@@ -1,5 +1,5 @@
 import { makeSnsProxyMock } from '@/test/mock/sns-proxy-mock-helper';
-import { ProxySendMessage } from '@/data/protocols/sns/send-message';
+import { ProxySendMessage } from '@/data/protocols/aws/sns/send-message';
 import { ProductMongoRepository } from '@/infra/db/mongodb/product/product-mongo-repository';
 
 import { DbUpdateProduct } from '../../../../data/usecases/product/db-update-product';

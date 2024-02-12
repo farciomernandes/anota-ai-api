@@ -8,6 +8,8 @@ import {
   Param,
   Post,
   Put,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { ProductModel } from '@/domain/models/product';
@@ -17,7 +19,8 @@ import { IDbListProductRepository } from '@/data/protocols/db/product/list-produ
 import { IDbUpdateProductRepository } from '@/data/protocols/db/product/update-product-respository';
 import { IDbDeleteProductRepository } from '@/data/protocols/db/product/delete-product-respository';
 import { UpdateProductModel } from '@/presentation/dtos/product/update-product.dto';
-
+import { FileInterceptor } from '@nestjs/platform-express';
+import multerConfig from '@/infra/config/multer';
 @ApiTags('Product')
 @Controller('api/v1/product')
 export class ProductController {
@@ -39,9 +42,13 @@ export class ProductController {
     status: HttpStatus.OK,
     type: ProductModel,
   })
-  async create(@Body() payload: AddProductModel): Promise<ProductModel> {
+  @UseInterceptors(FileInterceptor('file', multerConfig))
+  async create(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() payload: Omit<AddProductModel, 'file'>,
+  ): Promise<ProductModel> {
     try {
-      return await this.dbAddProduct.create(payload);
+      return await this.dbAddProduct.create(payload, file);
     } catch (error) {
       throw new HttpException(error.response, error.status);
     }

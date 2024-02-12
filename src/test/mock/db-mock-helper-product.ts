@@ -11,6 +11,8 @@ export const makeFakeProduct = (): ProductModel => {
   product.description = 'any_description';
   product.categoryId = makeFakeCategory().id;
   product.category = makeFakeCategory();
+  product.image_url =
+    'https://anota-ai-beta-images.s3.us-east-2.amazonaws.com/image.png';
   return product;
 };
 

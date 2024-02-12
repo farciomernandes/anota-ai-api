@@ -29,7 +29,7 @@ export class AddProductModel {
 
   @ApiProperty({
     type: String,
-    example: 'asG-1gmlç2em0-mdasjd',
+    example: '65b55e7ed161a296b867a4cd',
   })
   @IsNotEmpty()
   @Expose()
@@ -44,6 +44,14 @@ export class AddProductModel {
   @Matches(/^[0-9a-fA-F]{24}$/, { message: `Invalid 'categoryId' format` })
   @Expose()
   categoryId: string;
+
+  @ApiProperty({
+    type: 'string',
+    format: 'binary',
+    description: 'Image file',
+  })
+  @IsNotEmpty()
+  file: any;
 
   static toDto(payload: AddProductModel): AddProductModel {
     return plainToInstance(AddProductModel, payload, {

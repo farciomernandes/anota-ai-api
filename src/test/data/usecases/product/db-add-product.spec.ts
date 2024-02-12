@@ -5,13 +5,14 @@ import { AddProductModel } from '@/presentation/dtos/product/add-product.dto';
 import { BadRequestException } from '@nestjs/common';
 import { CategoryMongoRepository } from '@/infra/db/mongodb/category/category-mongo-repository';
 import { ConfigService } from '@nestjs/config';
-import { ProxySendMessage } from '@/data/protocols/sns/send-message';
+import { ProxySendMessage } from '@/data/protocols/aws/sns/send-message';
 import { makeSnsProxyMock } from '@/test/mock/sns-proxy-mock-helper';
 import {
   makeFakeProduct,
   makeProductMongoRepository,
 } from '@/test/mock/db-mock-helper-product';
 import { makeCategoryMongoRepository } from '@/test/mock/db-mock-helper-category';
+import { makeFile, makeS3UploadImageMock } from '@/test/mock/s3-mock-helper';
 
 type SutTypes = {
   sut: DbAddProduct;
@@ -24,10 +25,13 @@ const makeSut = (): SutTypes => {
   const addProductRepositoryStub = makeProductMongoRepository();
   const categoryRepositoryStub = makeCategoryMongoRepository();
   const snsProxyStub = makeSnsProxyMock({} as ConfigService);
+  const S3Stub = makeS3UploadImageMock();
+
   const sut = new DbAddProduct(
     addProductRepositoryStub,
     categoryRepositoryStub,
     snsProxyStub,
+    S3Stub,
   );
 
   return {
@@ -45,26 +49,27 @@ describe('DbAddProduct usecase', () => {
     ownerId: 'any_ownerId',
     price: 10,
     categoryId: 'category_id',
+    file: 'https://fake-s3-url.com/fake-object',
   };
 
   test('Should call ProductMongoRepository with correct values', async () => {
     const { sut, addProductRepositoryStub } = makeSut();
     const addSpy = jest.spyOn(addProductRepositoryStub, 'create');
-    await sut.create(fakeRequestData);
+    await sut.create(fakeRequestData, makeFile());
     expect(addSpy).toBeCalledWith(fakeRequestData);
   });
 
   test('Should throws if ProductMongoRepository throws', async () => {
     const { sut } = makeSut();
     jest.spyOn(sut, 'create').mockReturnValueOnce(Promise.reject(new Error()));
-    const promise = sut.create(fakeRequestData);
+    const promise = sut.create(fakeRequestData, makeFile());
     await expect(promise).rejects.toThrow();
   });
 
   test('Should return Product on success', async () => {
     const { sut } = makeSut();
 
-    const response = await sut.create(fakeRequestData);
+    const response = await sut.create(fakeRequestData, makeFile());
     expect(response).toEqual(makeFakeProduct());
   });
 
@@ -73,7 +78,7 @@ describe('DbAddProduct usecase', () => {
     jest
       .spyOn(addProductRepositoryStub, 'findByTitle')
       .mockReturnValueOnce(Promise.resolve(true));
-    const promise = sut.create(fakeRequestData);
+    const promise = sut.create(fakeRequestData, makeFile());
     await expect(promise).rejects.toThrowError(BadRequestException);
   });
 
@@ -85,7 +90,7 @@ describe('DbAddProduct usecase', () => {
       .spyOn(categoryRepositoryStub, 'findById')
       .mockImplementationOnce(() => null);
 
-    const promise = sut.create(fakeRequestData);
+    const promise = sut.create(fakeRequestData, makeFile());
     await expect(promise).rejects.toThrowError(BadRequestException);
   });
 });

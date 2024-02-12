@@ -11,11 +11,14 @@ import { IDbUpdateProductRepository } from '@/data/protocols/db/product/update-p
 import { IDbDeleteProductRepository } from '@/data/protocols/db/product/delete-product-respository';
 import { CategoryMongoRepository } from '../db/mongodb/category/category-mongo-repository';
 import { SnsProxy } from '../proxy/sns-proxy';
-import { ProxySendMessage } from '@/data/protocols/sns/send-message';
+import { ProxySendMessage } from '@/data/protocols/aws/sns/send-message';
+import { S3Storage } from '../proxy/s3-storage';
+import { S3UploadImage } from '@/data/protocols/aws/s3/upload-image';
 
 @Module({
   imports: [],
   providers: [
+    S3Storage,
     SnsProxy,
     ProductMongoRepository,
     CategoryMongoRepository,
@@ -23,6 +26,10 @@ import { ProxySendMessage } from '@/data/protocols/sns/send-message';
     DbListProduct,
     DbUpdateProduct,
     DbDeleteProduct,
+    {
+      provide: S3UploadImage,
+      useClass: S3Storage,
+    },
     {
       provide: ProxySendMessage,
       useClass: SnsProxy,

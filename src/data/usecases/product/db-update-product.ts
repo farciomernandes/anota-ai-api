@@ -3,7 +3,7 @@ import { ProductMongoRepository } from '@/infra/db/mongodb/product/product-mongo
 import { Injectable } from '@nestjs/common';
 import { ProductModel } from '@/domain/models/product';
 import { UpdateProductModel } from '@/presentation/dtos/product/update-product.dto';
-import { ProxySendMessage } from '@/data/protocols/sns/send-message';
+import { ProxySendMessage } from '@/data/protocols/aws/sns/send-message';
 
 @Injectable()
 export class DbUpdateProduct implements IDbUpdateProductRepository {

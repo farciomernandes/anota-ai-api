@@ -3,7 +3,7 @@ import { IDbUpdateCategoryRepository } from '@/data/protocols/db/category/update
 import { CategoryMongoRepository } from '@/infra/db/mongodb/category/category-mongo-repository';
 import { Injectable } from '@nestjs/common';
 import { CategoryModel } from '@/domain/models/category';
-import { ProxySendMessage } from '@/data/protocols/sns/send-message';
+import { ProxySendMessage } from '@/data/protocols/aws/sns/send-message';
 
 @Injectable()
 export class DbUpdateCategory implements IDbUpdateCategoryRepository {
