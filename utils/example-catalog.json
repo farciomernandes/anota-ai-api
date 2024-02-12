@@ -1,1 +1,21 @@
-{"products":[{"title":"Produto atualizado","description":"Descricao teste","ownerId":"valid_ownerId","categoryId":"65bd52411a0f4c3b57819a4a","price":999,"id":"65bd52691a0f4c3b57819a4b","type":"product"},{"title":"Produto teste 3","description":"Produto teste 3 com integracao a lambda aws","ownerId":"valid_ownerId","categoryId":"65bd5eaab0504016762da7d0","price":99,"category":{"title":"Categoria teste 1","description":"teste@email.com","ownerId":"valid_ownerId","id":"65bd5eaab0504016762da7d0"},"id":"65bd5ee3b0504016762da7d1","type":"product"}],"categories":[{"title":"Categoria 1 atualizada","description":"Descricao categoria 1 atualizada","ownerId":"valid_ownerId","id":"65bd52411a0f4c3b57819a4a","type":"category"},{"title":"Categoria teste 1","description":"teste@email.com","ownerId":"valid_ownerId","id":"65bd5eaab0504016762da7d0","type":"category"}]}
+{
+    "products": [
+        {
+            "title": "Product teste 1",
+            "description": "Product description form-data 1",
+            "ownerId": "valid_owner",
+            "categoryId": "65ca71b2ed9fa82dde187d3d",
+            "price": "10",
+            "file": "https://anota-ai-beta-images.s3.us-east-2.amazonaws.com/retrovisor-afcfe83b-e9b3-4226-a53f-41936fa44cf9.webp",
+            "category": {
+                "title": "Categoria teste 2",
+                "description": "descricao categoria 2",
+                "ownerId": "valid_ownerId",
+                "id": "65ca71b2ed9fa82dde187d3d"
+            },
+            "id": "65ca71d7ed9fa82dde187d3e",
+            "type": "product"
+        }
+    ],
+    "categories": []
+}

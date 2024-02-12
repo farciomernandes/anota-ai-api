@@ -1,5 +1,5 @@
 import { ProxySendMessage } from '@/data/protocols/aws/sns/send-message';
-import { SnsProxy } from './sns-proxy';
+import { SnsProxy } from '../proxy/sns-proxy';
 import { Module } from '@nestjs/common';
 
 @Module({

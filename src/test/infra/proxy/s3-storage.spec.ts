@@ -1,6 +1,7 @@
 import * as AWS from 'aws-sdk-mock';
 import { makeConfigServiceMock } from '../config/configService';
 import { S3Storage } from '@/infra/proxy/s3-storage';
+import { InternalServerErrorException } from '@nestjs/common';
 
 jest.mock('fs', () => ({
   promises: {
@@ -45,5 +46,24 @@ describe('SnsProxy', () => {
     });
 
     expect(typeof objectUrl).toBe('string');
+  });
+
+  test('Should return InternalServerErrorException if saveFile throws', async () => {
+    const configServiceMock = makeConfigServiceMock();
+    const s3Storage = new S3Storage(configServiceMock);
+
+    const putObjectMock = jest
+      .fn()
+      .mockImplementation(() =>
+        Promise.resolve(new InternalServerErrorException()),
+      );
+
+    jest
+      .spyOn(s3Storage['client'], 'putObject')
+      .mockImplementation(putObjectMock);
+
+    const promise = s3Storage.saveFile(mockedFile as Express.Multer.File);
+
+    await expect(promise).rejects.toThrow(InternalServerErrorException);
   });
 });

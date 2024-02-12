@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { S3Storage } from './s3-storage';
+import { S3Storage } from '../proxy/s3-storage';
 import { S3UploadImage } from '@/data/protocols/aws/s3/upload-image';
 
 @Module({
