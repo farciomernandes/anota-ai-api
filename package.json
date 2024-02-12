@@ -34,6 +34,7 @@
     "@shelf/jest-mongodb": "^4.2.0",
     "@types/aws-sdk": "^2.7.0",
     "aws-sdk": "^2.1548.0",
+    "aws-sdk-mock": "^5.9.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "dotenv": "^16.4.1",

@@ -179,7 +179,7 @@ describe('Product Mongo Repository', () => {
     const { sut } = makeSut();
     const nonExistentProductId = 'non_existent_id';
 
-    jest.spyOn(sut, 'update').mockImplementationOnce(async (id, payload) => {
+    jest.spyOn(sut, 'update').mockImplementationOnce(async (id) => {
       return new Promise((resolve, reject) => {
         reject(new BadRequestException(`Product with ${id} id not found.`));
       });

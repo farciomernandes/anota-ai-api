@@ -3,13 +3,14 @@ module.exports = {
     collectCoverageFrom: [
       '<rootDir>/src/**/*.ts',
       '!<rootDir>/src/main/**',
-      '!<rootDir>/src/*.module.ts',
+      '!<rootDir>/src/**/*.module.ts',
+      '!<rootDir>/src/**/*.helper**',
       '!<rootDir>/src/main.ts',
       '!<rootDir>/src/infra/ioc/**',
       '!<rootDir>/src/data/protocols/**',
       '!<rootDir>/src/presentation/**',
       '!<rootDir>/src/domain/**',
-      '!<rootDir>/src/infra/enviroments/**'
+      '!<rootDir>/src/infra/config/**'
     ],
     coverageDirectory: "coverage",
     testEnvironment: 'node',
