@@ -1,0 +1,65 @@
+import { ConfigService } from '@nestjs/config';
+import * as AWS from 'aws-sdk';
+import { promises as fsPromises } from 'fs';
+import { S3Storage } from '@/infra/proxy/s3-storage';
+
+jest.mock('aws-sdk');
+
+type SutTypes = {
+  sut: S3Storage;
+  configService: ConfigService;
+};
+
+const makeSut = (): SutTypes => {
+  const configService = new ConfigService();
+  const sut = new S3Storage(configService);
+  return {
+    sut,
+    configService,
+  };
+};
+
+describe('S3Storage', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('Should upload file to S3 and return object URL', async () => {
+    const { sut, configService } = makeSut();
+    jest.spyOn(configService, 'get').mockReturnValueOnce('your-bucket-name');
+
+    const putObjectMock = jest.fn().mockReturnThis();
+    const promiseMock = jest.fn().mockResolvedValueOnce({});
+    putObjectMock.mockImplementationOnce(() => ({ promise: promiseMock }));
+    jest
+      .spyOn(AWS.S3.prototype, 'putObject')
+      .mockImplementationOnce(putObjectMock);
+
+    jest
+      .spyOn(fsPromises, 'readFile')
+      .mockResolvedValueOnce(Buffer.from('file-content'));
+
+    jest.spyOn(fsPromises, 'unlink').mockResolvedValueOnce();
+
+    const file = {
+      filename: 'example.txt',
+      mimetype: 'text/plain',
+      path: '/path/to/example.txt',
+    };
+    const result = await sut.saveFile(file as Express.Multer.File);
+
+    expect(configService.get).toHaveBeenCalledWith('AWS_BUCKET');
+    expect(AWS.S3.prototype.putObject).toHaveBeenCalledWith({
+      Bucket: 'your-bucket-name',
+      Key: 'example.txt',
+      ACL: 'public-read',
+      Body: Buffer.from('file-content'),
+      ContentType: 'text/plain',
+    });
+    expect(fsPromises.readFile).toHaveBeenCalledWith('/path/to/example.txt');
+    expect(fsPromises.unlink).toHaveBeenCalledWith('/path/to/example.txt');
+    expect(result).toBe(
+      'https://your-bucket-name.s3.undefined.amazonaws.com/example.txt',
+    );
+  });
+});
