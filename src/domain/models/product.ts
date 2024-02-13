@@ -61,8 +61,7 @@ export class ProductModel {
 
   @ApiProperty({
     type: String,
-    example:
-      'https://anota-ai-beta-images.s3.us-east-2.amazonaws.com/image.png',
+    example: 'https://catalog-beta-images.s3.us-east-2.amazonaws.com/image.png',
   })
   @IsNotEmpty()
   @Expose()
