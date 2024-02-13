@@ -13,14 +13,14 @@ export const makeUserMongoRepository = (): UserMongoRepository => {
       return Promise.resolve(false);
     }
     async create(payload: AddUserModel): Promise<UserModel> {
-      return Promise.resolve({} as UserModel);
+      return Promise.resolve(makeFakeUser());
     }
   }
 
   return new UserRepositoryStub();
 };
 
-export const makeFakeRequest = () => ({
+export const makeUserFakeRequest = () => ({
   name: 'John Doe',
   email: 'any_email@mail.com',
   password: 'any_password',

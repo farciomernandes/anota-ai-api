@@ -3,7 +3,7 @@ import { DbAddUser } from '@/data/usecases/user/db-add-user';
 import { BcryptAdapter } from '@/infra/adapters/bcrypt-adapter';
 import { UserMongoRepository } from '@/infra/db/mongodb/user/user-mongo-repository';
 import {
-  makeFakeRequest,
+  makeUserFakeRequest,
   makeUserMongoRepository,
 } from '@/test/mock/db-mock-helper-user';
 import { BadRequestException } from '@nestjs/common';
@@ -36,9 +36,9 @@ describe('DbAddUser usecase', () => {
       .mockReturnValueOnce(Promise.resolve('hashed_password'));
 
     const repositorySpy = jest.spyOn(addUserRepositoryStub, 'create');
-    await sut.create(makeFakeRequest());
+    await sut.create(makeUserFakeRequest());
     expect(repositorySpy).toHaveBeenCalledWith({
-      ...makeFakeRequest(),
+      ...makeUserFakeRequest(),
       password: 'hashed_password',
     });
   });
@@ -50,7 +50,7 @@ describe('DbAddUser usecase', () => {
       .spyOn(addUserRepositoryStub, 'findByEmail')
       .mockResolvedValueOnce(Promise.resolve(true));
 
-    const promise = sut.create(makeFakeRequest());
+    const promise = sut.create(makeUserFakeRequest());
     await expect(promise).rejects.toThrow(BadRequestException);
   });
 
@@ -58,8 +58,8 @@ describe('DbAddUser usecase', () => {
     const { sut, hasher } = makeSut();
 
     const hasherSpy = jest.spyOn(hasher, 'hash');
-    await sut.create(makeFakeRequest());
-    expect(hasherSpy).toHaveBeenCalledWith(makeFakeRequest().password);
+    await sut.create(makeUserFakeRequest());
+    expect(hasherSpy).toHaveBeenCalledWith(makeUserFakeRequest().password);
   });
 
   test('Should returns throw if usecase throws', async () => {
@@ -69,7 +69,7 @@ describe('DbAddUser usecase', () => {
       .spyOn(sut, 'create')
       .mockResolvedValueOnce(Promise.reject(new Error()));
 
-    const promise = sut.create(makeFakeRequest());
+    const promise = sut.create(makeUserFakeRequest());
     await expect(promise).rejects.toThrow();
   });
 });
