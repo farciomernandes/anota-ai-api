@@ -5,12 +5,15 @@ import { UserMongoRepository } from '../db/mongodb/user/user-mongo-repository';
 import { BcryptAdapter } from '../adapters/bcrypt-adapter';
 import { IHasher } from '@/data/protocols/cryptography/hasher';
 import { UserController } from '@/presentation/controllers/user/user-controller';
+import { DbListUser } from '@/data/usecases/user/db-list-user';
+import { IDbListUserRepository } from '@/data/protocols/db/user/list-category-respository';
 
 @Module({
   imports: [],
   providers: [
     UserMongoRepository,
     DbAddUser,
+    DbListUser,
     BcryptAdapter,
     {
       provide: IHasher,
@@ -20,8 +23,12 @@ import { UserController } from '@/presentation/controllers/user/user-controller'
       provide: IDbAddUserRepository,
       useClass: DbAddUser,
     },
+    {
+      provide: IDbListUserRepository,
+      useClass: DbListUser,
+    },
   ],
   controllers: [UserController],
-  exports: [IDbAddUserRepository],
+  exports: [IDbAddUserRepository, IDbListUserRepository],
 })
 export class UserModule {}

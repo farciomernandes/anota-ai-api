@@ -1,13 +1,30 @@
 import { IDbAddUserRepository } from '@/data/protocols/db/user/add-user-repository';
+import { IDbListUserRepository } from '@/data/protocols/db/user/list-category-respository';
 import { UserModel } from '@/domain/models/user';
 import { AddUserModel } from '@/presentation/dtos/user/add-user.dto';
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import { ApiBody, ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpException,
+  HttpStatus,
+  Post,
+} from '@nestjs/common';
+import {
+  ApiBody,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @ApiTags('User')
 @Controller('api/v1/user')
 export class UserController {
-  constructor(private readonly dbAddUser: IDbAddUserRepository) {}
+  constructor(
+    private readonly dbAddUser: IDbAddUserRepository,
+    private readonly dbListUser: IDbListUserRepository,
+  ) {}
 
   @ApiBody({
     description: 'Create user',
@@ -18,5 +35,20 @@ export class UserController {
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() payload: AddUserModel): Promise<UserModel> {
     return await this.dbAddUser.create(payload);
+  }
+
+  @Get()
+  @ApiOkResponse({
+    description: 'Returns users.',
+    status: HttpStatus.OK,
+    type: UserModel,
+  })
+  async getAll(): Promise<UserModel[]> {
+    try {
+      return await this.dbListUser.getAll();
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(error.response, error.status);
+    }
   }
 }

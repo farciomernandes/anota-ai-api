@@ -4,10 +4,14 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { UserModel } from '@/domain/models/user';
 import { AddUserModel } from '@/presentation/dtos/user/add-user.dto';
 import { IDbFindUserByEmailRepository } from '@/data/protocols/db/user/find-user-by-email-repository';
+import { IDbListUserRepository } from '@/data/protocols/db/user/list-category-respository';
 
 @Injectable()
 export class UserMongoRepository
-  implements IDbAddUserRepository, IDbFindUserByEmailRepository
+  implements
+    IDbAddUserRepository,
+    IDbFindUserByEmailRepository,
+    IDbListUserRepository
 {
   async create(payload: AddUserModel): Promise<UserModel> {
     try {
@@ -19,11 +23,40 @@ export class UserMongoRepository
         _id: result.insertedId,
       });
 
-      userCollection.deleteMany({});
-
       return MongoHelper.map({
         ...user,
       });
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  async getAll(): Promise<UserModel[]> {
+    try {
+      const userCollection = await MongoHelper.getCollection('users');
+
+      const productsAndCategories = await userCollection
+        .aggregate([
+          {
+            $lookup: {
+              from: 'products',
+              localField: 'id',
+              foreignField: 'ownerId',
+              as: 'products',
+            },
+          },
+          {
+            $lookup: {
+              from: 'categories',
+              localField: 'id',
+              foreignField: 'ownerId',
+              as: 'categories',
+            },
+          },
+        ])
+        .toArray();
+
+      return productsAndCategories.map((user) => MongoHelper.map(user));
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
