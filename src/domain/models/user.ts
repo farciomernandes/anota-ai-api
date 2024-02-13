@@ -27,7 +27,7 @@ export class UserModel {
 
   @ApiProperty({
     type: String,
-    example: 'strong_password',
+    example: 'hashed_password',
     description: 'Senha utilizada para fazer login no sistema',
   })
   password: string;
@@ -41,9 +41,9 @@ export class UserModel {
   categories: CategoryModel[];
 
   @ApiProperty({
-    type: CategoryModel,
+    type: ProductModel,
     isArray: true,
-    example: CategoryModel,
+    example: ProductModel,
   })
   @Expose()
   products: ProductModel[];
