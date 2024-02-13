@@ -5,6 +5,7 @@ import { CategoryController } from './presentation/controllers/category/category
 import { ProductModule } from '@/infra/ioc/product-module';
 import { ProductController } from './presentation/controllers/product/product-controller';
 import { setEnvironment } from '@/infra/config/enviroments';
+import { UserModule } from './infra/ioc/user.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { setEnvironment } from '@/infra/config/enviroments';
     }),
     CategoryModule,
     ProductModule,
+    UserModule,
   ],
   controllers: [CategoryController, ProductController],
   providers: [],
