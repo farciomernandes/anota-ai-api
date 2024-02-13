@@ -38,25 +38,59 @@ export class UserMongoRepository
       const productsAndCategories = await userCollection
         .aggregate([
           {
+            $match: {
+              _id: { $exists: true },
+            },
+          },
+          {
             $lookup: {
               from: 'products',
-              localField: 'id',
-              foreignField: 'ownerId',
+              let: { userId: { $toString: '$_id' } },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $eq: ['$ownerId', '$$userId'],
+                    },
+                  },
+                },
+              ],
               as: 'products',
             },
           },
           {
             $lookup: {
               from: 'categories',
-              localField: 'id',
-              foreignField: 'ownerId',
+              let: { userId: { $toString: '$_id' } },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $eq: ['$ownerId', '$$userId'],
+                    },
+                  },
+                },
+              ],
               as: 'categories',
             },
           },
         ])
         .toArray();
 
-      return productsAndCategories.map((user) => MongoHelper.map(user));
+      return productsAndCategories.map((user) => {
+        const mappedItem = MongoHelper.map(user);
+        if (mappedItem.products) {
+          mappedItem.products = mappedItem.products.map((product) =>
+            MongoHelper.map(product),
+          );
+        }
+        if (mappedItem.categories) {
+          mappedItem.categories = mappedItem.categories.map((category) =>
+            MongoHelper.map(category),
+          );
+        }
+        return mappedItem;
+      });
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
