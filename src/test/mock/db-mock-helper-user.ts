@@ -9,8 +9,8 @@ export const makeUserMongoRepository = (): UserMongoRepository => {
     async getAll(): Promise<UserModel[]> {
       return Promise.resolve([makeFakeUser()]);
     }
-    async findByEmail(email: string): Promise<boolean> {
-      return Promise.resolve(false);
+    async findByEmail(email: string): Promise<UserModel> {
+      return Promise.resolve({} as UserModel);
     }
     async create(payload: AddUserModel): Promise<UserModel> {
       return Promise.resolve(makeFakeUser());

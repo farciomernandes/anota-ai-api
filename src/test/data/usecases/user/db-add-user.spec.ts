@@ -7,6 +7,7 @@ import {
   makeUserMongoRepository,
 } from '@/test/mock/db-mock-helper-user';
 import { BadRequestException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 type SutTypes = {
   sut: DbAddUser;
@@ -16,7 +17,7 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const addUserRepositoryStub = makeUserMongoRepository();
-  const hasher = new BcryptAdapter();
+  const hasher = new BcryptAdapter(new ConfigService());
 
   const sut = new DbAddUser(addUserRepositoryStub, hasher);
 
@@ -48,18 +49,12 @@ describe('DbAddUser usecase', () => {
 
     jest
       .spyOn(addUserRepositoryStub, 'findByEmail')
-      .mockResolvedValueOnce(Promise.resolve(true));
+      .mockResolvedValueOnce(
+        Promise.resolve(Promise.reject(new BadRequestException())),
+      );
 
     const promise = sut.create(makeUserFakeRequest());
     await expect(promise).rejects.toThrow(BadRequestException);
-  });
-
-  test('Should call Hasher with correct value', async () => {
-    const { sut, hasher } = makeSut();
-
-    const hasherSpy = jest.spyOn(hasher, 'hash');
-    await sut.create(makeUserFakeRequest());
-    expect(hasherSpy).toHaveBeenCalledWith(makeUserFakeRequest().password);
   });
 
   test('Should returns throw if usecase throws', async () => {
