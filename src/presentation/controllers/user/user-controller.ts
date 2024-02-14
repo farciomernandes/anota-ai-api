@@ -4,6 +4,10 @@ import { IDbListUserRepository } from '@/data/protocols/db/user/list-category-re
 import { UserModel } from '@/domain/models/user';
 import { AddUserModel } from '@/presentation/dtos/user/add-user.dto';
 import {
+  AuthenticatedUserDto,
+  LoginUserDto,
+} from '@/presentation/dtos/user/login-user.dto';
+import {
   Body,
   Controller,
   Get,
@@ -53,6 +57,13 @@ export class UserController {
     }
   }
 
+  @ApiBody({
+    type: LoginUserDto,
+  })
+  @ApiOkResponse({
+    status: HttpStatus.OK,
+    type: AuthenticatedUserDto,
+  })
   @Post('login')
   @HttpCode(HttpStatus.CREATED)
   async login(@Body() payload: any): Promise<any> {
