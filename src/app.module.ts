@@ -6,6 +6,7 @@ import { ProductModule } from '@/infra/ioc/product-module';
 import { ProductController } from './presentation/controllers/product/product-controller';
 import { setEnvironment } from '@/infra/config/enviroments';
 import { UserModule } from './infra/ioc/user.module';
+import { UserController } from './presentation/controllers/user/user-controller';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { UserModule } from './infra/ioc/user.module';
     ProductModule,
     UserModule,
   ],
-  controllers: [CategoryController, ProductController],
+  controllers: [CategoryController, ProductController, UserController],
   providers: [],
 })
 export class AppModule {}

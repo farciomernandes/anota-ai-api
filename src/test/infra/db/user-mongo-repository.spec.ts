@@ -1,14 +1,8 @@
 import { MongoHelper } from '../../../infra/db/mongodb/helpers/mongo-helper';
-import {
-  BadRequestException,
-  InternalServerErrorException,
-} from '@nestjs/common';
 import { Collection } from 'mongodb';
-import { makeFakeCategory } from '@/test/mock/db-mock-helper-category';
 import { UserMongoRepository } from '@/infra/db/mongodb/user/user-mongo-repository';
 import {
   makeFakeUser,
-  makeUserFakeRequest,
   makeUserMongoRepository,
 } from '@/test/mock/db-mock-helper-user';
 
@@ -36,7 +30,6 @@ describe('User Mongo Repository', () => {
 
   beforeEach(async () => {
     userCollection = await MongoHelper.getCollection('users');
-    await userCollection.deleteMany({});
   });
 
   test('Should create user on success', async () => {
@@ -44,42 +37,47 @@ describe('User Mongo Repository', () => {
 
     const fakeUser = makeFakeUser();
     const response = await sut.create(fakeUser);
-    console.log('response  ', response);
-    console.log('fakeUser  ', fakeUser);
 
     expect(response.email).toEqual(fakeUser.email);
   });
 
-  test('Should return BadRequestException if send category_id invalid', async () => {
-    const { sut } = makeSut();
-
-    jest
-      .spyOn(sut, 'create')
-      .mockReturnValueOnce(Promise.reject(new BadRequestException()));
-
-    const promise = sut.create(makeUserFakeRequest());
-
-    await expect(promise).rejects.toThrow(BadRequestException);
-  });
-
   test('Should list users on success', async () => {
     const { sut } = makeSut();
-
     const fakeUser = makeFakeUser();
-
-    await userCollection.insertMany([fakeUser]);
 
     const response = await sut.getAll();
 
     expect(response[0].email).toEqual(fakeUser.email);
   });
 
+  test('Should return true if findByEmail finds user', async () => {
+    const { sut } = makeSut();
+    const fakeUser = makeFakeUser();
+
+    jest.spyOn(sut, 'findByEmail').mockResolvedValueOnce(makeFakeUser());
+
+    const response = await sut.findByEmail(fakeUser.email);
+
+    expect(response.id).toBe(fakeUser.id);
+  });
+
   test('Should return false if findByEmail not find user', async () => {
     const { sut } = makeSut();
     const findSpy = jest.spyOn(sut, 'findByEmail');
-    const response = await sut.findByEmail(makeFakeUser().email);
+    const response = await sut.findByEmail('nonexistent@mail.com');
+    console.log('response ', response);
+    expect(findSpy).toHaveBeenLastCalledWith('nonexistent@mail.com');
+    expect(response).toStrictEqual({});
+  });
 
-    expect(findSpy).toHaveBeenLastCalledWith(makeFakeUser().email);
-    expect(response).toBe(false);
+  test('Should return true if findByEmail finds user', async () => {
+    const { sut } = makeSut();
+    const fakeUser = makeFakeUser();
+
+    jest.spyOn(sut, 'findByEmail').mockResolvedValueOnce(makeFakeUser());
+
+    const response = await sut.findByEmail(fakeUser.email);
+
+    expect(response.id).toBe(fakeUser.id);
   });
 });

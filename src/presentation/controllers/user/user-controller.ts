@@ -1,3 +1,4 @@
+import { IAuthUser } from '@/data/protocols/auth/auth-user';
 import { IDbAddUserRepository } from '@/data/protocols/db/user/add-user-repository';
 import { IDbListUserRepository } from '@/data/protocols/db/user/list-category-respository';
 import { UserModel } from '@/domain/models/user';
@@ -24,6 +25,7 @@ export class UserController {
   constructor(
     private readonly dbAddUser: IDbAddUserRepository,
     private readonly dbListUser: IDbListUserRepository,
+    private readonly authUser: IAuthUser,
   ) {}
 
   @ApiBody({
@@ -47,8 +49,13 @@ export class UserController {
     try {
       return await this.dbListUser.getAll();
     } catch (error) {
-      console.log(error);
       throw new HttpException(error.response, error.status);
     }
+  }
+
+  @Post('login')
+  @HttpCode(HttpStatus.CREATED)
+  async login(@Body() payload: any): Promise<any> {
+    return await this.authUser.auth(payload.email, payload.password);
   }
 }

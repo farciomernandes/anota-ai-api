@@ -15,7 +15,7 @@ export class DbAddUser implements IDbAddUserRepository {
   async create(payload: AddUserModel): Promise<UserModel> {
     const alreadyExists = await this.userRepository.findByEmail(payload.email);
 
-    if (alreadyExists) {
+    if (alreadyExists && alreadyExists.id) {
       throw new BadRequestException(
         `Already exists a user with ${payload.email} email.`,
       );
