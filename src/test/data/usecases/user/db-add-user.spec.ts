@@ -5,6 +5,7 @@ import { UserMongoRepository } from '@/infra/db/mongodb/user/user-mongo-reposito
 import {
   makeUserFakeRequest,
   makeUserMongoRepository,
+  makeFakeUser,
 } from '@/test/mock/db-mock-helper-user';
 import { BadRequestException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -49,12 +50,13 @@ describe('DbAddUser usecase', () => {
 
     jest
       .spyOn(addUserRepositoryStub, 'findByEmail')
-      .mockResolvedValueOnce(
-        Promise.resolve(Promise.reject(new BadRequestException())),
-      );
+      .mockResolvedValueOnce(Promise.resolve(makeFakeUser()));
 
     const promise = sut.create(makeUserFakeRequest());
     await expect(promise).rejects.toThrow(BadRequestException);
+    await expect(promise).rejects.toThrowError(
+      `Already exists a user with ${makeUserFakeRequest().email} email.`,
+    );
   });
 
   test('Should returns throw if usecase throws', async () => {
