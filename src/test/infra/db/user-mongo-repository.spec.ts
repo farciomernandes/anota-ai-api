@@ -86,6 +86,17 @@ describe('User Mongo Repository', () => {
     expect(response).toEqual(expectedOutput);
   });
 
+  test('Should return InternalServerErrorException if list users throws', async () => {
+    const { sut } = makeSut();
+
+    jest.spyOn(MongoHelper, 'getCollection').mockImplementationOnce(() => {
+      throw new InternalServerErrorException();
+    });
+    const promise = sut.getAll();
+
+    await expect(promise).rejects.toThrowError(InternalServerErrorException);
+  });
+
   test('Should return user if findByEmail finds user', async () => {
     const { sut } = makeSut();
     const fakeUser = makeFakeUser();
