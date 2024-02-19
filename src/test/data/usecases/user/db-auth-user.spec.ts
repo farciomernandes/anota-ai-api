@@ -73,4 +73,19 @@ describe('AuthUser usecase', () => {
     expect(response.name).toBe(makeFakeUser().name);
     expect(response.accessToken).toBe('hashed');
   });
+
+  test('Should return null if email is not matching', async () => {
+    const { sut, userRepository } = makeSut();
+
+    jest
+      .spyOn(userRepository, 'findByEmail')
+      .mockReturnValueOnce(Promise.resolve(null));
+
+    const response = await sut.auth(
+      makeFakeUser().email,
+      makeFakeUser().password,
+    );
+
+    expect(response).toBe(null);
+  });
 });
