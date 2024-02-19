@@ -34,7 +34,6 @@ export class SnsProxy implements ProxySendMessage {
 
       return data.MessageId;
     } catch (error) {
-      console.error('Erro ao enviar a mensagem para o tópico SNS:', error);
       throw new InternalServerErrorException(error.message);
     }
   }

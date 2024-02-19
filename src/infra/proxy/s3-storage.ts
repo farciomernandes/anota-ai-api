@@ -39,7 +39,6 @@ export class S3Storage implements S3UploadImage {
 
       return objectUrl;
     } catch (error) {
-      console.error(error);
       throw new InternalServerErrorException('Erro ao salvar o arquivo no S3');
     }
   }

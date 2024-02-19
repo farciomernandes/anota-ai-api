@@ -65,7 +65,6 @@ describe('User Mongo Repository', () => {
     const { sut } = makeSut();
     const findSpy = jest.spyOn(sut, 'findByEmail');
     const response = await sut.findByEmail('nonexistent@mail.com');
-    console.log('response ', response);
     expect(findSpy).toHaveBeenLastCalledWith('nonexistent@mail.com');
     expect(response).toStrictEqual({});
   });
