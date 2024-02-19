@@ -1,5 +1,9 @@
 import { IDbAddUserRepository } from '@/data/protocols/db/user/add-user-repository';
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { UserModel } from '@/domain/models/user';
 import { AddUserModel } from '@/presentation/dtos/user/add-user.dto';
 import { IDbFindUserByEmailRepository } from '@/data/protocols/db/user/find-user-by-email-repository';
@@ -102,8 +106,18 @@ export class UserMongoRepository
       const user = await userCollection.findOne({
         email,
       });
+
+      if (!user) {
+        throw new NotFoundException();
+      }
+
       return MongoHelper.map(user);
     } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(
+          `User with email ${email} does not exists!`,
+        );
+      }
       throw new InternalServerErrorException(error.message);
     }
   }
