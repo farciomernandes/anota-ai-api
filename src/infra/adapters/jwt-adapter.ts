@@ -11,7 +11,7 @@ export class JwtAdapter implements Encrypter, Decrypter {
     this.secret = configService.get<string>('SECRET_KEY');
   }
 
-  async encrypt(payload: string): Promise<string> {
+  async encrypt(payload: any): Promise<string> {
     return jwtSign(payload, this.secret);
   }
 
