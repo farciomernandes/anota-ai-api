@@ -7,7 +7,7 @@
 Essa API é um projeto simples para estudo de Clean Architecture, TDD e AWS, SQS, SNS, Bucket. Ele simula um sistema de gerenciamento de catálogo de produtos em um aplicativo de mercado. As funcionalidades até o momento incluem um CRUD de category e products, onde rotas do tipo DELETE, POST, UPDATE realizam chamadas a aws para salvar e ou atualizar os objetos no bucket.
 Rode npm run test:unit para ver os teste unitários e npm run test:verbose para ver com detalhes! (src/test)
 [![Coverage](./utils/print.png)]
-[![Coverage](./utils/swagger.png)]
+[![Coverage](./utils/tests.png)]
 
 <br /><br />
 
