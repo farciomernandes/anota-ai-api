@@ -1,4 +1,4 @@
-import { S3UploadImage } from '@/data/protocols/aws/s3/upload-image';
+import { S3UploadImage } from '@/core/domain/protocols/aws/s3-upload-image';
 
 export class S3UploadImageMock implements S3UploadImage {
   async saveFile(file: Express.Multer.File): Promise<string> {

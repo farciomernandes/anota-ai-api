@@ -1,5 +1,5 @@
 import { AddCategoryModel } from '@/presentation/dtos/category/add-category.dto';
-import { CategoryModel } from '@/domain/models/category';
+import { CategoryModel } from '@/core/domain/models/category';
 import { CategoryMongoRepository } from '@/infra/db/mongodb/category/category-mongo-repository';
 
 export const makeFakeCategory = (): CategoryModel => {

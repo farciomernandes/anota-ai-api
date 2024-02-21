@@ -1,5 +1,5 @@
-import { IDbAddProductRepository } from '@/data/protocols/db/product/add-product-respository';
-import { ProductModel } from '@/domain/models/product';
+import { IDbAddProductRepository } from '@/core/domain/protocols/db/product/add-product-respository';
+import { ProductModel } from '@/core/domain/models/product';
 import { AddProductModel } from '@/presentation/dtos/product/add-product.dto';
 import { MongoHelper } from '../helpers/mongo-helper';
 import {
@@ -8,9 +8,9 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
-import { IDbListProductRepository } from '@/data/protocols/db/product/list-product-respository';
-import { IDbUpdateProductRepository } from '@/data/protocols/db/product/update-product-respository';
-import { IDbDeleteProductRepository } from '@/data/protocols/db/product/delete-product-respository';
+import { IDbListProductRepository } from '@/core/domain/protocols/db/product/list-product-respository';
+import { IDbUpdateProductRepository } from '@/core/domain/protocols/db/product/update-product-respository';
+import { IDbDeleteProductRepository } from '@/core/domain/protocols/db/product/delete-product-respository';
 import { UpdateProductModel } from '@/presentation/dtos/product/update-product.dto';
 
 @Injectable()

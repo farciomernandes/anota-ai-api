@@ -10,13 +10,14 @@ import { CategoryController } from './presentation/controllers/category/category
 import { ProductModule } from '@/infra/ioc/product-module';
 import { ProductController } from './presentation/controllers/product/product-controller';
 import { setEnvironment } from '@/infra/config/enviroments';
-import { UserModule } from './infra/ioc/user.module';
 import { UserController } from './presentation/controllers/user/user-controller';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './infra/guards/roles.guard';
 import { AuthMiddleware } from './infra/middleware/auth.middleware';
-import { Decrypter } from './data/protocols/cryptography/decrypter';
 import { JwtAdapter } from './infra/adapters/jwt-adapter';
+import { Decrypter } from './core/domain/protocols/cryptography/decrypter';
+import { UserModule } from './infra/ioc/user.module';
+import { AuthModule } from './infra/ioc/auth.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { JwtAdapter } from './infra/adapters/jwt-adapter';
     CategoryModule,
     ProductModule,
     UserModule,
+    AuthModule,
   ],
   controllers: [CategoryController, ProductController, UserController],
   providers: [

@@ -2,17 +2,16 @@ module.exports = {
     roots: ['<rootDir>/src'],
     collectCoverageFrom: [
       '<rootDir>/src/**/*.ts',
-      '!<rootDir>/src/main/**',
-      '!<rootDir>/src/shared/**',
       '!<rootDir>/src/**/*.module.ts',
       '!<rootDir>/src/**/*.helper**',
       '!<rootDir>/src/main.ts',
       '!<rootDir>/src/infra/ioc/**',
-      '!<rootDir>/src/data/protocols/**',
-      '!<rootDir>/src/presentation/**',
-      '!<rootDir>/src/domain/**',
+      '!<rootDir>/src/core/application/protocols/**',
+      '!<rootDir>/src/core/domain/**',
       '!<rootDir>/src/infra/config/**',
-      '!<rootDir>/src/infra/middleware/**'
+      '!<rootDir>/src/infra/middleware/**',
+      '!<rootDir>/src/presentation/**',
+      '!<rootDir>/src/shared/**',
 
     ],
     coverageDirectory: "coverage",

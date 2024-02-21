@@ -1,5 +1,5 @@
+import { ProxySendMessage } from '@/core/domain/protocols/aws/sns-send-message';
 import { ConfigService } from '@nestjs/config';
-import { ProxySendMessage } from '@/data/protocols/aws/sns/send-message';
 
 export class SnsProxyMock implements ProxySendMessage {
   private topicArn: string;

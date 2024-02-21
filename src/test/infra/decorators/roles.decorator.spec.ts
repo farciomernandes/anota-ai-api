@@ -1,4 +1,4 @@
-import { ROLES_KEY, Roles } from '@/infra/decorators/roles.decorator';
+import { ROLES_KEY, Roles } from '@/shared/decorators/roles.decorator';
 import { SetMetadata } from '@nestjs/common';
 
 describe('Roles Decorator', () => {

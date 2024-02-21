@@ -1,5 +1,5 @@
-import { MongoHelper } from '../../../infra/db/mongodb/helpers/mongo-helper';
-import { ProductMongoRepository } from '../../../infra/db/mongodb/product/product-mongo-repository';
+import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper';
+import { ProductMongoRepository } from '@/infra/db/mongodb/product/product-mongo-repository';
 import {
   BadRequestException,
   InternalServerErrorException,

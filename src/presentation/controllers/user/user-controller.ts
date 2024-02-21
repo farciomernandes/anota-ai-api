@@ -1,14 +1,9 @@
-import { IAuthUser } from '@/data/protocols/auth/auth-user';
-import { IDbAddUserRepository } from '@/data/protocols/db/user/add-user-repository';
-import { IDbListUserRepository } from '@/data/protocols/db/user/list-category-respository';
-import { UserModel } from '@/domain/models/user';
-import { Roles } from '@/infra/decorators/roles.decorator';
+import { IDbAddUserRepository } from '@/core/domain/protocols/db/user/add-user-repository';
+import { IDbListUserRepository } from '@/core/domain/protocols/db/user/list-category-respository';
+import { UserModel } from '@/core/domain/models/user';
+import { Roles } from '@/shared/decorators/roles.decorator';
 import { RolesGuard } from '@/infra/guards/roles.guard';
 import { AddUserModel } from '@/presentation/dtos/user/add-user.dto';
-import {
-  AuthenticatedUserDto,
-  LoginUserDto,
-} from '@/presentation/dtos/user/login-user.dto';
 import {
   Body,
   Controller,
@@ -32,7 +27,6 @@ export class UserController {
   constructor(
     private readonly dbAddUser: IDbAddUserRepository,
     private readonly dbListUser: IDbListUserRepository,
-    private readonly authUser: IAuthUser,
   ) {}
 
   @ApiBody({
@@ -60,18 +54,5 @@ export class UserController {
     } catch (error) {
       throw new HttpException(error.response, error.status);
     }
-  }
-
-  @ApiBody({
-    type: LoginUserDto,
-  })
-  @ApiOkResponse({
-    status: HttpStatus.OK,
-    type: AuthenticatedUserDto,
-  })
-  @Post('login')
-  @HttpCode(HttpStatus.CREATED)
-  async login(@Body() payload: any): Promise<any> {
-    return await this.authUser.auth(payload.email, payload.password);
   }
 }

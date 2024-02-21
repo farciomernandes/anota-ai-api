@@ -1,5 +1,5 @@
-import { Decrypter } from '@/data/protocols/cryptography/decrypter';
-import { Encrypter } from '@/data/protocols/cryptography/encrypter';
+import { Decrypter } from '@/core/domain/protocols/cryptography/decrypter';
+import { Encrypter } from '@/core/domain/protocols/cryptography/encrypter';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { sign as jwtSign, verify as jwtVerify } from 'jsonwebtoken';

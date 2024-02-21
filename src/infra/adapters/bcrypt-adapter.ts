@@ -1,5 +1,5 @@
-import { HashComparer } from '@/data/protocols/cryptography/hash-compare';
-import { IHasher } from '@/data/protocols/cryptography/hasher';
+import { HashComparer } from '@/core/domain/protocols/cryptography/hash-compare';
+import { IHasher } from '@/core/domain/protocols/cryptography/hasher';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';

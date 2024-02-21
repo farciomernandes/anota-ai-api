@@ -1,16 +1,16 @@
 import { Module } from '@nestjs/common';
-import { DbAddCategory } from '@/data/usecases/category/db-add-category';
+import { DbAddCategory } from '@/core/application/category/db-add-category';
 import { CategoryController } from '@/presentation/controllers/category/category-controller';
-import { IDbAddCategoryRepository } from '@/data/protocols/db/category/add-category-respository';
+import { IDbAddCategoryRepository } from '@/core/domain/protocols/db/category/add-category-respository';
 import { CategoryMongoRepository } from '../db/mongodb/category/category-mongo-repository';
-import { DbListCategory } from '@/data/usecases/category/db-list-category';
-import { IDbListCategoryRepository } from '@/data/protocols/db/category/list-category-respository';
-import { DbUpdateCategory } from '@/data/usecases/category/db-update-category';
-import { IDbUpdateCategoryRepository } from '@/data/protocols/db/category/update-category-respository';
-import { DbDeleteCategory } from '@/data/usecases/category/db-delete-category';
-import { IDbDeleteCategoryRepository } from '@/data/protocols/db/category/delete-category-respository';
+import { DbListCategory } from '@/core/application/category/db-list-category';
+import { IDbListCategoryRepository } from '@/core/domain/protocols/db/category/list-category-respository';
+import { DbUpdateCategory } from '@/core/application/category/db-update-category';
+import { IDbUpdateCategoryRepository } from '@/core/domain/protocols/db/category/update-category-respository';
+import { DbDeleteCategory } from '@/core/application/category/db-delete-category';
+import { IDbDeleteCategoryRepository } from '@/core/domain/protocols/db/category/delete-category-respository';
 import { SnsProxy } from '../proxy/sns-proxy';
-import { ProxySendMessage } from '@/data/protocols/aws/sns/send-message';
+import { ProxySendMessage } from '@/core/domain/protocols/aws/sns-send-message';
 
 @Module({
   imports: [],

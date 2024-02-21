@@ -1,5 +1,5 @@
 import { UserMongoRepository } from '@/infra/db/mongodb/user/user-mongo-repository';
-import { UserModel } from '@/domain/models/user';
+import { UserModel } from '@/core/domain/models/user';
 import { AddUserModel } from '@/presentation/dtos/user/add-user.dto';
 import { makeFakeProduct } from './db-mock-helper-product';
 import { makeFakeCategory } from './db-mock-helper-category';

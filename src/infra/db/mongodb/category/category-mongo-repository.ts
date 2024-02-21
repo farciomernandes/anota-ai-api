@@ -1,6 +1,6 @@
-import { IDbListCategoryRepository } from '@/data/protocols/db/category/list-category-respository';
-import { IDbAddCategoryRepository } from '@/data/protocols/db/category/add-category-respository';
-import { CategoryModel } from '@/domain/models/category';
+import { IDbListCategoryRepository } from '@/core/domain/protocols/db/category/list-category-respository';
+import { IDbAddCategoryRepository } from '@/core/domain/protocols/db/category/add-category-respository';
+import { CategoryModel } from '@/core/domain/models/category';
 import { AddCategoryModel } from '@/presentation/dtos/category/add-category.dto';
 import { MongoHelper } from '../helpers/mongo-helper';
 import {
@@ -8,9 +8,9 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { IDbUpdateCategoryRepository } from '@/data/protocols/db/category/update-category-respository';
+import { IDbUpdateCategoryRepository } from '@/core/domain/protocols/db/category/update-category-respository';
 import { ObjectId } from 'mongodb';
-import { IDbDeleteCategoryRepository } from '@/data/protocols/db/category/delete-category-respository';
+import { IDbDeleteCategoryRepository } from '@/core/domain/protocols/db/category/delete-category-respository';
 
 @Injectable()
 export class CategoryMongoRepository

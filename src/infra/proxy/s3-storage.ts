@@ -2,7 +2,7 @@ import { ConfigService } from '@nestjs/config';
 import * as AWS from 'aws-sdk';
 import { promises as fsPromises } from 'fs';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { S3UploadImage } from '@/data/protocols/aws/s3/upload-image';
+import { S3UploadImage } from '@/core/domain/protocols/aws/s3-upload-image';
 
 @Injectable()
 export class S3Storage implements S3UploadImage {

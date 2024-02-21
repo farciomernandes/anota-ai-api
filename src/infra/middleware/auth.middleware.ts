@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-namespace */
-import { Decrypter } from '@/data/protocols/cryptography/decrypter';
-import { AuthUser } from '@/data/usecases/user/auth';
+import { AuthUser } from '@/core/application/auth/auth';
+import { Decrypter } from '@/core/domain/protocols/cryptography/decrypter';
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 
@@ -25,6 +25,7 @@ export class AuthMiddleware implements NestMiddleware {
 
         req.user = user;
       } catch (error) {
+        // add throw unauthorized
         console.error(error.message);
       }
     }

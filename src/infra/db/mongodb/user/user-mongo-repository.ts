@@ -1,13 +1,13 @@
-import { IDbAddUserRepository } from '@/data/protocols/db/user/add-user-repository';
+import { IDbAddUserRepository } from '@/core/domain/protocols/db/user/add-user-repository';
 import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { UserModel } from '@/domain/models/user';
+import { UserModel } from '@/core/domain/models/user';
 import { AddUserModel } from '@/presentation/dtos/user/add-user.dto';
-import { IDbFindUserByEmailRepository } from '@/data/protocols/db/user/find-user-by-email-repository';
-import { IDbListUserRepository } from '@/data/protocols/db/user/list-category-respository';
+import { IDbFindUserByEmailRepository } from '@/core/domain/protocols/db/user/find-user-by-email-repository';
+import { IDbListUserRepository } from '@/core/domain/protocols/db/user/list-category-respository';
 import { MongoHelper } from '../helpers/mongo-helper';
 
 @Injectable()

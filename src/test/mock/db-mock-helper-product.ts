@@ -1,4 +1,4 @@
-import { ProductModel } from '@/domain/models/product';
+import { ProductModel } from '@/core/domain/models/product';
 import { makeFakeCategory } from './db-mock-helper-category';
 import { ProductMongoRepository } from '@/infra/db/mongodb/product/product-mongo-repository';
 import { AddProductModel } from '@/presentation/dtos/product/add-product.dto';

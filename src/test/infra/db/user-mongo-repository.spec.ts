@@ -1,4 +1,4 @@
-import { MongoHelper } from '../../../infra/db/mongodb/helpers/mongo-helper';
+import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper';
 import { Collection } from 'mongodb';
 import { UserMongoRepository } from '@/infra/db/mongodb/user/user-mongo-repository';
 import { makeFakeUser } from '@/test/mock/db-mock-helper-user';
