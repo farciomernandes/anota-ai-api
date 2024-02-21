@@ -141,37 +141,11 @@ describe('Category Mongo Repository', () => {
     expect(response.id).toEqual(category.insertedId);
   });
 
-  test('Should return BadRequestExepction on deleted if invalid id', async () => {
-    const { sut } = makeSut();
-    jest
-      .spyOn(sut, 'delete')
-      .mockReturnValueOnce(
-        Promise.reject(new BadRequestException('Invalid category ID format.')),
-      );
-    const promise = sut.delete(makeFakeCategory().id);
-    await expect(promise).rejects.toThrow(BadRequestException);
-  });
-
-  test('Should return InternalServerError throws in delete if send invalid_id in delete', async () => {
+  test('Should return BadRequestException throws in delete if send invalid_id', async () => {
     const { sut } = makeSut();
 
     const response = sut.delete('invalid_id');
     await expect(response).rejects.toThrow(BadRequestException);
-  });
-
-  test('Should return BadRequestExepction if id not found ', async () => {
-    const { sut } = makeSut();
-    jest
-      .spyOn(sut, 'delete')
-      .mockReturnValueOnce(
-        Promise.reject(
-          new BadRequestException(
-            `Category with id ${makeFakeCategory().id} not found.`,
-          ),
-        ),
-      );
-    const promise = sut.delete(makeFakeCategory().id);
-    await expect(promise).rejects.toThrow(BadRequestException);
   });
 
   test('Should return InternalServerError throws if findByTitle throw InternalServerError', async () => {
