@@ -20,7 +20,10 @@ export class AuthUser {
       const isValid = await this.hashComparer.compare(password, user.password);
 
       if (isValid) {
-        const accessToken = await this.encrypter.encrypt(user.id);
+        const accessToken = await this.encrypter.encrypt({
+          id: user.id,
+          roles: ['ADMIN'],
+        });
 
         return {
           accessToken,

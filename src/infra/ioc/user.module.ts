@@ -13,6 +13,7 @@ import { Decrypter } from '@/data/protocols/cryptography/decrypter';
 import { AuthUser } from '@/data/usecases/user/auth';
 import { IAuthUser } from '@/data/protocols/auth/auth-user';
 import { HashComparer } from '@/data/protocols/cryptography/hash-compare';
+import { AuthMiddleware } from '../middleware/auth.middleware';
 
 @Module({
   imports: [],
@@ -23,6 +24,7 @@ import { HashComparer } from '@/data/protocols/cryptography/hash-compare';
     BcryptAdapter,
     JwtAdapter,
     AuthUser,
+    AuthMiddleware,
     {
       provide: IAuthUser,
       useClass: AuthUser,

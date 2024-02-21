@@ -1,3 +1,3 @@
 export abstract class Decrypter {
-  abstract decrypt: (ciphertext: string) => Promise<string>;
+  abstract decrypt: (ciphertext: string) => Promise<any>;
 }

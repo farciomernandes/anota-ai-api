@@ -1,3 +1,3 @@
 export abstract class Encrypter {
-  abstract encrypt(value: string): Promise<string>;
+  abstract encrypt(payload: any): Promise<string>;
 }

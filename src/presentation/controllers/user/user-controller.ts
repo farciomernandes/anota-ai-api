@@ -2,6 +2,8 @@ import { IAuthUser } from '@/data/protocols/auth/auth-user';
 import { IDbAddUserRepository } from '@/data/protocols/db/user/add-user-repository';
 import { IDbListUserRepository } from '@/data/protocols/db/user/list-category-respository';
 import { UserModel } from '@/domain/models/user';
+import { Roles } from '@/infra/decorators/roles.decorator';
+import { RolesGuard } from '@/infra/guards/roles.guard';
 import { AddUserModel } from '@/presentation/dtos/user/add-user.dto';
 import {
   AuthenticatedUserDto,
@@ -15,6 +17,7 @@ import {
   HttpException,
   HttpStatus,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -49,6 +52,8 @@ export class UserController {
     status: HttpStatus.OK,
     type: UserModel,
   })
+  @Roles('ADMIN')
+  @UseGuards(RolesGuard)
   async getAll(): Promise<UserModel[]> {
     try {
       return await this.dbListUser.getAll();
