@@ -8,8 +8,9 @@ import { MongoHelper } from '../helpers/mongo-helper';
 import { IDbAddStoreRepository } from '@/core/domain/protocols/db/store/add-store-repository';
 import { IDbFindStoreByEmailRepository } from '@/core/domain/protocols/db/store/find-store-by-email-repository';
 import { IDbListStoreRepository } from '@/core/domain/protocols/db/store/list-store-respository';
-import { AddStoreModel } from '@/presentation/dtos/store/add-store.dto';
 import { ObjectId } from 'mongodb';
+import { CreatedStore } from '@/presentation/dtos/store/created-store';
+import { AddStoreModel } from '@/presentation/dtos/role/add-role.dto';
 
 @Injectable()
 export class StoreMongoRepository
@@ -18,7 +19,7 @@ export class StoreMongoRepository
     IDbFindStoreByEmailRepository,
     IDbListStoreRepository
 {
-  async create(payload: AddStoreModel): Promise<StoreModel> {
+  async create(payload: AddStoreModel): Promise<CreatedStore> {
     try {
       const storeCollection = await MongoHelper.getCollection('stores');
       const roleCollection = await MongoHelper.getCollection('roles');

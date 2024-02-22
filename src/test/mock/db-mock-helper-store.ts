@@ -1,10 +1,11 @@
 import { StoreModel } from '@/core/domain/models/store';
 import { makeFakeProduct } from './db-mock-helper-product';
 import { makeFakeCategory } from './db-mock-helper-category';
-import { AddStoreModel } from '@/presentation/dtos/store/add-store.dto';
 import { StoreMongoRepository } from '@/infra/db/mongodb/store/store-mongo-repository';
 import { RolesEnum } from '@/shared/enums/roles.enum';
 import { RoleModel } from '@/core/domain/models/role';
+import { AddStoreModel } from '@/presentation/dtos/role/add-role.dto';
+import { CreatedStore } from '@/presentation/dtos/store/created-store';
 
 export const makeStoreMongoRepository = (): StoreMongoRepository => {
   class StoreRepositoryStub implements StoreMongoRepository {
@@ -14,7 +15,7 @@ export const makeStoreMongoRepository = (): StoreMongoRepository => {
     async findByEmail(email: string): Promise<StoreModel> {
       return Promise.resolve({} as StoreModel);
     }
-    async create(payload: AddStoreModel): Promise<StoreModel> {
+    async create(payload: AddStoreModel): Promise<CreatedStore> {
       return Promise.resolve(makeFakeStore());
     }
   }

@@ -1,10 +1,8 @@
+import { RoleModel } from '@/core/domain/models/role';
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, plainToInstance } from 'class-transformer';
-import { CategoryModel } from './category';
-import { ProductModel } from './product';
-import { RoleModel } from './role';
 
-export class StoreModel {
+export class CreatedStore {
   @ApiProperty({
     type: String,
     example: '65bd52691a0f4c3b57819a4b',
@@ -40,24 +38,8 @@ export class StoreModel {
   @Expose()
   role: RoleModel;
 
-  @ApiProperty({
-    type: CategoryModel,
-    example: CategoryModel,
-    isArray: true,
-  })
-  @Expose()
-  categories: CategoryModel[];
-
-  @ApiProperty({
-    type: ProductModel,
-    isArray: true,
-    example: ProductModel,
-  })
-  @Expose()
-  products: ProductModel[];
-
-  static toDto(payload: StoreModel): StoreModel {
-    return plainToInstance(StoreModel, payload, {
+  static toDto(payload: CreatedStore): CreatedStore {
+    return plainToInstance(CreatedStore, payload, {
       excludeExtraneousValues: true,
     });
   }

@@ -1,6 +1,6 @@
-import { StoreModel } from '@/core/domain/models/store';
-import { AddStoreModel } from '@/presentation/dtos/store/add-store.dto';
+import { AddStoreModel } from '@/presentation/dtos/role/add-role.dto';
+import { CreatedStore } from '@/presentation/dtos/store/created-store';
 
 export abstract class IDbAddStoreRepository {
-  abstract create(payload: AddStoreModel): Promise<StoreModel>;
+  abstract create(payload: AddStoreModel): Promise<CreatedStore>;
 }

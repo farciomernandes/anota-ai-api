@@ -19,7 +19,8 @@ import {
 } from '@nestjs/swagger';
 import { IDbAddStoreRepository } from '@/core/domain/protocols/db/store/add-store-repository';
 import { IDbListStoreRepository } from '@/core/domain/protocols/db/store/list-store-respository';
-import { AddStoreModel } from '@/presentation/dtos/store/add-store.dto';
+import { CreatedStore } from '@/presentation/dtos/store/created-store';
+import { AddStoreModel } from '@/presentation/dtos/role/add-role.dto';
 
 @ApiTags('Store')
 @Controller('api/v1/store')
@@ -33,10 +34,10 @@ export class StoreController {
     description: 'Create Store',
     type: AddStoreModel,
   })
-  @ApiCreatedResponse({ type: StoreModel })
+  @ApiCreatedResponse({ type: CreatedStore })
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() payload: AddStoreModel): Promise<StoreModel> {
+  async create(@Body() payload: AddStoreModel): Promise<CreatedStore> {
     return await this.dbAddStore.create(payload);
   }
 

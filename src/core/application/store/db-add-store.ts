@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { StoreMongoRepository } from '@/infra/db/mongodb/store/store-mongo-repository';
-import { AddStoreModel } from '@/presentation/dtos/store/add-store.dto';
-import { StoreModel } from '@/core/domain/models/store';
 import { IDbAddStoreRepository } from '../../domain/protocols/db/store/add-store-repository';
 import { IHasher } from '../../domain/protocols/cryptography/hasher';
+import { CreatedStore } from '@/presentation/dtos/store/created-store';
+import { AddStoreModel } from '@/presentation/dtos/role/add-role.dto';
 
 @Injectable()
 export class DbAddStore implements IDbAddStoreRepository {
@@ -12,7 +12,7 @@ export class DbAddStore implements IDbAddStoreRepository {
     private readonly hasher: IHasher,
   ) {}
 
-  async create(payload: AddStoreModel): Promise<StoreModel> {
+  async create(payload: AddStoreModel): Promise<CreatedStore> {
     const alreadyExists = await this.storeRepository.findByEmail(payload.email);
 
     if (alreadyExists && alreadyExists.id) {

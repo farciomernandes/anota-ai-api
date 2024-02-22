@@ -1,4 +1,3 @@
-import { Roles } from '@/shared/decorators/roles.decorator';
 import { RolesGuard } from '@/infra/guards/roles.guard';
 import {
   Body,
@@ -19,6 +18,7 @@ import {
 import { IDbAddRoleRepository } from '@/core/domain/protocols/db/role/add-role-repository';
 import { IDbListRoleRepository } from '@/core/domain/protocols/db/role/list-role-respository';
 import { RoleModel } from '@/core/domain/models/role';
+import { AddRole } from '@/presentation/dtos/store/add-store.dto';
 
 @ApiTags('Role')
 @Controller('api/v1/role')
@@ -30,7 +30,7 @@ export class RoleController {
 
   @ApiBody({
     description: 'Create Role',
-    type: RoleModel,
+    type: AddRole,
   })
   @ApiCreatedResponse({ type: RoleModel })
   @Post()
@@ -44,6 +44,7 @@ export class RoleController {
     description: 'Returns Roles.',
     status: HttpStatus.OK,
     type: RoleModel,
+    isArray: true,
   })
   @UseGuards(RolesGuard)
   async getAll(): Promise<RoleModel[]> {
