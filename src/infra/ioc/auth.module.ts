@@ -1,5 +1,3 @@
-import { AuthUser } from '@/core/application/auth/auth';
-import { IAuthUser } from '@/core/domain/protocols/auth/auth-user';
 import { Encrypter } from '@/core/domain/protocols/cryptography/encrypter';
 import { Module } from '@nestjs/common';
 import { JwtAdapter } from '../adapters/jwt-adapter';
@@ -7,19 +5,21 @@ import { Decrypter } from '@/core/domain/protocols/cryptography/decrypter';
 import { HashComparer } from '@/core/domain/protocols/cryptography/hash-compare';
 import { BcryptAdapter } from '../adapters/bcrypt-adapter';
 import { AuthController } from '@/presentation/controllers/auth/auth-controller';
-import { UserMongoRepository } from '../db/mongodb/user/user-mongo-repository';
+import { StoreMongoRepository } from '../db/mongodb/store/store-mongo-repository';
+import { IAuthStore } from '@/core/domain/protocols/auth/auth-store';
+import { AuthStore } from '@/core/application/auth/auth';
 
 @Module({
   imports: [],
   controllers: [AuthController],
   providers: [
-    AuthUser,
+    AuthStore,
     BcryptAdapter,
-    UserMongoRepository,
+    StoreMongoRepository,
     JwtAdapter,
     {
-      provide: IAuthUser,
-      useClass: AuthUser,
+      provide: IAuthStore,
+      useClass: AuthStore,
     },
     {
       provide: Encrypter,
@@ -34,6 +34,6 @@ import { UserMongoRepository } from '../db/mongodb/user/user-mongo-repository';
       useClass: BcryptAdapter,
     },
   ],
-  exports: [HashComparer, Decrypter, Encrypter, IAuthUser],
+  exports: [HashComparer, Decrypter, Encrypter, IAuthStore],
 })
 export class AuthModule {}

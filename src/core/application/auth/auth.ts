@@ -1,13 +1,13 @@
 import { Encrypter } from '@/core/domain/protocols/cryptography/encrypter';
 import { HashComparer } from '@/core/domain/protocols/cryptography/hash-compare';
-import { UserMongoRepository } from '@/infra/db/mongodb/user/user-mongo-repository';
+import { StoreMongoRepository } from '@/infra/db/mongodb/store/store-mongo-repository';
 import { RolesEnum } from '@/shared/enums/roles.enum';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class AuthUser {
+export class AuthStore {
   constructor(
-    private readonly userRepository: UserMongoRepository,
+    private readonly storeRepository: StoreMongoRepository,
     private readonly hashComparer: HashComparer,
     private readonly encrypter: Encrypter,
   ) {}
@@ -16,23 +16,23 @@ export class AuthUser {
     email: string,
     password: string,
   ): Promise<{ accessToken: string; name: string }> {
-    const user = await this.userRepository.findByEmail(email);
+    const store = await this.storeRepository.findByEmail(email);
 
     /**
      * 2 dominios diferentes ( 2 auth )
      * 2 regras de dominio diferentes
      */
 
-    if (user) {
-      const isValid = await this.hashComparer.compare(password, user.password);
+    if (store) {
+      const isValid = await this.hashComparer.compare(password, store.password);
       if (isValid) {
         const accessToken = await this.encrypter.encrypt({
-          id: user.id,
+          id: store.id,
           roles: [RolesEnum.ADMIN],
         });
         return {
           accessToken,
-          name: user.name,
+          name: store.name,
         };
       }
     }

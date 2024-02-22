@@ -1,24 +1,24 @@
 import { Module } from '@nestjs/common';
-import { IDbAddUserRepository } from '@/core/domain/protocols/db/user/add-user-repository';
-import { DbAddUser } from '@/core/application/user/db-add-user';
-import { UserMongoRepository } from '../db/mongodb/user/user-mongo-repository';
 import { BcryptAdapter } from '../adapters/bcrypt-adapter';
 import { IHasher } from '@/core/domain/protocols/cryptography/hasher';
-import { UserController } from '@/presentation/controllers/user/user-controller';
-import { DbListUser } from '@/core/application/user/db-list-user';
-import { IDbListUserRepository } from '@/core/domain/protocols/db/user/list-category-respository';
 import { JwtAdapter } from '../adapters/jwt-adapter';
 import { Encrypter } from '@/core/domain/protocols/cryptography/encrypter';
 import { Decrypter } from '@/core/domain/protocols/cryptography/decrypter';
 import { HashComparer } from '@/core/domain/protocols/cryptography/hash-compare';
 import { AuthMiddleware } from '../middleware/auth.middleware';
+import { DbAddStore } from '@/core/application/store/db-add-store';
+import { DbListStore } from '@/core/application/store/db-list-store';
+import { IDbAddStoreRepository } from '@/core/domain/protocols/db/store/add-store-repository';
+import { IDbListStoreRepository } from '@/core/domain/protocols/db/store/list-store-respository';
+import { StoreMongoRepository } from '../db/mongodb/store/store-mongo-repository';
+import { StoreController } from '@/presentation/controllers/store/store-controller';
 
 @Module({
   imports: [],
   providers: [
-    UserMongoRepository,
-    DbAddUser,
-    DbListUser,
+    StoreMongoRepository,
+    DbAddStore,
+    DbListStore,
     BcryptAdapter,
     JwtAdapter,
     AuthMiddleware,
@@ -39,20 +39,20 @@ import { AuthMiddleware } from '../middleware/auth.middleware';
       useClass: BcryptAdapter,
     },
     {
-      provide: IDbAddUserRepository,
-      useClass: DbAddUser,
+      provide: IDbAddStoreRepository,
+      useClass: DbAddStore,
     },
     {
-      provide: IDbListUserRepository,
-      useClass: DbListUser,
+      provide: IDbListStoreRepository,
+      useClass: DbListStore,
     },
   ],
-  controllers: [UserController],
+  controllers: [StoreController],
   exports: [
-    IDbAddUserRepository,
-    IDbListUserRepository,
+    IDbAddStoreRepository,
+    IDbListStoreRepository,
     BcryptAdapter,
     Encrypter,
   ],
 })
-export class UserModule {}
+export class StoreModule {}

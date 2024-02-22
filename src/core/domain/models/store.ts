@@ -3,7 +3,7 @@ import { Expose, plainToInstance } from 'class-transformer';
 import { CategoryModel } from './category';
 import { ProductModel } from './product';
 
-export class UserModel {
+export class StoreModel {
   @ApiProperty({
     type: String,
     example: '65bd52691a0f4c3b57819a4b',
@@ -20,7 +20,7 @@ export class UserModel {
 
   @ApiProperty({
     type: String,
-    example: 'John Doe',
+    example: 'Pizza House',
   })
   @Expose()
   name: string;
@@ -48,8 +48,8 @@ export class UserModel {
   @Expose()
   products: ProductModel[];
 
-  static toDto(payload: UserModel): UserModel {
-    return plainToInstance(UserModel, payload, {
+  static toDto(payload: StoreModel): StoreModel {
+    return plainToInstance(StoreModel, payload, {
       excludeExtraneousValues: true,
     });
   }

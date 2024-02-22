@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Expose, plainToInstance } from 'class-transformer';
 import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
 
-export class AddUserModel {
+export class AddStoreModel {
   @ApiProperty({
     type: String,
     example: 'any@mail.com',
@@ -31,8 +31,8 @@ export class AddUserModel {
   @MinLength(8)
   password: string;
 
-  static toDto(payload: AddUserModel): AddUserModel {
-    return plainToInstance(AddUserModel, payload, {
+  static toDto(payload: AddStoreModel): AddStoreModel {
+    return plainToInstance(AddStoreModel, payload, {
       excludeExtraneousValues: true,
     });
   }

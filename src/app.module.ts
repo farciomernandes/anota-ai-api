@@ -10,14 +10,14 @@ import { CategoryController } from './presentation/controllers/category/category
 import { ProductModule } from '@/infra/ioc/product-module';
 import { ProductController } from './presentation/controllers/product/product-controller';
 import { setEnvironment } from '@/infra/config/enviroments';
-import { UserController } from './presentation/controllers/user/user-controller';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './infra/guards/roles.guard';
 import { AuthMiddleware } from './infra/middleware/auth.middleware';
 import { JwtAdapter } from './infra/adapters/jwt-adapter';
 import { Decrypter } from './core/domain/protocols/cryptography/decrypter';
-import { UserModule } from './infra/ioc/user.module';
 import { AuthModule } from './infra/ioc/auth.module';
+import { StoreController } from './presentation/controllers/store/store-controller';
+import { StoreModule } from './infra/ioc/store.module';
 
 @Module({
   imports: [
@@ -28,10 +28,10 @@ import { AuthModule } from './infra/ioc/auth.module';
     }),
     CategoryModule,
     ProductModule,
-    UserModule,
+    StoreModule,
     AuthModule,
   ],
-  controllers: [CategoryController, ProductController, UserController],
+  controllers: [CategoryController, ProductController, StoreController],
   providers: [
     {
       provide: APP_GUARD,
@@ -47,6 +47,6 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthMiddleware)
-      .forRoutes({ path: 'api/v1/user', method: RequestMethod.GET });
+      .forRoutes({ path: 'api/v1/Store', method: RequestMethod.GET });
   }
 }

@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-namespace */
-import { AuthUser } from '@/core/application/auth/auth';
 import { Decrypter } from '@/core/domain/protocols/cryptography/decrypter';
+import { Authenticated } from '@/presentation/dtos/auth/authenticated.dto';
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 
 declare global {
   namespace Express {
     interface Request {
-      user?: AuthUser;
+      user?: Authenticated;
     }
   }
 }

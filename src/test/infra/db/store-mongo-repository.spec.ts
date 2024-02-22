@@ -1,26 +1,27 @@
 import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper';
 import { Collection } from 'mongodb';
-import { UserMongoRepository } from '@/infra/db/mongodb/user/user-mongo-repository';
-import { makeFakeUser } from '@/test/mock/db-mock-helper-user';
+
 import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { StoreMongoRepository } from '@/infra/db/mongodb/store/store-mongo-repository';
+import { makeFakeStore } from '@/test/mock/db-mock-helper-store';
 
 type SutTypes = {
-  sut: UserMongoRepository;
+  sut: StoreMongoRepository;
 };
 
 const makeSut = (): SutTypes => {
-  const sut = new UserMongoRepository();
+  const sut = new StoreMongoRepository();
 
   return {
     sut,
   };
 };
 
-describe('User Mongo Repository', () => {
-  let userCollection: Collection;
+describe('Store Mongo Repository', () => {
+  let storeCollection: Collection;
 
   beforeAll(async () => {
     await MongoHelper.connect(process.env.MONGO_URL);
@@ -31,16 +32,16 @@ describe('User Mongo Repository', () => {
   });
 
   beforeEach(async () => {
-    userCollection = await MongoHelper.getCollection('users');
-    await userCollection.deleteMany({});
+    storeCollection = await MongoHelper.getCollection('stores');
+    await storeCollection.deleteMany({});
   });
 
-  test('Should create user on success', async () => {
+  test('Should create Store on success', async () => {
     const { sut } = makeSut();
 
-    await sut.create(makeFakeUser());
+    await sut.create(makeFakeStore());
 
-    const count = await userCollection.countDocuments();
+    const count = await storeCollection.countDocuments();
     expect(count).toBe(1);
   });
 
@@ -51,42 +52,42 @@ describe('User Mongo Repository', () => {
       throw new InternalServerErrorException();
     });
 
-    const promise = sut.create(makeFakeUser());
+    const promise = sut.create(makeFakeStore());
     await expect(promise).rejects.toThrowError(InternalServerErrorException);
   });
 
-  test('Should list users on success', async () => {
+  test('Should list Stores on success', async () => {
     const { sut } = makeSut();
 
-    const fakeUser1 = {
-      email: makeFakeUser().email,
-      name: makeFakeUser().name,
-      password: makeFakeUser().password,
+    const fakeStore1 = {
+      email: makeFakeStore().email,
+      name: makeFakeStore().name,
+      password: makeFakeStore().password,
       categories: [],
       products: [],
     };
 
-    const fakeUser2 = {
-      email: makeFakeUser().email,
-      name: makeFakeUser().name,
-      password: makeFakeUser().password,
+    const fakeStore2 = {
+      email: makeFakeStore().email,
+      name: makeFakeStore().name,
+      password: makeFakeStore().password,
       categories: [],
       products: [],
     };
 
-    await userCollection.insertMany([fakeUser1, fakeUser2]);
+    await storeCollection.insertMany([fakeStore1, fakeStore2]);
 
     const response = await sut.getAll();
 
     const expectedOutput = [
-      MongoHelper.map(fakeUser1),
-      MongoHelper.map(fakeUser2),
+      MongoHelper.map(fakeStore1),
+      MongoHelper.map(fakeStore2),
     ];
 
     expect(response).toEqual(expectedOutput);
   });
 
-  test('Should return InternalServerErrorException if list users throws', async () => {
+  test('Should return InternalServerErrorException if list Stores throws', async () => {
     const { sut } = makeSut();
 
     jest.spyOn(MongoHelper, 'getCollection').mockImplementationOnce(() => {
@@ -97,15 +98,15 @@ describe('User Mongo Repository', () => {
     await expect(promise).rejects.toThrowError(InternalServerErrorException);
   });
 
-  test('Should return user if findByEmail finds user', async () => {
+  test('Should return Store if findByEmail finds Store', async () => {
     const { sut } = makeSut();
-    const fakeUser = makeFakeUser();
+    const fakeStore = makeFakeStore();
 
-    jest.spyOn(sut, 'findByEmail').mockResolvedValueOnce(makeFakeUser());
+    jest.spyOn(sut, 'findByEmail').mockResolvedValueOnce(makeFakeStore());
 
-    const response = await sut.findByEmail(fakeUser.email);
+    const response = await sut.findByEmail(fakeStore.email);
 
-    expect(response.id).toBe(fakeUser.id);
+    expect(response.id).toBe(fakeStore.id);
   });
 
   test('Should return NotFoundException if findByEmail not matching!', async () => {
@@ -118,13 +119,13 @@ describe('User Mongo Repository', () => {
   test('Should return InternalServerErrorException if findByEmail throws!', async () => {
     const { sut } = makeSut();
 
-    await sut.create(makeFakeUser());
+    await sut.create(makeFakeStore());
 
     jest.spyOn(MongoHelper, 'getCollection').mockImplementationOnce(() => {
       throw new InternalServerErrorException();
     });
 
-    const promise = sut.findByEmail(makeFakeUser().email);
+    const promise = sut.findByEmail(makeFakeStore().email);
     await expect(promise).rejects.toThrowError(InternalServerErrorException);
   });
 });

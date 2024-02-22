@@ -1,4 +1,4 @@
-export abstract class IAuthUser {
+export abstract class IAuthStore {
   abstract auth(
     email: string,
     password: string,
