@@ -9,6 +9,7 @@ import { IDbAddStoreRepository } from '@/core/domain/protocols/db/store/add-stor
 import { IDbFindStoreByEmailRepository } from '@/core/domain/protocols/db/store/find-store-by-email-repository';
 import { IDbListStoreRepository } from '@/core/domain/protocols/db/store/list-store-respository';
 import { AddStoreModel } from '@/presentation/dtos/store/add-store.dto';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class StoreMongoRepository
@@ -19,16 +20,31 @@ export class StoreMongoRepository
 {
   async create(payload: AddStoreModel): Promise<StoreModel> {
     try {
-      const StoreCollection = await MongoHelper.getCollection('stores');
+      const storeCollection = await MongoHelper.getCollection('stores');
+      const roleCollection = await MongoHelper.getCollection('roles');
 
-      const result = await StoreCollection.insertOne(payload);
+      const role = await roleCollection.findOne({
+        _id: new ObjectId(payload.roleId),
+      });
 
-      const Store = await StoreCollection.findOne({
+      if (!role) {
+        throw new NotFoundException(
+          `Role with ${payload.roleId} id not found!`,
+        );
+      }
+
+      delete payload.roleId;
+      const result = await storeCollection.insertOne({
+        ...payload,
+        role: MongoHelper.map(role),
+      });
+
+      const store = await storeCollection.findOne({
         _id: result.insertedId,
       });
 
       return MongoHelper.map({
-        ...Store,
+        ...store,
       });
     } catch (error) {
       throw new InternalServerErrorException(error.message);
@@ -37,50 +53,52 @@ export class StoreMongoRepository
 
   async getAll(): Promise<StoreModel[]> {
     try {
-      const StoreCollection = await MongoHelper.getCollection('stores');
+      const storeCollection = await MongoHelper.getCollection('stores');
 
-      const productsAndCategories = await StoreCollection.aggregate([
-        {
-          $match: {
-            _id: { $exists: true },
+      const stores = await storeCollection
+        .aggregate([
+          {
+            $match: {
+              _id: { $exists: true },
+            },
           },
-        },
-        {
-          $lookup: {
-            from: 'products',
-            let: { storeId: { $toString: '$_id' } },
-            pipeline: [
-              {
-                $match: {
-                  $expr: {
-                    $eq: ['$ownerId', '$$storeId'],
+          {
+            $lookup: {
+              from: 'products',
+              let: { storeId: { $toString: '$_id' } },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $eq: ['$ownerId', '$$storeId'],
+                    },
                   },
                 },
-              },
-            ],
-            as: 'products',
+              ],
+              as: 'products',
+            },
           },
-        },
-        {
-          $lookup: {
-            from: 'categories',
-            let: { storeId: { $toString: '$_id' } },
-            pipeline: [
-              {
-                $match: {
-                  $expr: {
-                    $eq: ['$ownerId', '$$storeId'],
+          {
+            $lookup: {
+              from: 'categories',
+              let: { storeId: { $toString: '$_id' } },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $eq: ['$ownerId', '$$storeId'],
+                    },
                   },
                 },
-              },
-            ],
-            as: 'categories',
+              ],
+              as: 'categories',
+            },
           },
-        },
-      ]).toArray();
+        ])
+        .toArray();
 
-      return productsAndCategories.map((Store) => {
-        const mappedItem = MongoHelper.map(Store);
+      return stores.map((store) => {
+        const mappedItem = MongoHelper.map(store);
         if (mappedItem.products) {
           mappedItem.products = mappedItem.products.map((product) =>
             MongoHelper.map(product),
@@ -100,22 +118,17 @@ export class StoreMongoRepository
 
   async findByEmail(email: string): Promise<StoreModel> {
     try {
-      const StoreCollection = await MongoHelper.getCollection('stores');
-      const Store = await StoreCollection.findOne({
+      const storeCollection = await MongoHelper.getCollection('stores');
+      const store = await storeCollection.findOne({
         email,
       });
 
-      if (!Store) {
-        throw new NotFoundException();
+      if (!store) {
+        return null;
       }
 
-      return MongoHelper.map(Store);
+      return MongoHelper.map(store);
     } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw new NotFoundException(
-          `Store with email ${email} does not exists!`,
-        );
-      }
       throw new InternalServerErrorException(error.message);
     }
   }

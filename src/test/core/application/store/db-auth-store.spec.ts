@@ -8,6 +8,7 @@ import {
   makeFakeStore,
   makeStoreMongoRepository,
 } from '@/test/mock/db-mock-helper-store';
+import { BadRequestException } from '@nestjs/common';
 
 import { ConfigService } from '@nestjs/config';
 
@@ -75,18 +76,15 @@ describe('AuthStore usecase', () => {
     expect(response.accessToken).toBe('hashed');
   });
 
-  test('Should return null if email is not matching', async () => {
+  test('Should return BadRequestException if email is not matching', async () => {
     const { sut, storeRepository } = makeSut();
 
     jest
       .spyOn(storeRepository, 'findByEmail')
       .mockReturnValueOnce(Promise.resolve(null));
 
-    const response = await sut.auth(
-      makeFakeStore().email,
-      makeFakeStore().password,
-    );
+    const promise = sut.auth(makeFakeStore().email, makeFakeStore().password);
 
-    expect(response).toBe(null);
+    await expect(promise).rejects.toThrowError(BadRequestException);
   });
 });

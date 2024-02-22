@@ -2,7 +2,11 @@ import { Encrypter } from '@/core/domain/protocols/cryptography/encrypter';
 import { HashComparer } from '@/core/domain/protocols/cryptography/hash-compare';
 import { StoreMongoRepository } from '@/infra/db/mongodb/store/store-mongo-repository';
 import { RolesEnum } from '@/shared/enums/roles.enum';
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 
 @Injectable()
 export class AuthStore {
@@ -36,6 +40,6 @@ export class AuthStore {
         };
       }
     }
-    return null;
+    throw new BadRequestException(`Store with ${email} not found!`);
   }
 }

@@ -18,6 +18,7 @@ import { Decrypter } from './core/domain/protocols/cryptography/decrypter';
 import { AuthModule } from './infra/ioc/auth.module';
 import { StoreController } from './presentation/controllers/store/store-controller';
 import { StoreModule } from './infra/ioc/store.module';
+import { RoleModule } from './infra/ioc/role.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { StoreModule } from './infra/ioc/store.module';
       expandVariables: true,
       envFilePath: setEnvironment(),
     }),
+    RoleModule,
     CategoryModule,
     ProductModule,
     StoreModule,

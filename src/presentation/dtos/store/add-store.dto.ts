@@ -1,3 +1,4 @@
+import { RolesEnum } from '@/shared/enums/roles.enum';
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, plainToInstance } from 'class-transformer';
 import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
@@ -20,6 +21,15 @@ export class AddStoreModel {
   @IsNotEmpty()
   @Expose()
   name: string;
+
+  @ApiProperty({
+    type: String,
+    example: '65d771c9a1acf6d4b2aec923',
+    required: true,
+  })
+  @IsNotEmpty()
+  @Expose()
+  roleId: string;
 
   @ApiProperty({
     type: String,

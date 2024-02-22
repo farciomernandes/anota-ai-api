@@ -3,6 +3,8 @@ import { makeFakeProduct } from './db-mock-helper-product';
 import { makeFakeCategory } from './db-mock-helper-category';
 import { AddStoreModel } from '@/presentation/dtos/store/add-store.dto';
 import { StoreMongoRepository } from '@/infra/db/mongodb/store/store-mongo-repository';
+import { RolesEnum } from '@/shared/enums/roles.enum';
+import { RoleModel } from '@/core/domain/models/role';
 
 export const makeStoreMongoRepository = (): StoreMongoRepository => {
   class StoreRepositoryStub implements StoreMongoRepository {
@@ -26,11 +28,33 @@ export const makeStoreFakeRequest = () => ({
   password: 'any_password',
 });
 
-export const makeFakeStore = () => ({
-  id: '65bd52691a0f4c3b57819a4b',
-  email: 'any@mail.com',
-  name: 'John Doe',
-  password: 'hashed_password',
-  categories: [makeFakeCategory()],
-  products: [makeFakeProduct()],
-});
+export const makeFakeRoles = (): RoleModel => {
+  const role = new RoleModel();
+  role.id = '65b9a4cd77e2de47acb5db37';
+  role.label = 'Role de acesso a todas as funcionalidades do sistema';
+  role.value = RolesEnum.ADMIN;
+  return role;
+};
+
+export const makeFakeStore = (): StoreModel => {
+  const store = new StoreModel();
+  store.id = '65bd52691a0f4c3b57819a4b';
+  store.email = 'any_email@mail.com';
+  store.name = 'John Doe';
+  store.password = 'hashed_password';
+  store.categories = [makeFakeCategory()];
+  store.products = [makeFakeProduct()];
+  store.role = makeFakeRoles();
+
+  return store;
+};
+
+export const makeRequestAddStore = (): AddStoreModel => {
+  const store = new AddStoreModel();
+  store.email = 'any_email@mail.com';
+  store.name = 'John Doe';
+  store.password = 'hashed_password';
+  store.roleId = makeFakeRoles().id;
+
+  return store;
+};

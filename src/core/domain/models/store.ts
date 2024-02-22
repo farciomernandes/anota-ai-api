@@ -2,6 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Expose, plainToInstance } from 'class-transformer';
 import { CategoryModel } from './category';
 import { ProductModel } from './product';
+import { RolesEnum } from '@/shared/enums/roles.enum';
+import { RoleModel } from './role';
 
 export class StoreModel {
   @ApiProperty({
@@ -27,10 +29,17 @@ export class StoreModel {
 
   @ApiProperty({
     type: String,
-    example: 'hashed_password',
+    example: 'password',
     description: 'Senha utilizada para fazer login no sistema',
   })
   password: string;
+
+  @ApiProperty({
+    type: RoleModel,
+    example: RoleModel,
+  })
+  @Expose()
+  role: RoleModel;
 
   @ApiProperty({
     type: CategoryModel,
