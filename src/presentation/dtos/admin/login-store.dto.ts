@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 import { IsEmail, IsString, MinLength } from 'class-validator';
 
-export class LoginStoreDto {
+export class LoginAdminDto {
   @ApiProperty({
     type: String,
     example: 'any@mail.com',
@@ -24,7 +24,7 @@ export class LoginStoreDto {
   password: string;
 }
 
-export class AuthenticatedStoreDto {
+export class AuthenticatedAdminDto {
   @ApiProperty({
     type: String,
     example: 'eyJhbGciOiJIUzI1NiIsInR5cCI',

@@ -7,7 +7,10 @@ import { BcryptAdapter } from '../adapters/bcrypt-adapter';
 import { AuthController } from '@/presentation/controllers/auth/auth-controller';
 import { StoreMongoRepository } from '../db/mongodb/store/store-mongo-repository';
 import { IAuthStore } from '@/core/domain/protocols/auth/auth-store';
-import { AuthStore } from '@/core/application/auth/auth';
+import { AdminMongoRepository } from '../db/mongodb/admin/admin-mongo-repository';
+import { AuthStore } from '@/core/application/auth/auth-store';
+import { IAuthAdmin } from '@/core/domain/protocols/auth/auth-admin';
+import { AuthAdmin } from '@/core/application/auth/auth-admin';
 
 @Module({
   imports: [],
@@ -16,10 +19,15 @@ import { AuthStore } from '@/core/application/auth/auth';
     AuthStore,
     BcryptAdapter,
     StoreMongoRepository,
+    AdminMongoRepository,
     JwtAdapter,
     {
       provide: IAuthStore,
       useClass: AuthStore,
+    },
+    {
+      provide: IAuthAdmin,
+      useClass: AuthAdmin,
     },
     {
       provide: Encrypter,
@@ -34,6 +42,6 @@ import { AuthStore } from '@/core/application/auth/auth';
       useClass: BcryptAdapter,
     },
   ],
-  exports: [HashComparer, Decrypter, Encrypter, IAuthStore],
+  exports: [HashComparer, Decrypter, Encrypter, IAuthStore, IAuthAdmin],
 })
 export class AuthModule {}
