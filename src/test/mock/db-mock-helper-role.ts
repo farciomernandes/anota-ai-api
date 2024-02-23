@@ -1,5 +1,22 @@
 import { RoleModel } from '@/core/domain/models/role';
+import { RoleMongoRepository } from '@/infra/db/mongodb/role/role-mongo-repository';
 import { RolesEnum } from '@/shared/enums/roles.enum';
+
+export const makeRoleMongoRepository = (): RoleMongoRepository => {
+  class RoleRepositoryStub implements RoleMongoRepository {
+    async getAll(): Promise<RoleModel[]> {
+      return Promise.resolve([makeFakeRoles()]);
+    }
+    async findByValue(value: string): Promise<RoleModel> {
+      return Promise.resolve({} as RoleModel);
+    }
+    async create(payload: Omit<RoleModel, 'id'>): Promise<RoleModel> {
+      return Promise.resolve(makeFakeRoles());
+    }
+  }
+
+  return new RoleRepositoryStub();
+};
 
 export const makeFakeRoles = (): RoleModel => {
   const role = new RoleModel();
