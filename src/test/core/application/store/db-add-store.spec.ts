@@ -32,21 +32,24 @@ const makeSut = (): SutTypes => {
 };
 
 describe('DbAddStore usecase', () => {
-  /*test('Should call StoreMongoRepository with correct values', async () => {
+  test('Should call create and hasher with correct values', async () => {
     const { sut, addStoreRepositoryStub, hasher } = makeSut();
 
-    jest
+    const hashSpy = jest
       .spyOn(hasher, 'hash')
       .mockReturnValueOnce(Promise.resolve('hashed_password'));
 
     const repositorySpy = jest.spyOn(addStoreRepositoryStub, 'create');
     await sut.create(makeRequestAddStore());
 
+    expect(hashSpy).toHaveBeenCalledWith(makeRequestAddStore().password);
+
     expect(repositorySpy).toHaveBeenCalledWith({
       ...makeStoreFakeRequest(),
       password: 'hashed_password',
+      roleId: expect.any(String),
     });
-  }); */
+  });
 
   test('Should throw BadRequestException if email already exists!', async () => {
     const { sut, addStoreRepositoryStub } = makeSut();
