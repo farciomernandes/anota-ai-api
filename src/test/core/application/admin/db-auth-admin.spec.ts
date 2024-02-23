@@ -1,20 +1,20 @@
-import { AuthStore } from '@/core/application/auth/auth-store';
+import { AuthAdmin } from '@/core/application/auth/auth-admin';
 import { Encrypter } from '@/core/domain/protocols/cryptography/encrypter';
 import { HashComparer } from '@/core/domain/protocols/cryptography/hash-compare';
 import { BcryptAdapter } from '@/infra/adapters/bcrypt-adapter';
 import { JwtAdapter } from '@/infra/adapters/jwt-adapter';
-import { StoreMongoRepository } from '@/infra/db/mongodb/store/store-mongo-repository';
+import { AdminMongoRepository } from '@/infra/db/mongodb/admin/admin-mongo-repository';
 import {
-  makeFakeStore,
-  makeStoreMongoRepository,
-} from '@/test/mock/db-mock-helper-store';
+  makeFakeAdmin,
+  makeAdminMongoRepository,
+} from '@/test/mock/db-mock-helper-admin';
 import { BadRequestException } from '@nestjs/common';
 
 import { ConfigService } from '@nestjs/config';
 
 type SutTypes = {
-  sut: AuthStore;
-  storeRepository: StoreMongoRepository;
+  sut: AuthAdmin;
+  adminRepository: AdminMongoRepository;
   hasher: HashComparer;
   encrypter: Encrypter;
 };
@@ -43,47 +43,47 @@ const makeConfigServiceMock = () => {
 const makeSut = (): SutTypes => {
   const configServiceMock = makeConfigServiceMock();
 
-  const storeRepository = makeStoreMongoRepository();
+  const adminRepository = makeAdminMongoRepository();
   const hasher = new BcryptAdapter(configServiceMock as ConfigService);
   const encrypter = new JwtAdapter(configServiceMock as ConfigService);
 
   jest.spyOn(hasher, 'compare').mockReturnValue(Promise.resolve(true));
   jest.spyOn(encrypter, 'encrypt').mockReturnValue(Promise.resolve('hashed'));
 
-  const sut = new AuthStore(storeRepository, hasher, encrypter);
+  const sut = new AuthAdmin(adminRepository, hasher, encrypter);
 
   return {
     sut,
-    storeRepository,
+    adminRepository,
     hasher,
     encrypter,
   };
 };
 
-describe('AuthStore usecase', () => {
+describe('AuthAdmin usecase', () => {
   test('Should return name and accessToken with success authentication', async () => {
-    const { sut, storeRepository } = makeSut();
+    const { sut, adminRepository } = makeSut();
     jest
-      .spyOn(storeRepository, 'findByEmail')
-      .mockReturnValueOnce(Promise.resolve(makeFakeStore()));
+      .spyOn(adminRepository, 'findByEmail')
+      .mockReturnValueOnce(Promise.resolve(makeFakeAdmin()));
 
     const response = await sut.auth(
-      makeFakeStore().email,
-      makeFakeStore().password,
+      makeFakeAdmin().email,
+      makeFakeAdmin().password,
     );
 
-    expect(response.name).toBe(makeFakeStore().name);
+    expect(response.name).toBe(makeFakeAdmin().name);
     expect(response.accessToken).toBe('hashed');
   });
 
   test('Should return BadRequestException if email is not matching', async () => {
-    const { sut, storeRepository } = makeSut();
+    const { sut, adminRepository } = makeSut();
 
     jest
-      .spyOn(storeRepository, 'findByEmail')
+      .spyOn(adminRepository, 'findByEmail')
       .mockReturnValueOnce(Promise.resolve(null));
 
-    const promise = sut.auth(makeFakeStore().email, makeFakeStore().password);
+    const promise = sut.auth(makeFakeAdmin().email, makeFakeAdmin().password);
 
     await expect(promise).rejects.toThrowError(BadRequestException);
   });
