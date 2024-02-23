@@ -46,9 +46,31 @@ import { RoleModule } from './infra/ioc/role.module';
   ],
 })
 export class AppModule implements NestModule {
+  private readonly storeEndpoints = [
+    { path: 'api/v1/store', method: RequestMethod.POST },
+    { path: 'api/v1/store', method: RequestMethod.PUT },
+    { path: 'api/v1/store', method: RequestMethod.DELETE },
+  ];
+
+  private readonly categoryEndpoints = [
+    { path: 'api/v1/category', method: RequestMethod.POST },
+    { path: 'api/v1/category', method: RequestMethod.PUT },
+    { path: 'api/v1/category', method: RequestMethod.DELETE },
+  ];
+
+  private readonly productEndpoints = [
+    { path: 'api/v1/product', method: RequestMethod.POST },
+    { path: 'api/v1/product', method: RequestMethod.PUT },
+    { path: 'api/v1/product', method: RequestMethod.DELETE },
+  ];
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthMiddleware)
-      .forRoutes({ path: 'api/v1/Store', method: RequestMethod.GET });
+      .forRoutes(
+        ...this.storeEndpoints,
+        ...this.categoryEndpoints,
+        ...this.productEndpoints,
+        { path: 'api/v1/role', method: RequestMethod.ALL },
+      );
   }
 }

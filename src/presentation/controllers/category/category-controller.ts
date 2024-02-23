@@ -16,6 +16,8 @@ import { IDbAddCategoryRepository } from '@/core/domain/protocols/db/category/ad
 import { IDbListCategoryRepository } from '@/core/domain/protocols/db/category/list-category-respository';
 import { IDbUpdateCategoryRepository } from '@/core/domain/protocols/db/category/update-category-respository';
 import { IDbDeleteCategoryRepository } from '@/core/domain/protocols/db/category/delete-category-respository';
+import { RolesEnum } from '@/shared/enums/roles.enum';
+import { Roles } from '@/shared/decorators/roles.decorator';
 
 @ApiTags('Category')
 @Controller('api/v1/category')
@@ -38,6 +40,7 @@ export class CategoryController {
     status: HttpStatus.OK,
     type: CategoryModel,
   })
+  @Roles(RolesEnum.ADMIN, RolesEnum.STORE)
   async create(@Body() payload: AddCategoryModel): Promise<CategoryModel> {
     try {
       return await this.dbAddCategory.create(payload);
@@ -53,6 +56,7 @@ export class CategoryController {
     type: CategoryModel,
     isArray: true,
   })
+  @Roles(RolesEnum.ADMIN, RolesEnum.STORE)
   async getAll(): Promise<CategoryModel[]> {
     try {
       return await this.dbListCategory.getAll();
@@ -69,6 +73,7 @@ export class CategoryController {
     status: HttpStatus.OK,
     type: CategoryModel,
   })
+  @Roles(RolesEnum.ADMIN, RolesEnum.STORE)
   async update(
     @Param('id') id: string,
     @Body() payload: Omit<AddCategoryModel, 'ownerId'>,
@@ -85,6 +90,7 @@ export class CategoryController {
     status: HttpStatus.OK,
     type: CategoryModel,
   })
+  @Roles(RolesEnum.ADMIN, RolesEnum.STORE)
   async delete(@Param('id') id: string): Promise<CategoryModel> {
     try {
       const response = await this.dbDeleteCategory.delete(id);

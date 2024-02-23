@@ -19,6 +19,8 @@ import { IDbAddRoleRepository } from '@/core/domain/protocols/db/role/add-role-r
 import { IDbListRoleRepository } from '@/core/domain/protocols/db/role/list-role-respository';
 import { RoleModel } from '@/core/domain/models/role';
 import { AddRole } from '@/presentation/dtos/store/add-store.dto';
+import { Roles } from '@/shared/decorators/roles.decorator';
+import { RolesEnum } from '@/shared/enums/roles.enum';
 
 @ApiTags('Role')
 @Controller('api/v1/role')
@@ -35,6 +37,8 @@ export class RoleController {
   @ApiCreatedResponse({ type: RoleModel })
   @Post()
   @HttpCode(HttpStatus.CREATED)
+  @Roles(RolesEnum.ADMIN)
+  @UseGuards(RolesGuard)
   async create(@Body() payload: Omit<RoleModel, 'id'>): Promise<RoleModel> {
     return await this.dbAddRole.create(payload);
   }
@@ -46,6 +50,7 @@ export class RoleController {
     type: RoleModel,
     isArray: true,
   })
+  @Roles(RolesEnum.ADMIN)
   @UseGuards(RolesGuard)
   async getAll(): Promise<RoleModel[]> {
     try {

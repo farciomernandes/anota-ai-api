@@ -21,6 +21,7 @@ import { IDbAddStoreRepository } from '@/core/domain/protocols/db/store/add-stor
 import { IDbListStoreRepository } from '@/core/domain/protocols/db/store/list-store-respository';
 import { CreatedStore } from '@/presentation/dtos/store/created-store';
 import { AddStoreModel } from '@/presentation/dtos/role/add-role.dto';
+import { RolesEnum } from '@/shared/enums/roles.enum';
 
 @ApiTags('Store')
 @Controller('api/v1/store')
@@ -37,6 +38,8 @@ export class StoreController {
   @ApiCreatedResponse({ type: CreatedStore })
   @Post()
   @HttpCode(HttpStatus.CREATED)
+  @Roles('ADMIN')
+  @UseGuards(RolesGuard)
   async create(@Body() payload: AddStoreModel): Promise<CreatedStore> {
     return await this.dbAddStore.create(payload);
   }
@@ -47,7 +50,7 @@ export class StoreController {
     status: HttpStatus.OK,
     type: StoreModel,
   })
-  @Roles('ADMIN')
+  @Roles(RolesEnum.ADMIN)
   @UseGuards(RolesGuard)
   async getAll(): Promise<StoreModel[]> {
     try {

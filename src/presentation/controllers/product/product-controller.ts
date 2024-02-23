@@ -9,6 +9,7 @@ import {
   Post,
   Put,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
@@ -21,6 +22,9 @@ import { IDbDeleteProductRepository } from '@/core/domain/protocols/db/product/d
 import { UpdateProductModel } from '@/presentation/dtos/product/update-product.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import multerConfig from '@/infra/config/multer';
+import { Roles } from '@/shared/decorators/roles.decorator';
+import { RolesGuard } from '@/infra/guards/roles.guard';
+import { RolesEnum } from '@/shared/enums/roles.enum';
 @ApiTags('Product')
 @Controller('api/v1/product')
 export class ProductController {
@@ -43,6 +47,8 @@ export class ProductController {
     type: ProductModel,
   })
   @UseInterceptors(FileInterceptor('file', multerConfig))
+  @Roles(RolesEnum.ADMIN, RolesEnum.STORE)
+  @UseGuards(RolesGuard)
   async create(
     @UploadedFile() file: Express.Multer.File,
     @Body() payload: Omit<AddProductModel, 'file'>,
