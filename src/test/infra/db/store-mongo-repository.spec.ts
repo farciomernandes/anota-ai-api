@@ -123,17 +123,17 @@ describe('Store Mongo Repository', () => {
     expect(response.id).toBe(fakeStore.id);
   });
 
-  test('Should return null if findByEmail not matching!', async () => {
+  test('Should return null if findByEmail not matching', async () => {
     const { sut } = makeSut();
 
     const response = await sut.findByEmail('nonexistent@mail.com');
     expect(response).toBe(null);
   });
 
-  /*test('Should return InternalServerErrorException if findByEmail throws!', async () => {
+  test('Should return InternalServerErrorException if findByEmail throws', async () => {
     const { sut } = makeSut();
 
-    await sut.create(makeRequestAddStore());
+    await sut.findByEmail(makeRequestAddStore().email);
 
     jest.spyOn(MongoHelper, 'getCollection').mockImplementationOnce(() => {
       throw new InternalServerErrorException();
@@ -141,5 +141,5 @@ describe('Store Mongo Repository', () => {
 
     const promise = sut.findByEmail(makeFakeStore().email);
     await expect(promise).rejects.toThrowError(InternalServerErrorException);
-  }); */
+  });
 });
