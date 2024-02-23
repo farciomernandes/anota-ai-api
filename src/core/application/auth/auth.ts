@@ -2,11 +2,7 @@ import { Encrypter } from '@/core/domain/protocols/cryptography/encrypter';
 import { HashComparer } from '@/core/domain/protocols/cryptography/hash-compare';
 import { StoreMongoRepository } from '@/infra/db/mongodb/store/store-mongo-repository';
 import { RolesEnum } from '@/shared/enums/roles.enum';
-import {
-  BadRequestException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AuthStore {

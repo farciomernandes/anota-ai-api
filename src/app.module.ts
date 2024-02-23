@@ -19,6 +19,8 @@ import { AuthModule } from './infra/ioc/auth.module';
 import { StoreController } from './presentation/controllers/store/store-controller';
 import { StoreModule } from './infra/ioc/store.module';
 import { RoleModule } from './infra/ioc/role.module';
+import { AdminModule } from './infra/ioc/admin.module';
+import { AdminController } from './presentation/controllers/admin/admin-controller';
 
 @Module({
   imports: [
@@ -32,8 +34,14 @@ import { RoleModule } from './infra/ioc/role.module';
     ProductModule,
     StoreModule,
     AuthModule,
+    AdminModule,
   ],
-  controllers: [CategoryController, ProductController, StoreController],
+  controllers: [
+    CategoryController,
+    ProductController,
+    StoreController,
+    AdminController,
+  ],
   providers: [
     {
       provide: APP_GUARD,

@@ -19,7 +19,7 @@ export class AuthController {
     status: HttpStatus.OK,
     type: AuthenticatedStoreDto,
   })
-  @Post('admin')
+  @Post('store')
   @HttpCode(HttpStatus.CREATED)
   async login(@Body() payload: any): Promise<any> {
     return await this.authStore.auth(payload.email, payload.password);
