@@ -48,6 +48,9 @@ export class StoreMongoRepository
         ...store,
       });
     } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(error.message);
+      }
       throw new InternalServerErrorException(error.message);
     }
   }

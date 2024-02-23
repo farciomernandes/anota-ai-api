@@ -1,13 +1,17 @@
 import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper';
 import { Collection } from 'mongodb';
 
-import { InternalServerErrorException } from '@nestjs/common';
+import {
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { StoreMongoRepository } from '@/infra/db/mongodb/store/store-mongo-repository';
 import {
   makeFakeStore,
   makeRequestAddStore,
-  makeFakeRoles,
 } from '@/test/mock/db-mock-helper-store';
+
+import { makeFakeRoles } from '@/test/mock/db-mock-helper-role';
 
 type SutTypes = {
   sut: StoreMongoRepository;
@@ -66,6 +70,21 @@ describe('Store Mongo Repository', () => {
 
     const promise = sut.create(makeRequestAddStore());
     await expect(promise).rejects.toThrowError(InternalServerErrorException);
+  });
+
+  test('Should return NotFoundException if role not matching in create', async () => {
+    const { sut } = makeSut();
+
+    await roleCollection.insertOne({
+      ...makeFakeRoles(),
+    });
+
+    const promise = sut.create({
+      ...makeRequestAddStore(),
+      roleId: makeRequestAddStore().roleId,
+    });
+
+    await expect(promise).rejects.toThrowError(NotFoundException);
   });
 
   test('Should list Stores on success', async () => {

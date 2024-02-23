@@ -2,10 +2,9 @@ import { StoreModel } from '@/core/domain/models/store';
 import { makeFakeProduct } from './db-mock-helper-product';
 import { makeFakeCategory } from './db-mock-helper-category';
 import { StoreMongoRepository } from '@/infra/db/mongodb/store/store-mongo-repository';
-import { RolesEnum } from '@/shared/enums/roles.enum';
-import { RoleModel } from '@/core/domain/models/role';
 import { AddStoreModel } from '@/presentation/dtos/role/add-role.dto';
 import { CreatedStore } from '@/presentation/dtos/store/created-store';
+import { makeFakeRoles } from './db-mock-helper-role';
 
 export const makeStoreMongoRepository = (): StoreMongoRepository => {
   class StoreRepositoryStub implements StoreMongoRepository {
@@ -28,14 +27,6 @@ export const makeStoreFakeRequest = () => ({
   email: 'any_email@mail.com',
   password: 'any_password',
 });
-
-export const makeFakeRoles = (): RoleModel => {
-  const role = new RoleModel();
-  role.id = '65b9a4cd77e2de47acb5db37';
-  role.label = 'Role de acesso a todas as funcionalidades do sistema';
-  role.value = RolesEnum.ADMIN;
-  return role;
-};
 
 export const makeFakeStore = (): StoreModel => {
   const store = new StoreModel();
