@@ -9,7 +9,6 @@ module.exports = {
       '!<rootDir>/src/core/application/protocols/**',
       '!<rootDir>/src/core/domain/**',
       '!<rootDir>/src/infra/config/**',
-      '!<rootDir>/src/infra/middleware/**',
       '!<rootDir>/src/presentation/**',
       '!<rootDir>/src/shared/**',
 
