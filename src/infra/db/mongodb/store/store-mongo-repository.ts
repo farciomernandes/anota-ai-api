@@ -153,8 +153,9 @@ export class StoreMongoRepository
       return MongoHelper.map(store);
     } catch (error) {
       if (
-        error.message ==
-        `Cannot destructure property '_id' of 'collection' as it is null.`
+        error.message ===
+          `Cannot destructure property '_id' of 'collection' as it is null.` ||
+        `Cannot destructure property '_id' of '((cov_rxnwf9ry8(...).s[24]++) , collection)' as it is null.`
       ) {
         throw new NotFoundException(
           `${MessagesHelper.NOT_FOUND} store id ${id}`,
@@ -193,7 +194,8 @@ export class StoreMongoRepository
       }
       if (
         error.message ===
-        `Cannot destructure property '_id' of 'collection' as it is null.`
+          `Cannot destructure property '_id' of 'collection' as it is null.` ||
+        `Cannot destructure property '_id' of '((cov_rxnwf9ry8(...).s[24]++) , collection)' as it is null.`
       ) {
         throw new NotFoundException(
           `${MessagesHelper.NOT_FOUND} admin id ${id}`,
