@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -11,6 +12,7 @@ import { IDbListStoreRepository } from '@/core/domain/protocols/db/store/list-st
 import { ObjectId } from 'mongodb';
 import { CreatedStore } from '@/presentation/dtos/store/created-store';
 import { AddStoreModel } from '@/presentation/dtos/role/add-role.dto';
+import { MessagesHelper } from '@/shared/helpers/messages.helper';
 
 @Injectable()
 export class StoreMongoRepository
@@ -133,6 +135,58 @@ export class StoreMongoRepository
 
       return MongoHelper.map(store);
     } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  async findById(id: string): Promise<StoreModel> {
+    try {
+      const storeCollection = await MongoHelper.getCollection('stores');
+      const store = await storeCollection.findOne({
+        _id: new ObjectId(id),
+      });
+
+      return MongoHelper.map(store);
+    } catch (error) {
+      if (
+        error.message ===
+        `Cannot destructure property '_id' of 'collection' as it is null.`
+      ) {
+        throw new NotFoundException(
+          `${MessagesHelper.NOT_FOUND} store id ${id}`,
+        );
+      }
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  async delete(id: string): Promise<StoreModel> {
+    try {
+      if (!id || !/^[0-9a-fA-F]{24}$/.test(id)) {
+        throw new BadRequestException(MessagesHelper.INVALID_ID_FORMAT);
+      }
+
+      const storeCollection = await MongoHelper.getCollection('stores');
+
+      const store = MongoHelper.map(
+        await storeCollection.findOne({
+          _id: new ObjectId(id),
+        }),
+      );
+
+      if (!store) {
+        throw new BadRequestException(`store with id ${id} not found.`);
+      }
+
+      await storeCollection.deleteOne({
+        _id: new ObjectId(id),
+      });
+
+      return store;
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw new BadRequestException(error.message);
+      }
       throw new InternalServerErrorException(error.message);
     }
   }

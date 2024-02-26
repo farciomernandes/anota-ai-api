@@ -2,6 +2,7 @@ import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper';
 import { Collection } from 'mongodb';
 
 import {
+  BadRequestException,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
@@ -160,5 +161,30 @@ describe('Store Mongo Repository', () => {
 
     const promise = sut.findByEmail(makeFakeStore().email);
     await expect(promise).rejects.toThrowError(InternalServerErrorException);
+  });
+
+  test('Should delete Store on success', async () => {
+    const { sut } = makeSut();
+    const store = await storeCollection.insertOne(makeFakeStore());
+    const response = await sut.delete(String(store.insertedId));
+
+    expect(response.email).toEqual(makeFakeStore().email);
+    expect(response.name).toEqual(makeFakeStore().name);
+    expect(response.id).toEqual(store.insertedId);
+  });
+
+  test('Should return BadRequestException throws in delete if send invalid_id', async () => {
+    const { sut } = makeSut();
+
+    const response = sut.delete('invalid_id');
+    await expect(response).rejects.toThrow(BadRequestException);
+  });
+
+  test('Should return InternalServerErrorException throws in delete if send invalid_id', async () => {
+    const { sut } = makeSut();
+    const notFoundId = '65d771c9a1acf6d4b2aec923';
+
+    const response = sut.delete(notFoundId);
+    await expect(response).rejects.toThrow(InternalServerErrorException);
   });
 });

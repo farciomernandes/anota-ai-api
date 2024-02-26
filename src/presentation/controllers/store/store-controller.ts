@@ -4,10 +4,12 @@ import { RolesGuard } from '@/infra/guards/roles.guard';
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpException,
   HttpStatus,
+  Param,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -23,6 +25,9 @@ import { IDbListStoreRepository } from '@/core/domain/protocols/db/store/list-st
 import { CreatedStore } from '@/presentation/dtos/store/created-store';
 import { AddStoreModel } from '@/presentation/dtos/role/add-role.dto';
 import { RolesEnum } from '@/shared/enums/roles.enum';
+import { User } from '@/shared/decorators/user.decorator';
+import { Authenticated } from '@/presentation/dtos/auth/authenticated.dto';
+import { IDbDeleteStoreRepository } from '@/core/domain/protocols/db/store/delete-store-respository';
 
 @ApiTags('Store')
 @Controller('api/v1/store')
@@ -30,6 +35,7 @@ export class StoreController {
   constructor(
     private readonly dbAddStore: IDbAddStoreRepository,
     private readonly dbListStore: IDbListStoreRepository,
+    private readonly dbDeleteStore: IDbDeleteStoreRepository,
   ) {}
 
   @ApiBody({
@@ -61,6 +67,27 @@ export class StoreController {
     } catch (error) {
       console.log('saca');
 
+      throw new HttpException(error.response, error.status);
+    }
+  }
+
+  @Delete('/:id')
+  @ApiOkResponse({
+    status: HttpStatus.OK,
+    type: StoreModel,
+  })
+  @Roles(RolesEnum.ADMIN, RolesEnum.STORE)
+  @UseGuards(RolesGuard)
+  @ApiBearerAuth()
+  async delete(
+    @Param('id') id: string,
+    @User() user: Authenticated,
+  ): Promise<StoreModel> {
+    try {
+      const response = await this.dbDeleteStore.delete(id, user);
+
+      return response;
+    } catch (error) {
       throw new HttpException(error.response, error.status);
     }
   }

@@ -8,6 +8,12 @@ import { makeFakeRoles } from './db-mock-helper-role';
 
 export const makeStoreMongoRepository = (): StoreMongoRepository => {
   class StoreRepositoryStub implements StoreMongoRepository {
+    findById(id: string): Promise<StoreModel> {
+      return Promise.resolve(makeFakeStore());
+    }
+    delete(id: string): Promise<StoreModel> {
+      return Promise.resolve(makeFakeStore());
+    }
     async getAll(): Promise<StoreModel[]> {
       return Promise.resolve([makeFakeStore()]);
     }

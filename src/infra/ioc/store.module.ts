@@ -12,6 +12,8 @@ import { IDbAddStoreRepository } from '@/core/domain/protocols/db/store/add-stor
 import { IDbListStoreRepository } from '@/core/domain/protocols/db/store/list-store-respository';
 import { StoreMongoRepository } from '../db/mongodb/store/store-mongo-repository';
 import { StoreController } from '@/presentation/controllers/store/store-controller';
+import { DbDeleteStore } from '@/core/application/store/db-delete-store';
+import { IDbDeleteStoreRepository } from '@/core/domain/protocols/db/store/delete-store-respository';
 
 @Module({
   imports: [],
@@ -19,6 +21,7 @@ import { StoreController } from '@/presentation/controllers/store/store-controll
     StoreMongoRepository,
     DbAddStore,
     DbListStore,
+    DbDeleteStore,
     BcryptAdapter,
     JwtAdapter,
     AuthMiddleware,
@@ -46,11 +49,16 @@ import { StoreController } from '@/presentation/controllers/store/store-controll
       provide: IDbListStoreRepository,
       useClass: DbListStore,
     },
+    {
+      provide: IDbDeleteStoreRepository,
+      useClass: DbDeleteStore,
+    },
   ],
   controllers: [StoreController],
   exports: [
     IDbAddStoreRepository,
     IDbListStoreRepository,
+    IDbDeleteStoreRepository,
     BcryptAdapter,
     Encrypter,
   ],
