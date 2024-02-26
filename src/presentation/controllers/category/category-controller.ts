@@ -86,9 +86,10 @@ export class CategoryController {
   async update(
     @Param('id') id: string,
     @Body() payload: Omit<AddCategoryModel, 'ownerId'>,
+    @User() user: Authenticated,
   ): Promise<CategoryModel> {
     try {
-      return await this.dbUpdateCategory.update(id, payload);
+      return await this.dbUpdateCategory.update(id, payload, user);
     } catch (error) {
       throw new HttpException(error.response, error.status);
     }

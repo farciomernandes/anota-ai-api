@@ -43,6 +43,17 @@ describe('DbDeleteCategory usecase', () => {
     expect(findSpy).toBeCalledWith(makeFakeCategory().ownerId);
   });
 
+  test('Shoul call delete CategoryMongoRepository with succes if roles is ADMIN', async () => {
+    const { sut, deleteCategoryRepositoryStub } = makeSut();
+    const deleteSpy = jest.spyOn(deleteCategoryRepositoryStub, 'delete');
+    await sut.delete(makeFakeCategory().id, {
+      id: 'admin-id',
+      roles: [RolesEnum.ADMIN],
+    });
+
+    expect(deleteSpy).toHaveBeenCalledWith(makeFakeCategory().id);
+  });
+
   test('Should throw UnauthorizedException if category ownerId not matching if userId sended', async () => {
     const { sut } = makeSut();
 

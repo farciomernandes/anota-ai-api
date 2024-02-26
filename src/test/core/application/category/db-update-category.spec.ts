@@ -6,6 +6,8 @@ import {
   makeCategoryMongoRepository,
   makeFakeCategory,
 } from '@/test/mock/db-mock-helper-category';
+import { RolesEnum } from '@/shared/enums/roles.enum';
+import { UnauthorizedException } from '@nestjs/common';
 
 type SutTypes = {
   sut: DbUpdateCategory;
@@ -24,21 +26,48 @@ const makeSut = (): SutTypes => {
 };
 
 describe('DbUpdate Category', () => {
-  test('Shoul call DbUpdateCategory with correct values', async () => {
+  test('Shoul call update CategoryMongoRepository with correct values', async () => {
     const { sut, updateCategoryRepositoryStub } = makeSut();
     const updateSpy = jest.spyOn(updateCategoryRepositoryStub, 'update');
-    await sut.update('valid_id', makeFakeCategory());
+    await sut.update('valid_id', makeFakeCategory(), {
+      id: makeFakeCategory().ownerId,
+      roles: [RolesEnum.STORE],
+    });
     expect(updateSpy).toHaveBeenCalledWith('valid_id', makeFakeCategory());
   });
 
-  test('Should throws if DbUpdateCategory throws', async () => {
+  test('Shoul call update CategoryMongoRepository with succes if roles is ADMIN', async () => {
+    const { sut, updateCategoryRepositoryStub } = makeSut();
+    const updateSpy = jest.spyOn(updateCategoryRepositoryStub, 'update');
+    await sut.update('valid_id', makeFakeCategory(), {
+      id: 'admin-id',
+      roles: [RolesEnum.ADMIN],
+    });
+    expect(updateSpy).toHaveBeenCalledWith('valid_id', makeFakeCategory());
+  });
+
+  test('Should throw UnauthorizedException if category ownerId not matching if userId sended', async () => {
+    const { sut } = makeSut();
+
+    const promise = sut.update('any_id', makeFakeCategory(), {
+      id: 'invalid_id',
+      roles: [RolesEnum.STORE],
+    });
+
+    await expect(promise).rejects.toThrowError(UnauthorizedException);
+  });
+
+  test('Should throws if CategoryMongoRepository throws', async () => {
     const { sut, updateCategoryRepositoryStub } = makeSut();
     jest
       .spyOn(updateCategoryRepositoryStub, 'update')
       .mockReturnValueOnce(
         new Promise((resolver, reject) => reject(new Error())),
       );
-    const promise = sut.update('any_id', makeFakeCategory());
+    const promise = sut.update('any_id', makeFakeCategory(), {
+      id: makeFakeCategory().ownerId,
+      roles: [RolesEnum.STORE],
+    });
     expect(promise).rejects.toThrow();
   });
 });
