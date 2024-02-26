@@ -10,10 +10,7 @@ import { StoreModel } from '@/core/domain/models/store';
 
 @Injectable()
 export class DbUpdateStore implements IDbUpdateStoreRepository {
-  constructor(
-    private readonly storeMongoRepository: StoreMongoRepository,
-    private readonly snsProxy: ProxySendMessage,
-  ) {}
+  constructor(private readonly storeMongoRepository: StoreMongoRepository) {}
   async update(
     id: string,
     payload: AddStoreModel,
@@ -26,8 +23,6 @@ export class DbUpdateStore implements IDbUpdateStoreRepository {
     }
 
     const storeUpdated = await this.storeMongoRepository.update(id, payload);
-
-    await this.snsProxy.sendSnsMessage(storeUpdated, 'store');
 
     return storeUpdated;
   }

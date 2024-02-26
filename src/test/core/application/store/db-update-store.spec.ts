@@ -1,7 +1,5 @@
-import { ConfigService } from '@nestjs/config';
 import { StoreMongoRepository } from '@/infra/db/mongodb/store/store-mongo-repository';
 import { DbUpdateStore } from '@/core/application/store/db-update-store';
-import { makeSnsProxyMock } from '@/test/mock/sns-proxy-mock-helper';
 import {
   makeStoreMongoRepository,
   makeFakeStore,
@@ -18,8 +16,7 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const updatestoreRepositoryStub = makeStoreMongoRepository();
-  const snsProxyStub = makeSnsProxyMock({} as ConfigService);
-  const sut = new DbUpdateStore(updatestoreRepositoryStub, snsProxyStub);
+  const sut = new DbUpdateStore(updatestoreRepositoryStub);
 
   return {
     sut,
