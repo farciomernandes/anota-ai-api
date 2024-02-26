@@ -6,6 +6,7 @@ import { IDbUpdateProductRepository } from '../../domain/protocols/db/product/up
 import { ProxySendMessage } from '../../domain/protocols/aws/sns-send-message';
 import { Authenticated } from '@/presentation/dtos/auth/authenticated.dto';
 import { MessagesHelper } from '@/shared/helpers/messages.helper';
+import { RolesEnum } from '@/shared/enums/roles.enum';
 
 @Injectable()
 export class DbUpdateProduct implements IDbUpdateProductRepository {
@@ -20,7 +21,7 @@ export class DbUpdateProduct implements IDbUpdateProductRepository {
   ): Promise<ProductModel> {
     const product = await this.productMongoRepository.findById(id);
 
-    if (product.ownerId !== user.id && user.roles.value !== 'ADMIN') {
+    if (product.ownerId !== user.id && user.roles.value !== RolesEnum.ADMIN) {
       throw new UnauthorizedException(MessagesHelper.NOT_AUTHORIZATION);
     }
 

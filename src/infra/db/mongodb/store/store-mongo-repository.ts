@@ -13,13 +13,17 @@ import { ObjectId } from 'mongodb';
 import { CreatedStore } from '@/presentation/dtos/store/created-store';
 import { AddStoreModel } from '@/presentation/dtos/role/add-role.dto';
 import { MessagesHelper } from '@/shared/helpers/messages.helper';
+import { IDbDeleteStoreRepository } from '@/core/domain/protocols/db/store/delete-store-respository';
+import { IDbFindStoreByIdRepository } from '@/core/domain/protocols/db/store/find-store-by-id-repository';
 
 @Injectable()
 export class StoreMongoRepository
   implements
     IDbAddStoreRepository,
     IDbFindStoreByEmailRepository,
-    IDbListStoreRepository
+    IDbListStoreRepository,
+    IDbDeleteStoreRepository,
+    IDbFindStoreByIdRepository
 {
   async create(payload: AddStoreModel): Promise<CreatedStore> {
     try {
@@ -148,7 +152,6 @@ export class StoreMongoRepository
 
       return MongoHelper.map(store);
     } catch (error) {
-      console.log('ERRO ----------', error.message);
       if (
         error.message ==
         `Cannot destructure property '_id' of 'collection' as it is null.`

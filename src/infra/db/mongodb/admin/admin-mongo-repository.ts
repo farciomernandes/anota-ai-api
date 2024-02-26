@@ -12,14 +12,68 @@ import { IDbFindAdminByEmailRepository } from '@/core/domain/protocols/db/admin/
 import { IDbListAdminRepository } from '@/core/domain/protocols/db/admin/list-admin-respository';
 import { AddAdmin } from '@/presentation/dtos/admin/add-admin';
 import { MessagesHelper } from '@/shared/helpers/messages.helper';
+import { IDbFindAdminByIdRepository } from '@/core/domain/protocols/db/admin/find-admin-by-id-repository';
+import { IDbDeleteAdminRepository } from '@/core/domain/protocols/db/admin/delete-admin-respository';
 
 @Injectable()
 export class AdminMongoRepository
   implements
     IDbAddAdminRepository,
     IDbFindAdminByEmailRepository,
-    IDbListAdminRepository
+    IDbListAdminRepository,
+    IDbFindAdminByIdRepository,
+    IDbDeleteAdminRepository
 {
+  async findById(id: string): Promise<AdminModel> {
+    try {
+      const adminCollection = await MongoHelper.getCollection('admins');
+      const admin = await adminCollection.findOne({
+        _id: new ObjectId(id),
+      });
+
+      return MongoHelper.map(admin);
+    } catch (error) {
+      if (
+        error.message ===
+        `Cannot destructure property '_id' of 'collection' as it is null.`
+      ) {
+        throw new NotFoundException(
+          `${MessagesHelper.NOT_FOUND} admin id ${id}`,
+        );
+      }
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  async findByEmail(email: string): Promise<AdminModel> {
+    try {
+      const adminCollection = await MongoHelper.getCollection('admins');
+      const admin = await adminCollection.findOne({
+        email,
+      });
+
+      if (!admin) {
+        return null;
+      }
+
+      return MongoHelper.map(admin);
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  async getAll(): Promise<AdminModel[]> {
+    try {
+      const adminCollection = await MongoHelper.getCollection('admins');
+
+      const admins = await adminCollection.find().toArray();
+
+      return admins.map((admin) => MongoHelper.map(admin));
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
   async create(payload: AddAdmin): Promise<AdminModel> {
     try {
       const adminCollection = await MongoHelper.getCollection('admins');
@@ -51,56 +105,6 @@ export class AdminMongoRepository
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);
-      }
-      throw new InternalServerErrorException(error.message);
-    }
-  }
-
-  async getAll(): Promise<AdminModel[]> {
-    try {
-      const adminCollection = await MongoHelper.getCollection('admins');
-
-      const admins = await adminCollection.find().toArray();
-
-      return admins.map((admin) => MongoHelper.map(admin));
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
-  }
-
-  async findByEmail(email: string): Promise<AdminModel> {
-    try {
-      const adminCollection = await MongoHelper.getCollection('admins');
-      const admin = await adminCollection.findOne({
-        email,
-      });
-
-      if (!admin) {
-        return null;
-      }
-
-      return MongoHelper.map(admin);
-    } catch (error) {
-      throw new InternalServerErrorException(error.message);
-    }
-  }
-
-  async findById(id: string): Promise<AdminModel> {
-    try {
-      const adminCollection = await MongoHelper.getCollection('admins');
-      const admin = await adminCollection.findOne({
-        _id: new ObjectId(id),
-      });
-
-      return MongoHelper.map(admin);
-    } catch (error) {
-      if (
-        error.message ===
-        `Cannot destructure property '_id' of 'collection' as it is null.`
-      ) {
-        throw new NotFoundException(
-          `${MessagesHelper.NOT_FOUND} admin id ${id}`,
-        );
       }
       throw new InternalServerErrorException(error.message);
     }

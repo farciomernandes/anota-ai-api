@@ -6,6 +6,7 @@ import { ProxySendMessage } from '../../domain/protocols/aws/sns-send-message';
 import { IDbUpdateCategoryRepository } from '../../domain/protocols/db/category/update-category-respository';
 import { Authenticated } from '@/presentation/dtos/auth/authenticated.dto';
 import { MessagesHelper } from '@/shared/helpers/messages.helper';
+import { RolesEnum } from '@/shared/enums/roles.enum';
 
 @Injectable()
 export class DbUpdateCategory implements IDbUpdateCategoryRepository {
@@ -20,7 +21,7 @@ export class DbUpdateCategory implements IDbUpdateCategoryRepository {
   ): Promise<CategoryModel> {
     const category = await this.categoryMongoRepository.findById(id);
 
-    if (category.ownerId !== user.id && user.roles.value !== 'ADMIN') {
+    if (category.ownerId !== user.id && user.roles.value !== RolesEnum.ADMIN) {
       throw new UnauthorizedException(MessagesHelper.NOT_AUTHORIZATION);
     }
 

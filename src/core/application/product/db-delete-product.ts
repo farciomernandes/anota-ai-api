@@ -5,6 +5,7 @@ import { ProxySendMessage } from '../../domain/protocols/aws/sns-send-message';
 import { IDbDeleteProductRepository } from '../../domain/protocols/db/product/delete-product-respository';
 import { Authenticated } from '@/presentation/dtos/auth/authenticated.dto';
 import { MessagesHelper } from '@/shared/helpers/messages.helper';
+import { RolesEnum } from '@/shared/enums/roles.enum';
 
 @Injectable()
 export class DbDeleteProduct implements IDbDeleteProductRepository {
@@ -15,7 +16,7 @@ export class DbDeleteProduct implements IDbDeleteProductRepository {
   async delete(id: string, user: Authenticated): Promise<ProductModel> {
     const product = await this.productMongoRepository.findById(id);
 
-    if (product.ownerId !== user.id && user.roles.value !== 'ADMIN') {
+    if (product.ownerId !== user.id && user.roles.value !== RolesEnum.ADMIN) {
       throw new UnauthorizedException(MessagesHelper.NOT_AUTHORIZATION);
     }
 

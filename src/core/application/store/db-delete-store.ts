@@ -4,6 +4,7 @@ import { MessagesHelper } from '@/shared/helpers/messages.helper';
 import { StoreMongoRepository } from '@/infra/db/mongodb/store/store-mongo-repository';
 import { IDbDeleteStoreRepository } from '@/core/domain/protocols/db/store/delete-store-respository';
 import { StoreModel } from '@/core/domain/models/store';
+import { RolesEnum } from '@/shared/enums/roles.enum';
 
 @Injectable()
 export class DbDeleteStore implements IDbDeleteStoreRepository {
@@ -11,7 +12,7 @@ export class DbDeleteStore implements IDbDeleteStoreRepository {
   async delete(id: string, user: Authenticated): Promise<StoreModel> {
     const store = await this.storeMongoRepository.findById(id);
 
-    if (store.id !== user.id && user.roles.value !== 'ADMIN') {
+    if (store.id !== user.id && user.roles.value !== RolesEnum.ADMIN) {
       throw new UnauthorizedException(MessagesHelper.NOT_AUTHORIZATION);
     }
 
