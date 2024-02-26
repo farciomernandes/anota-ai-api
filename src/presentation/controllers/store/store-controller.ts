@@ -12,6 +12,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiCreatedResponse,
   ApiOkResponse,
@@ -40,6 +41,7 @@ export class StoreController {
   @HttpCode(HttpStatus.CREATED)
   @Roles('ADMIN')
   @UseGuards(RolesGuard)
+  @ApiBearerAuth()
   async create(@Body() payload: AddStoreModel): Promise<CreatedStore> {
     return await this.dbAddStore.create(payload);
   }
@@ -52,6 +54,7 @@ export class StoreController {
   })
   @Roles(RolesEnum.ADMIN)
   @UseGuards(RolesGuard)
+  @ApiBearerAuth()
   async getAll(): Promise<StoreModel[]> {
     try {
       return await this.dbListStore.getAll();

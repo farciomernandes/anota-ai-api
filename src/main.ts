@@ -29,9 +29,10 @@ async function bootstrap() {
       }
 
       const config = new DocumentBuilder()
-        .setTitle(configService.get('APP_TITLE'))
-        .setDescription(configService.get('APP_DESCRIPTION'))
-        .setVersion(configService.get('APP_VERSION'))
+        .setTitle(configService.get('SWAGGER_TITLE'))
+        .setDescription(configService.get('SWAGGER_DESCRIPTION'))
+        .setVersion(configService.get('SWAGGER_VERSION'))
+        .addBearerAuth()
         .build();
 
       const document = SwaggerModule.createDocument(application, config);

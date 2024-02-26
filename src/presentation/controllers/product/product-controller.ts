@@ -12,7 +12,12 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ProductModel } from '@/core/domain/models/product';
 import { AddProductModel } from '@/presentation/dtos/product/add-product.dto';
 import { IDbAddProductRepository } from '@/core/domain/protocols/db/product/add-product-respository';
@@ -48,6 +53,7 @@ export class ProductController {
   })
   @UseInterceptors(FileInterceptor('file', multerConfig))
   @Roles(RolesEnum.ADMIN, RolesEnum.STORE)
+  @ApiBearerAuth()
   @UseGuards(RolesGuard)
   async create(
     @UploadedFile() file: Express.Multer.File,
@@ -80,6 +86,7 @@ export class ProductController {
     status: HttpStatus.OK,
     type: ProductModel,
   })
+  @ApiBearerAuth()
   async update(
     @Param('id') id: string,
     @Body() payload: UpdateProductModel,
@@ -96,6 +103,7 @@ export class ProductController {
     status: HttpStatus.OK,
     type: ProductModel,
   })
+  @ApiBearerAuth()
   async delete(@Param('id') id: string): Promise<ProductModel> {
     try {
       const response = await this.dbDeleteProduct.delete(id);

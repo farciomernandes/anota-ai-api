@@ -9,7 +9,12 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CategoryModel } from '@/core/domain/models/category';
 import { AddCategoryModel } from '@/presentation/dtos/category/add-category.dto';
 import { IDbAddCategoryRepository } from '@/core/domain/protocols/db/category/add-category-respository';
@@ -41,6 +46,7 @@ export class CategoryController {
     type: CategoryModel,
   })
   @Roles(RolesEnum.ADMIN, RolesEnum.STORE)
+  @ApiBearerAuth()
   async create(@Body() payload: AddCategoryModel): Promise<CategoryModel> {
     try {
       return await this.dbAddCategory.create(payload);
@@ -74,6 +80,7 @@ export class CategoryController {
     type: CategoryModel,
   })
   @Roles(RolesEnum.ADMIN, RolesEnum.STORE)
+  @ApiBearerAuth()
   async update(
     @Param('id') id: string,
     @Body() payload: Omit<AddCategoryModel, 'ownerId'>,
@@ -91,6 +98,7 @@ export class CategoryController {
     type: CategoryModel,
   })
   @Roles(RolesEnum.ADMIN, RolesEnum.STORE)
+  @ApiBearerAuth()
   async delete(@Param('id') id: string): Promise<CategoryModel> {
     try {
       const response = await this.dbDeleteCategory.delete(id);
