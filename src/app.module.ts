@@ -21,6 +21,7 @@ import { StoreModule } from './infra/ioc/store.module';
 import { RoleModule } from './infra/ioc/role.module';
 import { AdminModule } from './infra/ioc/admin.module';
 import { AdminController } from './presentation/controllers/admin/admin-controller';
+import { AuthController } from './presentation/controllers/auth/auth-controller';
 
 @Module({
   imports: [
@@ -37,10 +38,11 @@ import { AdminController } from './presentation/controllers/admin/admin-controll
     AdminModule,
   ],
   controllers: [
+    AuthController,
+    AdminController,
+    StoreController,
     CategoryController,
     ProductController,
-    StoreController,
-    AdminController,
   ],
   providers: [
     {
@@ -56,8 +58,7 @@ import { AdminController } from './presentation/controllers/admin/admin-controll
 export class AppModule implements NestModule {
   private readonly storeEndpoints = [
     { path: 'api/v1/store', method: RequestMethod.POST },
-    { path: 'api/v1/store', method: RequestMethod.PUT },
-    { path: 'api/v1/store', method: RequestMethod.DELETE },
+    { path: 'api/v1/store', method: RequestMethod.GET },
   ];
 
   private readonly categoryEndpoints = [

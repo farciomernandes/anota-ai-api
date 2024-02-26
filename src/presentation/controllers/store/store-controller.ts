@@ -52,13 +52,15 @@ export class StoreController {
     status: HttpStatus.OK,
     type: StoreModel,
   })
+  @ApiBearerAuth()
   @Roles(RolesEnum.ADMIN)
   @UseGuards(RolesGuard)
-  @ApiBearerAuth()
   async getAll(): Promise<StoreModel[]> {
     try {
       return await this.dbListStore.getAll();
     } catch (error) {
+      console.log('saca');
+
       throw new HttpException(error.response, error.status);
     }
   }
