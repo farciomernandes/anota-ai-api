@@ -83,7 +83,6 @@ export class ProductController {
   }
 
   @Put('/:id')
-  @Post()
   @ApiOkResponse({
     status: HttpStatus.OK,
     type: ProductModel,
