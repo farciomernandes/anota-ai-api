@@ -92,9 +92,10 @@ export class ProductController {
   async update(
     @Param('id') id: string,
     @Body() payload: UpdateProductModel,
+    @User() user: Authenticated,
   ): Promise<ProductModel> {
     try {
-      return await this.dbUpdateProduct.update(id, payload);
+      return await this.dbUpdateProduct.update(id, payload, user);
     } catch (error) {
       throw new HttpException(error.response, error.status);
     }

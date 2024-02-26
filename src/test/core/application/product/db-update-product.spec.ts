@@ -8,6 +8,8 @@ import {
   makeProductMongoRepository,
 } from '@/test/mock/db-mock-helper-product';
 import { ProxySendMessage } from '@/core/domain/protocols/aws/sns-send-message';
+import { RolesEnum } from '@/shared/enums/roles.enum';
+import { UnauthorizedException } from '@nestjs/common';
 
 type SutTypes = {
   sut: DbUpdateProduct;
@@ -32,8 +34,32 @@ describe('DbUpdate Product', () => {
   test('Shoul call DbUpdateProduct with correct values', async () => {
     const { sut, updateProductRepositoryStub } = makeSut();
     const updateSpy = jest.spyOn(updateProductRepositoryStub, 'update');
-    await sut.update('valid_id', makeFakeProduct());
+    await sut.update('valid_id', makeFakeProduct(), {
+      id: makeFakeProduct().ownerId,
+      roles: [RolesEnum.STORE],
+    });
     expect(updateSpy).toHaveBeenCalledWith('valid_id', makeFakeProduct());
+  });
+
+  test('Shoul call update ProductMongoRepository with succes if roles is ADMIN', async () => {
+    const { sut, updateProductRepositoryStub } = makeSut();
+    const updateSpy = jest.spyOn(updateProductRepositoryStub, 'update');
+    await sut.update('valid_id', makeFakeProduct(), {
+      id: 'admin-id',
+      roles: [RolesEnum.ADMIN],
+    });
+    expect(updateSpy).toHaveBeenCalledWith('valid_id', makeFakeProduct());
+  });
+
+  test('Should throw UnauthorizedException if Product ownerId not matching if userId sended', async () => {
+    const { sut } = makeSut();
+
+    const promise = sut.update('any_id', makeFakeProduct(), {
+      id: 'invalid_id',
+      roles: [RolesEnum.STORE],
+    });
+
+    await expect(promise).rejects.toThrowError(UnauthorizedException);
   });
 
   test('Should throws if DbUpdateProduct throws', async () => {
@@ -43,7 +69,10 @@ describe('DbUpdate Product', () => {
       .mockReturnValueOnce(
         new Promise((resolver, reject) => reject(new Error())),
       );
-    const promise = sut.update('any_id', makeFakeProduct());
+    const promise = sut.update('any_id', makeFakeProduct(), {
+      id: makeFakeProduct().ownerId,
+      roles: [RolesEnum.STORE],
+    });
     expect(promise).rejects.toThrow();
   });
 });

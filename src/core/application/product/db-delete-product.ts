@@ -9,17 +9,17 @@ import { MessagesHelper } from '@/shared/helpers/messages.helper';
 @Injectable()
 export class DbDeleteProduct implements IDbDeleteProductRepository {
   constructor(
-    private readonly productMongoRepositoy: ProductMongoRepository,
+    private readonly productMongoRepository: ProductMongoRepository,
     private readonly snsProxy: ProxySendMessage,
   ) {}
   async delete(id: string, user: Authenticated): Promise<ProductModel> {
-    const product = await this.productMongoRepositoy.findById(id);
+    const product = await this.productMongoRepository.findById(id);
 
     if (product.ownerId !== user.id && !user.roles.includes('ADMIN')) {
       throw new UnauthorizedException(MessagesHelper.NOT_AUTHORIZATION);
     }
 
-    const productUpdated = await this.productMongoRepositoy.delete(id);
+    const productUpdated = await this.productMongoRepository.delete(id);
 
     await this.snsProxy.sendSnsMessage(
       {
