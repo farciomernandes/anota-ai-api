@@ -195,6 +195,16 @@ describe('Product Mongo Repository', () => {
     await expect(promise).rejects.toThrow(BadRequestException);
   });
 
+  test('Should return true if findById searched product on success', async () => {
+    const { sut } = makeSut();
+
+    const product = await productCollection.insertOne(makeFakeProduct());
+    const response = await sut.findById(product.insertedId.toHexString());
+    expect(response.title).toEqual(makeFakeProduct().title);
+    expect(response.description).toEqual(makeFakeProduct().description);
+    expect(response.ownerId).toEqual(makeFakeProduct().ownerId);
+  });
+
   test('Should delete Product on success', async () => {
     const { sut } = makeSut();
     const product = await productCollection.insertOne(makeFakeProduct());
