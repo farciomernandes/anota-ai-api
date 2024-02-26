@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -10,6 +11,7 @@ import { ObjectId } from 'mongodb';
 import { IDbFindAdminByEmailRepository } from '@/core/domain/protocols/db/admin/find-admin-by-email-repository';
 import { IDbListAdminRepository } from '@/core/domain/protocols/db/admin/list-admin-respository';
 import { AddAdmin } from '@/presentation/dtos/admin/add-admin';
+import { MessagesHelper } from '@/shared/helpers/messages.helper';
 
 @Injectable()
 export class AdminMongoRepository
@@ -79,6 +81,58 @@ export class AdminMongoRepository
 
       return MongoHelper.map(admin);
     } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  async findById(id: string): Promise<AdminModel> {
+    try {
+      const adminCollection = await MongoHelper.getCollection('admins');
+      const admin = await adminCollection.findOne({
+        _id: new ObjectId(id),
+      });
+
+      return MongoHelper.map(admin);
+    } catch (error) {
+      if (
+        error.message ===
+        `Cannot destructure property '_id' of 'collection' as it is null.`
+      ) {
+        throw new NotFoundException(
+          `${MessagesHelper.NOT_FOUND} admin id ${id}`,
+        );
+      }
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  async delete(id: string): Promise<AdminModel> {
+    try {
+      if (!id || !/^[0-9a-fA-F]{24}$/.test(id)) {
+        throw new BadRequestException(MessagesHelper.INVALID_ID_FORMAT);
+      }
+
+      const adminCollection = await MongoHelper.getCollection('admins');
+
+      const admin = MongoHelper.map(
+        await adminCollection.findOne({
+          _id: new ObjectId(id),
+        }),
+      );
+
+      if (!admin) {
+        throw new BadRequestException(`admin with id ${id} not found.`);
+      }
+
+      await adminCollection.deleteOne({
+        _id: new ObjectId(id),
+      });
+
+      return admin;
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw new BadRequestException(error.message);
+      }
       throw new InternalServerErrorException(error.message);
     }
   }

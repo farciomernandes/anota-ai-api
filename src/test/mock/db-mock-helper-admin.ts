@@ -5,6 +5,12 @@ import { AddAdmin } from '@/presentation/dtos/admin/add-admin';
 
 export const makeAdminMongoRepository = (): AdminMongoRepository => {
   class AdminRepositoryStub implements AdminMongoRepository {
+    findById(id: string): Promise<AdminModel> {
+      return Promise.resolve(makeFakeAdmin());
+    }
+    delete(id: string): Promise<AdminModel> {
+      return Promise.resolve(makeFakeAdmin());
+    }
     async getAll(): Promise<AdminModel[]> {
       return Promise.resolve([makeFakeAdmin()]);
     }

@@ -163,6 +163,25 @@ describe('Store Mongo Repository', () => {
     await expect(promise).rejects.toThrowError(InternalServerErrorException);
   });
 
+  test('Should return correct if findById searched store on success', async () => {
+    const { sut } = makeSut();
+
+    const store = await storeCollection.insertOne(makeFakeStore());
+    const response = await sut.findById(store.insertedId.toHexString());
+    expect(response.email).toEqual(makeFakeStore().email);
+    expect(response.name).toEqual(makeFakeStore().name);
+  });
+
+  test('Should return NotFoundException if search id in findById', async () => {
+    const { sut } = makeSut();
+    const notFoundId = '65bd52691a0f4c3b57819a4b';
+    await storeCollection.insertOne(makeFakeStore());
+
+    const promise = sut.findById(notFoundId);
+
+    await expect(promise).rejects.toThrowError(NotFoundException);
+  });
+
   test('Should delete Store on success', async () => {
     const { sut } = makeSut();
     const store = await storeCollection.insertOne(makeFakeStore());
@@ -180,11 +199,10 @@ describe('Store Mongo Repository', () => {
     await expect(response).rejects.toThrow(BadRequestException);
   });
 
-  test('Should return InternalServerErrorException throws in delete if send invalid_id', async () => {
+  test('Should return BadRequestException throws in delete if send invalid_id', async () => {
     const { sut } = makeSut();
-    const notFoundId = '65d771c9a1acf6d4b2aec923';
 
-    const response = sut.delete(notFoundId);
-    await expect(response).rejects.toThrow(InternalServerErrorException);
+    const response = sut.delete('invalid_id');
+    await expect(response).rejects.toThrow(BadRequestException);
   });
 });

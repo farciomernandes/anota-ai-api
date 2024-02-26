@@ -2,6 +2,7 @@ import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper';
 import { Collection } from 'mongodb';
 
 import {
+  BadRequestException,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
@@ -152,5 +153,49 @@ describe('Admin Mongo Repository', () => {
 
     const promise = sut.findByEmail(makeFakeAdmin().email);
     await expect(promise).rejects.toThrowError(InternalServerErrorException);
+  });
+
+  test('Should return correct if findById searched store on success', async () => {
+    const { sut } = makeSut();
+
+    const admin = await adminCollection.insertOne(makeFakeAdmin());
+    const response = await sut.findById(admin.insertedId.toHexString());
+    expect(response.email).toEqual(makeFakeAdmin().email);
+    expect(response.name).toEqual(makeFakeAdmin().name);
+  });
+
+  test('Should return NotFoundException if search id in findById', async () => {
+    const { sut } = makeSut();
+    const notFoundId = '65bd52691a0f4c3b57819a4b';
+    await adminCollection.insertOne(makeFakeAdmin());
+
+    const promise = sut.findById(notFoundId);
+
+    await expect(promise).rejects.toThrowError(NotFoundException);
+  });
+
+  test('Should delete admin on success', async () => {
+    const { sut } = makeSut();
+    const admin = await adminCollection.insertOne(makeFakeAdmin());
+    const response = await sut.delete(String(admin.insertedId));
+
+    expect(response.email).toEqual(makeFakeAdmin().email);
+    expect(response.name).toEqual(makeFakeAdmin().name);
+    expect(response.id).toEqual(admin.insertedId);
+  });
+
+  test('Should return BadRequestException throws in delete if send invalid_id', async () => {
+    const { sut } = makeSut();
+
+    const response = sut.delete('invalid_id');
+    await expect(response).rejects.toThrow(BadRequestException);
+  });
+
+  test('Should return InternalServerErrorException throws in delete if send invalid_id', async () => {
+    const { sut } = makeSut();
+    const notFoundId = '65d771c9a1acf6d4b2aec923';
+
+    const response = sut.delete(notFoundId);
+    await expect(response).rejects.toThrow(InternalServerErrorException);
   });
 });

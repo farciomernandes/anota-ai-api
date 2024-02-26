@@ -148,8 +148,9 @@ export class StoreMongoRepository
 
       return MongoHelper.map(store);
     } catch (error) {
+      console.log('ERRO ----------', error.message);
       if (
-        error.message ===
+        error.message ==
         `Cannot destructure property '_id' of 'collection' as it is null.`
       ) {
         throw new NotFoundException(
@@ -186,6 +187,14 @@ export class StoreMongoRepository
     } catch (error) {
       if (error instanceof BadRequestException) {
         throw new BadRequestException(error.message);
+      }
+      if (
+        error.message ===
+        `Cannot destructure property '_id' of 'collection' as it is null.`
+      ) {
+        throw new NotFoundException(
+          `${MessagesHelper.NOT_FOUND} admin id ${id}`,
+        );
       }
       throw new InternalServerErrorException(error.message);
     }
