@@ -88,6 +88,19 @@ export class ProductMongoRepository
     }
   }
 
+  async findById(id: string): Promise<ProductModel> {
+    try {
+      const productCollection = await MongoHelper.getCollection('products');
+      const product = await productCollection.findOne({
+        _id: new ObjectId(id),
+      });
+
+      return MongoHelper.map(product);
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
   async update(id: string, payload: UpdateProductModel): Promise<ProductModel> {
     try {
       const body: any = payload;

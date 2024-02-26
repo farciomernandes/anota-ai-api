@@ -30,6 +30,8 @@ import multerConfig from '@/infra/config/multer';
 import { Roles } from '@/shared/decorators/roles.decorator';
 import { RolesGuard } from '@/infra/guards/roles.guard';
 import { RolesEnum } from '@/shared/enums/roles.enum';
+import { User } from '@/shared/decorators/user.decorator';
+import { Authenticated } from '@/presentation/dtos/auth/authenticated.dto';
 @ApiTags('Product')
 @Controller('api/v1/product')
 export class ProductController {
@@ -104,7 +106,10 @@ export class ProductController {
     type: ProductModel,
   })
   @ApiBearerAuth()
-  async delete(@Param('id') id: string): Promise<ProductModel> {
+  async delete(
+    @Param('id') id: string,
+    @User() user: Authenticated,
+  ): Promise<ProductModel> {
     try {
       const response = await this.dbDeleteProduct.delete(id);
 

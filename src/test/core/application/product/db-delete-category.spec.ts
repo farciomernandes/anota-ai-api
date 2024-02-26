@@ -7,6 +7,8 @@ import {
   makeFakeProduct,
   makeProductMongoRepository,
 } from '@/test/mock/db-mock-helper-product';
+import { RolesEnum } from '@/shared/enums/roles.enum';
+import { UnauthorizedException } from '@nestjs/common';
 
 type SutTypes = {
   sut: DbDeleteProduct;
@@ -28,7 +30,32 @@ describe('DbDeleteProduct usecase', () => {
   test('Should call ProductMongoRepository with correct values', async () => {
     const { sut, deleteProductRepositoryStub } = makeSut();
     const deleteSpy = jest.spyOn(deleteProductRepositoryStub, 'delete');
-    await sut.delete(makeFakeProduct().id);
+    await sut.delete(makeFakeProduct().id, {
+      id: makeFakeProduct().ownerId,
+      roles: [RolesEnum.STORE],
+    });
     expect(deleteSpy).toBeCalledWith(makeFakeProduct().id);
+  });
+
+  test('Shoul call delete ProductMongoRepository with succes if roles is ADMIN', async () => {
+    const { sut, deleteProductRepositoryStub } = makeSut();
+    const deleteSpy = jest.spyOn(deleteProductRepositoryStub, 'delete');
+    await sut.delete(makeFakeProduct().id, {
+      id: 'admin-id',
+      roles: [RolesEnum.ADMIN],
+    });
+
+    expect(deleteSpy).toHaveBeenCalledWith(makeFakeProduct().id);
+  });
+
+  test('Should throw UnauthorizedException if product ownerId not matching if userId sended', async () => {
+    const { sut } = makeSut();
+
+    const promise = sut.delete(makeFakeProduct().id, {
+      id: 'invalid_id',
+      roles: [RolesEnum.STORE],
+    });
+
+    await expect(promise).rejects.toThrowError(UnauthorizedException);
   });
 });

@@ -18,6 +18,9 @@ export const makeFakeProduct = (): ProductModel => {
 
 export const makeProductMongoRepository = (): ProductMongoRepository => {
   class ProductRepositoryStub implements ProductMongoRepository {
+    findById(id: string): Promise<ProductModel> {
+      return Promise.resolve(makeFakeProduct());
+    }
     async findByTitle(title: string): Promise<boolean> {
       return false;
     }
