@@ -23,6 +23,8 @@ import { IDbUpdateCategoryRepository } from '@/core/domain/protocols/db/category
 import { IDbDeleteCategoryRepository } from '@/core/domain/protocols/db/category/delete-category-respository';
 import { RolesEnum } from '@/shared/enums/roles.enum';
 import { Roles } from '@/shared/decorators/roles.decorator';
+import { User } from '@/shared/decorators/user.decorator';
+import { Authenticated } from '@/presentation/dtos/auth/authenticated.dto';
 
 @ApiTags('Category')
 @Controller('api/v1/category')
@@ -99,9 +101,12 @@ export class CategoryController {
   })
   @Roles(RolesEnum.ADMIN, RolesEnum.STORE)
   @ApiBearerAuth()
-  async delete(@Param('id') id: string): Promise<CategoryModel> {
+  async delete(
+    @Param('id') id: string,
+    @User() user: Authenticated,
+  ): Promise<CategoryModel> {
     try {
-      const response = await this.dbDeleteCategory.delete(id);
+      const response = await this.dbDeleteCategory.delete(id, user);
 
       return response;
     } catch (error) {

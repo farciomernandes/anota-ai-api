@@ -5,6 +5,8 @@ import {
   makeCategoryMongoRepository,
   makeFakeCategory,
 } from '@/test/mock/db-mock-helper-category';
+import { RolesEnum } from '@/shared/enums/roles.enum';
+import { UnauthorizedException } from '@nestjs/common';
 
 type SutTypes = {
   sut: DbDeleteCategory;
@@ -21,10 +23,34 @@ const makeSut = (): SutTypes => {
   };
 };
 describe('DbDeleteCategory usecase', () => {
-  test('Should call CategoryMongoRepository with correct values', async () => {
+  test('Should call Delete on CategoryMongoRepository with correct values', async () => {
     const { sut, deleteCategoryRepositoryStub } = makeSut();
     const deleteSpy = jest.spyOn(deleteCategoryRepositoryStub, 'delete');
-    await sut.delete(makeFakeCategory().id);
+    await sut.delete(makeFakeCategory().id, {
+      id: makeFakeCategory().ownerId,
+      roles: [RolesEnum.STORE],
+    });
     expect(deleteSpy).toBeCalledWith(makeFakeCategory().id);
+  });
+
+  test('Should call findById CategoryMongoRepository with correct value', async () => {
+    const { sut, deleteCategoryRepositoryStub } = makeSut();
+    const findSpy = jest.spyOn(deleteCategoryRepositoryStub, 'findById');
+    await sut.delete(makeFakeCategory().id, {
+      id: makeFakeCategory().ownerId,
+      roles: [RolesEnum.STORE],
+    });
+    expect(findSpy).toBeCalledWith(makeFakeCategory().ownerId);
+  });
+
+  test('Should throw UnauthorizedException if category ownerId not matching if userId sended', async () => {
+    const { sut } = makeSut();
+
+    const promise = sut.delete(makeFakeCategory().id, {
+      id: 'invalid_id',
+      roles: [RolesEnum.STORE],
+    });
+
+    await expect(promise).rejects.toThrowError(UnauthorizedException);
   });
 });
