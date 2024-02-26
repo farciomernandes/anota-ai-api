@@ -87,6 +87,7 @@ export class ProductController {
     status: HttpStatus.OK,
     type: ProductModel,
   })
+  @Roles(RolesEnum.ADMIN, RolesEnum.STORE)
   @ApiBearerAuth()
   async update(
     @Param('id') id: string,
@@ -105,6 +106,7 @@ export class ProductController {
     status: HttpStatus.OK,
     type: ProductModel,
   })
+  @Roles(RolesEnum.ADMIN, RolesEnum.STORE)
   @ApiBearerAuth()
   async delete(
     @Param('id') id: string,

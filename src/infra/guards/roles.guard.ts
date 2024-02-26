@@ -2,6 +2,7 @@ import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '../../shared/decorators/roles.decorator';
 import { Authenticated } from '@/presentation/dtos/auth/authenticated.dto';
+import { RoleModel } from '@/core/domain/models/role';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -25,7 +26,7 @@ export class RolesGuard implements CanActivate {
     return this.matchRoles(roles, user.roles);
   }
 
-  private matchRoles(requiredRoles: string[], userRoles: string[]): boolean {
-    return requiredRoles.some((role) => userRoles.includes(role));
+  private matchRoles(requiredRoles: string[], userRoles: RoleModel): boolean {
+    return requiredRoles.includes(userRoles.value);
   }
 }

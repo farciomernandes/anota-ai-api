@@ -8,8 +8,9 @@ import {
   makeProductMongoRepository,
 } from '@/test/mock/db-mock-helper-product';
 import { ProxySendMessage } from '@/core/domain/protocols/aws/sns-send-message';
-import { RolesEnum } from '@/shared/enums/roles.enum';
 import { UnauthorizedException } from '@nestjs/common';
+import { makeFakeRoles } from '@/test/mock/db-mock-helper-role';
+import { RolesEnum } from '@/shared/enums/roles.enum';
 
 type SutTypes = {
   sut: DbUpdateProduct;
@@ -36,7 +37,7 @@ describe('DbUpdate Product', () => {
     const updateSpy = jest.spyOn(updateProductRepositoryStub, 'update');
     await sut.update('valid_id', makeFakeProduct(), {
       id: makeFakeProduct().ownerId,
-      roles: [RolesEnum.STORE],
+      roles: makeFakeRoles(),
     });
     expect(updateSpy).toHaveBeenCalledWith('valid_id', makeFakeProduct());
   });
@@ -46,7 +47,7 @@ describe('DbUpdate Product', () => {
     const updateSpy = jest.spyOn(updateProductRepositoryStub, 'update');
     await sut.update('valid_id', makeFakeProduct(), {
       id: 'admin-id',
-      roles: [RolesEnum.ADMIN],
+      roles: makeFakeRoles(),
     });
     expect(updateSpy).toHaveBeenCalledWith('valid_id', makeFakeProduct());
   });
@@ -56,7 +57,10 @@ describe('DbUpdate Product', () => {
 
     const promise = sut.update('any_id', makeFakeProduct(), {
       id: 'invalid_id',
-      roles: [RolesEnum.STORE],
+      roles: {
+        ...makeFakeRoles(),
+        value: RolesEnum.STORE,
+      },
     });
 
     await expect(promise).rejects.toThrowError(UnauthorizedException);
@@ -71,7 +75,7 @@ describe('DbUpdate Product', () => {
       );
     const promise = sut.update('any_id', makeFakeProduct(), {
       id: makeFakeProduct().ownerId,
-      roles: [RolesEnum.STORE],
+      roles: makeFakeRoles(),
     });
     expect(promise).rejects.toThrow();
   });

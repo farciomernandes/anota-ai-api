@@ -6,6 +6,7 @@ import {
   makeCategoryMongoRepository,
   makeFakeCategory,
 } from '@/test/mock/db-mock-helper-category';
+import { makeFakeRoles } from '@/test/mock/db-mock-helper-role';
 import { RolesEnum } from '@/shared/enums/roles.enum';
 import { UnauthorizedException } from '@nestjs/common';
 
@@ -31,7 +32,10 @@ describe('DbUpdate Category', () => {
     const updateSpy = jest.spyOn(updateCategoryRepositoryStub, 'update');
     await sut.update('valid_id', makeFakeCategory(), {
       id: makeFakeCategory().ownerId,
-      roles: [RolesEnum.STORE],
+      roles: {
+        ...makeFakeRoles(),
+        value: RolesEnum.STORE,
+      },
     });
     expect(updateSpy).toHaveBeenCalledWith('valid_id', makeFakeCategory());
   });
@@ -41,7 +45,7 @@ describe('DbUpdate Category', () => {
     const updateSpy = jest.spyOn(updateCategoryRepositoryStub, 'update');
     await sut.update('valid_id', makeFakeCategory(), {
       id: 'admin-id',
-      roles: [RolesEnum.ADMIN],
+      roles: makeFakeRoles(),
     });
     expect(updateSpy).toHaveBeenCalledWith('valid_id', makeFakeCategory());
   });
@@ -51,7 +55,10 @@ describe('DbUpdate Category', () => {
 
     const promise = sut.update('any_id', makeFakeCategory(), {
       id: 'invalid_id',
-      roles: [RolesEnum.STORE],
+      roles: {
+        ...makeFakeRoles(),
+        value: RolesEnum.STORE,
+      },
     });
 
     await expect(promise).rejects.toThrowError(UnauthorizedException);
@@ -66,7 +73,10 @@ describe('DbUpdate Category', () => {
       );
     const promise = sut.update('any_id', makeFakeCategory(), {
       id: makeFakeCategory().ownerId,
-      roles: [RolesEnum.STORE],
+      roles: {
+        ...makeFakeRoles(),
+        value: RolesEnum.STORE,
+      },
     });
     expect(promise).rejects.toThrow();
   });

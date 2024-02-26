@@ -71,6 +71,7 @@ export class AppModule implements NestModule {
     { path: 'api/v1/product', method: RequestMethod.PUT },
     { path: 'api/v1/product', method: RequestMethod.DELETE },
   ];
+
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthMiddleware)
@@ -79,6 +80,7 @@ export class AppModule implements NestModule {
         ...this.categoryEndpoints,
         ...this.productEndpoints,
         { path: 'api/v1/role', method: RequestMethod.ALL },
+        { path: 'api/v1/admin', method: RequestMethod.ALL },
       );
   }
 }

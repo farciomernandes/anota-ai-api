@@ -1,3 +1,4 @@
+import { RoleModel } from '@/core/domain/models/role';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class Authenticated {
@@ -8,10 +9,9 @@ export class Authenticated {
   id: string;
 
   @ApiProperty({
-    type: String,
+    type: RoleModel,
     required: true,
-    example: ['STORE', 'ADMIN'],
-    isArray: true,
+    example: RoleModel,
   })
-  roles: string[];
+  roles: RoleModel;
 }

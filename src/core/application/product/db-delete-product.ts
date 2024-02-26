@@ -15,7 +15,7 @@ export class DbDeleteProduct implements IDbDeleteProductRepository {
   async delete(id: string, user: Authenticated): Promise<ProductModel> {
     const product = await this.productMongoRepository.findById(id);
 
-    if (product.ownerId !== user.id && !user.roles.includes('ADMIN')) {
+    if (product.ownerId !== user.id && user.roles.value !== 'ADMIN') {
       throw new UnauthorizedException(MessagesHelper.NOT_AUTHORIZATION);
     }
 

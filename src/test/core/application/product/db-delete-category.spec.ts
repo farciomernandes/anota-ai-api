@@ -9,6 +9,7 @@ import {
 } from '@/test/mock/db-mock-helper-product';
 import { RolesEnum } from '@/shared/enums/roles.enum';
 import { UnauthorizedException } from '@nestjs/common';
+import { makeFakeRoles } from '@/test/mock/db-mock-helper-role';
 
 type SutTypes = {
   sut: DbDeleteProduct;
@@ -32,7 +33,7 @@ describe('DbDeleteProduct usecase', () => {
     const deleteSpy = jest.spyOn(deleteProductRepositoryStub, 'delete');
     await sut.delete(makeFakeProduct().id, {
       id: makeFakeProduct().ownerId,
-      roles: [RolesEnum.STORE],
+      roles: makeFakeRoles(),
     });
     expect(deleteSpy).toBeCalledWith(makeFakeProduct().id);
   });
@@ -42,7 +43,7 @@ describe('DbDeleteProduct usecase', () => {
     const deleteSpy = jest.spyOn(deleteProductRepositoryStub, 'delete');
     await sut.delete(makeFakeProduct().id, {
       id: 'admin-id',
-      roles: [RolesEnum.ADMIN],
+      roles: makeFakeRoles(),
     });
 
     expect(deleteSpy).toHaveBeenCalledWith(makeFakeProduct().id);
@@ -53,7 +54,10 @@ describe('DbDeleteProduct usecase', () => {
 
     const promise = sut.delete(makeFakeProduct().id, {
       id: 'invalid_id',
-      roles: [RolesEnum.STORE],
+      roles: {
+        ...makeFakeRoles(),
+        value: RolesEnum.STORE,
+      },
     });
 
     await expect(promise).rejects.toThrowError(UnauthorizedException);

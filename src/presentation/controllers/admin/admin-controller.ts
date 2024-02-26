@@ -8,6 +8,7 @@ import {
   Post,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiCreatedResponse,
   ApiOkResponse,
@@ -17,6 +18,8 @@ import { IDbAddAdminRepository } from '@/core/domain/protocols/db/admin/add-admi
 import { IDbListAdminRepository } from '@/core/domain/protocols/db/admin/list-admin-respository';
 import { AddAdmin } from '@/presentation/dtos/admin/add-admin';
 import { AdminModel } from '@/core/domain/models/admin';
+import { Roles } from '@/shared/decorators/roles.decorator';
+import { RolesEnum } from '@/shared/enums/roles.enum';
 
 @ApiTags('Admin')
 @Controller('api/v1/admin')
@@ -43,6 +46,8 @@ export class AdminController {
     status: HttpStatus.OK,
     type: AdminModel,
   })
+  @Roles(RolesEnum.ADMIN)
+  @ApiBearerAuth()
   async getAll(): Promise<AdminModel[]> {
     try {
       return await this.dbListAdmin.getAll();

@@ -20,7 +20,7 @@ export class DbUpdateCategory implements IDbUpdateCategoryRepository {
   ): Promise<CategoryModel> {
     const category = await this.categoryMongoRepository.findById(id);
 
-    if (category.ownerId !== user.id && !user.roles.includes('ADMIN')) {
+    if (category.ownerId !== user.id && user.roles.value !== 'ADMIN') {
       throw new UnauthorizedException(MessagesHelper.NOT_AUTHORIZATION);
     }
 

@@ -1,7 +1,6 @@
 import { Decrypter } from '@/core/domain/protocols/cryptography/decrypter';
 import { JwtAdapter } from '@/infra/adapters/jwt-adapter';
 import { AuthMiddleware } from '@/infra/middleware/auth.middleware';
-import { RolesEnum } from '@/shared/enums/roles.enum';
 import {
   InternalServerErrorException,
   UnauthorizedException,
@@ -9,6 +8,7 @@ import {
 import { Request, Response } from 'express';
 import { makeConfigServiceMock } from '../config/configService';
 import { Authenticated } from '@/presentation/dtos/auth/authenticated.dto';
+import { makeFakeRoles } from '@/test/mock/db-mock-helper-role';
 
 type SutTypes = {
   sut: AuthMiddleware;
@@ -33,7 +33,7 @@ describe('AuthMiddleware', () => {
     const { decrypter, sut } = makeSut();
     const token = 'valid_token';
     const user: Authenticated = {
-      roles: [RolesEnum.ADMIN],
+      roles: makeFakeRoles(),
       id: 'valid_id',
     };
 

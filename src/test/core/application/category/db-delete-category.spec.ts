@@ -5,6 +5,7 @@ import {
   makeCategoryMongoRepository,
   makeFakeCategory,
 } from '@/test/mock/db-mock-helper-category';
+import { makeFakeRoles } from '@/test/mock/db-mock-helper-role';
 import { RolesEnum } from '@/shared/enums/roles.enum';
 import { UnauthorizedException } from '@nestjs/common';
 
@@ -28,7 +29,10 @@ describe('DbDeleteCategory usecase', () => {
     const deleteSpy = jest.spyOn(deleteCategoryRepositoryStub, 'delete');
     await sut.delete(makeFakeCategory().id, {
       id: makeFakeCategory().ownerId,
-      roles: [RolesEnum.STORE],
+      roles: {
+        ...makeFakeRoles(),
+        value: RolesEnum.STORE,
+      },
     });
     expect(deleteSpy).toBeCalledWith(makeFakeCategory().id);
   });
@@ -38,7 +42,10 @@ describe('DbDeleteCategory usecase', () => {
     const findSpy = jest.spyOn(deleteCategoryRepositoryStub, 'findById');
     await sut.delete(makeFakeCategory().id, {
       id: makeFakeCategory().ownerId,
-      roles: [RolesEnum.STORE],
+      roles: {
+        ...makeFakeRoles(),
+        value: RolesEnum.STORE,
+      },
     });
     expect(findSpy).toBeCalledWith(makeFakeCategory().ownerId);
   });
@@ -48,7 +55,7 @@ describe('DbDeleteCategory usecase', () => {
     const deleteSpy = jest.spyOn(deleteCategoryRepositoryStub, 'delete');
     await sut.delete(makeFakeCategory().id, {
       id: 'admin-id',
-      roles: [RolesEnum.ADMIN],
+      roles: makeFakeRoles(),
     });
 
     expect(deleteSpy).toHaveBeenCalledWith(makeFakeCategory().id);
@@ -59,7 +66,10 @@ describe('DbDeleteCategory usecase', () => {
 
     const promise = sut.delete(makeFakeCategory().id, {
       id: 'invalid_id',
-      roles: [RolesEnum.STORE],
+      roles: {
+        ...makeFakeRoles(),
+        value: RolesEnum.STORE,
+      },
     });
 
     await expect(promise).rejects.toThrowError(UnauthorizedException);

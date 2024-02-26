@@ -10,6 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiCreatedResponse,
   ApiOkResponse,
@@ -37,8 +38,8 @@ export class RoleController {
   @ApiCreatedResponse({ type: RoleModel })
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @Roles(RolesEnum.ADMIN)
   @UseGuards(RolesGuard)
+  @ApiBearerAuth()
   async create(@Body() payload: Omit<RoleModel, 'id'>): Promise<RoleModel> {
     return await this.dbAddRole.create(payload);
   }
@@ -50,8 +51,7 @@ export class RoleController {
     type: RoleModel,
     isArray: true,
   })
-  @Roles(RolesEnum.ADMIN)
-  @UseGuards(RolesGuard)
+  @ApiBearerAuth()
   async getAll(): Promise<RoleModel[]> {
     try {
       return await this.dbListRole.getAll();

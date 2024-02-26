@@ -39,7 +39,7 @@ export class StoreController {
   @ApiCreatedResponse({ type: CreatedStore })
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @Roles('ADMIN')
+  @Roles(RolesEnum.ADMIN)
   @UseGuards(RolesGuard)
   @ApiBearerAuth()
   async create(@Body() payload: AddStoreModel): Promise<CreatedStore> {

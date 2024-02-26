@@ -13,7 +13,7 @@ export class DbDeleteCategory implements IDbDeleteCategoryRepository {
   async delete(id: string, user: Authenticated): Promise<CategoryModel> {
     const category = await this.categoryMongoRepositoy.findById(id);
 
-    if (category.ownerId !== user.id && !user.roles.includes('ADMIN')) {
+    if (category.ownerId !== user.id && user.roles.value !== 'ADMIN') {
       throw new UnauthorizedException(MessagesHelper.NOT_AUTHORIZATION);
     }
 
