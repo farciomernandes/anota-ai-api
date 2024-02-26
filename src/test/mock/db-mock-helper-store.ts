@@ -8,6 +8,15 @@ import { makeFakeRoles } from './db-mock-helper-role';
 
 export const makeStoreMongoRepository = (): StoreMongoRepository => {
   class StoreRepositoryStub implements StoreMongoRepository {
+    update(
+      id: string,
+      payload: Omit<AddStoreModel, 'ownerId'>,
+    ): Promise<StoreModel> {
+      return Promise.resolve({
+        ...makeFakeStore(),
+        ...makeFakeUpdateStore(),
+      });
+    }
     findById(id: string): Promise<StoreModel> {
       return Promise.resolve(makeFakeStore());
     }
@@ -32,6 +41,13 @@ export const makeStoreFakeRequest = () => ({
   name: 'John Doe',
   email: 'any_email@mail.com',
   password: 'any_password',
+});
+
+export const makeFakeUpdateStore = () => ({
+  email: 'invalid_mail@mail.com',
+  name: 'new_name',
+  password: 'new_password',
+  roleId: 'valid_role_id',
 });
 
 export const makeFakeStore = (): StoreModel => {

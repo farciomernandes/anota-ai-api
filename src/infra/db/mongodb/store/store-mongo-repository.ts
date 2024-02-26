@@ -15,6 +15,7 @@ import { AddStoreModel } from '@/presentation/dtos/role/add-role.dto';
 import { MessagesHelper } from '@/shared/helpers/messages.helper';
 import { IDbDeleteStoreRepository } from '@/core/domain/protocols/db/store/delete-store-respository';
 import { IDbFindStoreByIdRepository } from '@/core/domain/protocols/db/store/find-store-by-id-repository';
+import { IDbUpdateStoreRepository } from '@/core/domain/protocols/db/store/update-store-respository';
 
 @Injectable()
 export class StoreMongoRepository
@@ -23,8 +24,38 @@ export class StoreMongoRepository
     IDbFindStoreByEmailRepository,
     IDbListStoreRepository,
     IDbDeleteStoreRepository,
-    IDbFindStoreByIdRepository
+    IDbFindStoreByIdRepository,
+    IDbUpdateStoreRepository
 {
+  async update(
+    id: string,
+    payload: Omit<AddStoreModel, 'ownerId'>,
+  ): Promise<StoreModel> {
+    try {
+      const storeCollection = await MongoHelper.getCollection('stores');
+      const storeUpdated = await storeCollection.updateOne(
+        {
+          _id: new ObjectId(id),
+        },
+        {
+          $set: {
+            ...payload,
+          },
+        },
+      );
+      if (storeUpdated.matchedCount == 0) {
+        throw new BadRequestException(`store with ${id} id not found.`);
+      }
+      return MongoHelper.map(
+        await storeCollection.findOne({
+          _id: new ObjectId(id),
+        }),
+      );
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
   async create(payload: AddStoreModel): Promise<CreatedStore> {
     try {
       const storeCollection = await MongoHelper.getCollection('stores');

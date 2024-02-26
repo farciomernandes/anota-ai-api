@@ -10,6 +10,7 @@ import { StoreMongoRepository } from '@/infra/db/mongodb/store/store-mongo-repos
 import {
   makeFakeStore,
   makeRequestAddStore,
+  makeFakeUpdateStore,
 } from '@/test/mock/db-mock-helper-store';
 
 import { makeFakeRoles } from '@/test/mock/db-mock-helper-role';
@@ -130,6 +131,49 @@ describe('Store Mongo Repository', () => {
     const promise = sut.getAll();
 
     await expect(promise).rejects.toThrowError(InternalServerErrorException);
+  });
+
+  test('Should update store on success', async () => {
+    const { sut } = makeSut();
+
+    const fakeStore = makeFakeStore();
+    const store = await storeCollection.insertOne(fakeStore);
+
+    const response = await sut.update(
+      String(store.insertedId),
+      makeFakeUpdateStore(),
+    );
+
+    expect(response.email).toEqual(makeFakeUpdateStore().email);
+    expect(response.name).toEqual(makeFakeUpdateStore().name);
+    expect(response.id).toEqual(store.insertedId);
+  });
+
+  test('Should return BadRequestExepction throws if update throw BadRequestExepction', async () => {
+    const { sut } = makeSut();
+    jest
+      .spyOn(sut, 'update')
+      .mockReturnValueOnce(
+        Promise.reject(
+          new BadRequestException(
+            `Category with ${makeFakeStore().id} id not found.`,
+          ),
+        ),
+      );
+    const promise = sut.update(makeFakeStore().id, makeFakeUpdateStore());
+    await expect(promise).rejects.toThrow(BadRequestException);
+  });
+
+  test('Should return InternalServerError throws if update throws', async () => {
+    const { sut } = makeSut();
+    jest.mock('@/infra/db/mongodb/helpers/mongo-helper');
+
+    jest
+      .spyOn(MongoHelper, 'getCollection')
+      .mockReturnValueOnce(Promise.reject(new InternalServerErrorException()));
+
+    const promise = sut.update(makeFakeStore().id, makeFakeUpdateStore());
+    await expect(promise).rejects.toThrow(InternalServerErrorException);
   });
 
   test('Should return Store if findByEmail finds Store', async () => {

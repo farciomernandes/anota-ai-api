@@ -59,6 +59,7 @@ export class AppModule implements NestModule {
   private readonly storeEndpoints = [
     { path: 'api/v1/store', method: RequestMethod.POST },
     { path: 'api/v1/store', method: RequestMethod.GET },
+    { path: 'api/v1/store**', method: RequestMethod.PUT },
     { path: 'api/v1/store**', method: RequestMethod.DELETE },
   ];
 

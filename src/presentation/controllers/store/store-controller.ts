@@ -11,6 +11,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -28,6 +29,7 @@ import { RolesEnum } from '@/shared/enums/roles.enum';
 import { User } from '@/shared/decorators/user.decorator';
 import { Authenticated } from '@/presentation/dtos/auth/authenticated.dto';
 import { IDbDeleteStoreRepository } from '@/core/domain/protocols/db/store/delete-store-respository';
+import { IDbUpdateStoreRepository } from '@/core/domain/protocols/db/store/update-store-respository';
 
 @ApiTags('Store')
 @Controller('api/v1/store')
@@ -36,6 +38,7 @@ export class StoreController {
     private readonly dbAddStore: IDbAddStoreRepository,
     private readonly dbListStore: IDbListStoreRepository,
     private readonly dbDeleteStore: IDbDeleteStoreRepository,
+    private readonly dbUpdateStore: IDbUpdateStoreRepository,
   ) {}
 
   @ApiBody({
@@ -67,6 +70,28 @@ export class StoreController {
     } catch (error) {
       console.log('saca');
 
+      throw new HttpException(error.response, error.status);
+    }
+  }
+
+  @Put('/:id')
+  @ApiBody({
+    type: AddStoreModel,
+  })
+  @ApiOkResponse({
+    status: HttpStatus.OK,
+    type: StoreModel,
+  })
+  @Roles(RolesEnum.ADMIN)
+  @ApiBearerAuth()
+  async update(
+    @Param('id') id: string,
+    @Body() payload: Omit<AddStoreModel, 'ownerId'>,
+    @User() user: Authenticated,
+  ): Promise<StoreModel> {
+    try {
+      return await this.dbUpdateStore.update(id, payload, user);
+    } catch (error) {
       throw new HttpException(error.response, error.status);
     }
   }
