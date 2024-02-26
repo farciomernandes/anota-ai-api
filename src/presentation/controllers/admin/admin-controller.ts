@@ -1,11 +1,14 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpException,
   HttpStatus,
+  Param,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -20,6 +23,10 @@ import { AddAdmin } from '@/presentation/dtos/admin/add-admin';
 import { AdminModel } from '@/core/domain/models/admin';
 import { Roles } from '@/shared/decorators/roles.decorator';
 import { RolesEnum } from '@/shared/enums/roles.enum';
+import { RolesGuard } from '@/infra/guards/roles.guard';
+import { User } from '@/shared/decorators/user.decorator';
+import { Authenticated } from '@/presentation/dtos/auth/authenticated.dto';
+import { IDbDeleteAdminRepository } from '@/core/domain/protocols/db/admin/delete-admin-respository';
 
 @ApiTags('Admin')
 @Controller('api/v1/admin')
@@ -27,6 +34,7 @@ export class AdminController {
   constructor(
     private readonly dbAddAdmin: IDbAddAdminRepository,
     private readonly dbListAdmin: IDbListAdminRepository,
+    private readonly dbDeleteAdmin: IDbDeleteAdminRepository,
   ) {}
 
   @ApiBody({
@@ -51,6 +59,27 @@ export class AdminController {
   async getAll(): Promise<AdminModel[]> {
     try {
       return await this.dbListAdmin.getAll();
+    } catch (error) {
+      throw new HttpException(error.response, error.status);
+    }
+  }
+
+  @Delete('/:id')
+  @ApiOkResponse({
+    status: HttpStatus.OK,
+    type: AdminModel,
+  })
+  @Roles(RolesEnum.ADMIN)
+  @UseGuards(RolesGuard)
+  @ApiBearerAuth()
+  async delete(
+    @Param('id') id: string,
+    @User() user: Authenticated,
+  ): Promise<AdminModel> {
+    try {
+      const response = await this.dbDeleteAdmin.delete(id, user);
+
+      return response;
     } catch (error) {
       throw new HttpException(error.response, error.status);
     }

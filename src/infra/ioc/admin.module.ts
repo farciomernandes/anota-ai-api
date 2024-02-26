@@ -11,6 +11,8 @@ import { AdminMongoRepository } from '../db/mongodb/admin/admin-mongo-repository
 import { IDbListAdminRepository } from '@/core/domain/protocols/db/admin/list-admin-respository';
 import { IDbAddAdminRepository } from '@/core/domain/protocols/db/admin/add-admin-repository';
 import { AdminController } from '@/presentation/controllers/admin/admin-controller';
+import { DbDeleteAdmin } from '@/core/application/admin/db-delete-admin';
+import { IDbDeleteAdminRepository } from '@/core/domain/protocols/db/admin/delete-admin-respository';
 
 @Module({
   imports: [],
@@ -18,6 +20,7 @@ import { AdminController } from '@/presentation/controllers/admin/admin-controll
     AdminMongoRepository,
     DbAddAdmin,
     DbListAdmin,
+    DbDeleteAdmin,
     BcryptAdapter,
     JwtAdapter,
     {
@@ -44,11 +47,16 @@ import { AdminController } from '@/presentation/controllers/admin/admin-controll
       provide: IDbListAdminRepository,
       useClass: DbListAdmin,
     },
+    {
+      provide: IDbDeleteAdminRepository,
+      useClass: DbDeleteAdmin,
+    },
   ],
   controllers: [AdminController],
   exports: [
     IDbAddAdminRepository,
     IDbListAdminRepository,
+    IDbDeleteAdminRepository,
     BcryptAdapter,
     Encrypter,
   ],
