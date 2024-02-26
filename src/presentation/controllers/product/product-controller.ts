@@ -111,7 +111,7 @@ export class ProductController {
     @User() user: Authenticated,
   ): Promise<ProductModel> {
     try {
-      const response = await this.dbDeleteProduct.delete(id);
+      const response = await this.dbDeleteProduct.delete(id, user);
 
       return response;
     } catch (error) {
