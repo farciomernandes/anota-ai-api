@@ -2,12 +2,14 @@ import { DbAddStore } from '@/core/application/store/db-add-store';
 import { IHasher } from '@/core/domain/protocols/cryptography/hasher';
 import { BcryptAdapter } from '@/infra/adapters/bcrypt-adapter';
 import { StoreMongoRepository } from '@/infra/db/mongodb/store/store-mongo-repository';
+import { makeConfigServiceMock } from '@/test/infra/config/configService';
 import {
   makeFakeStore,
   makeRequestAddStore,
   makeStoreFakeRequest,
   makeStoreMongoRepository,
 } from '@/test/mock/db-mock-helper-store';
+import { makeS3UploadImageMock } from '@/test/mock/s3-mock-helper';
 
 import { BadRequestException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -21,8 +23,14 @@ type SutTypes = {
 const makeSut = (): SutTypes => {
   const addStoreRepositoryStub = makeStoreMongoRepository();
   const hasher = new BcryptAdapter(new ConfigService());
-
-  const sut = new DbAddStore(addStoreRepositoryStub, hasher);
+  const S3Stub = makeS3UploadImageMock();
+  const configServiceMock = makeConfigServiceMock();
+  const sut = new DbAddStore(
+    addStoreRepositoryStub,
+    hasher,
+    S3Stub,
+    configServiceMock,
+  );
 
   return {
     sut,
@@ -47,7 +55,8 @@ describe('DbAddStore usecase', () => {
     expect(repositorySpy).toHaveBeenCalledWith({
       ...makeStoreFakeRequest(),
       password: 'hashed_password',
-      roleId: expect.any(String),
+      roleId: '65b9a4cd77e2de47acb5db37',
+      file: null,
     });
   });
 

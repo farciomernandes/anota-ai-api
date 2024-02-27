@@ -11,6 +11,7 @@ jest.mock('fs', () => ({
 }));
 
 describe('SnsProxy', () => {
+  const bucket = 'mocked-bucket';
   const mockedFile = {
     mimetype: 'text/plain',
     filename: 'example-123456789.txt',
@@ -35,6 +36,7 @@ describe('SnsProxy', () => {
 
     const objectUrl = await s3Storage.saveFile(
       mockedFile as Express.Multer.File,
+      bucket,
     );
 
     expect(putObjectMock).toHaveBeenCalledWith({
@@ -62,7 +64,10 @@ describe('SnsProxy', () => {
       .spyOn(s3Storage['client'], 'putObject')
       .mockImplementation(putObjectMock);
 
-    const promise = s3Storage.saveFile(mockedFile as Express.Multer.File);
+    const promise = s3Storage.saveFile(
+      mockedFile as Express.Multer.File,
+      bucket,
+    );
 
     await expect(promise).rejects.toThrow(InternalServerErrorException);
   });

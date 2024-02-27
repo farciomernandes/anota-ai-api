@@ -1,6 +1,9 @@
-import { AddStoreModel } from '@/presentation/dtos/role/add-store.dto';
+import { AddStoreModel } from '@/presentation/dtos/store/add-store.dto';
 import { CreatedStore } from '@/presentation/dtos/store/created-store';
 
 export abstract class IDbAddStoreRepository {
-  abstract create(payload: AddStoreModel): Promise<CreatedStore>;
+  abstract create(
+    payload: Omit<AddStoreModel, 'file'>,
+    file: Express.Multer.File,
+  ): Promise<CreatedStore>;
 }

@@ -6,6 +6,7 @@ import { CategoryMongoRepository } from '@/infra/db/mongodb/category/category-mo
 import { S3UploadImage } from '../../domain/protocols/aws/s3-upload-image';
 import { ProxySendMessage } from '../../domain/protocols/aws/sns-send-message';
 import { IDbAddProductRepository } from '../../domain/protocols/db/product/add-product-respository';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class DbAddProduct implements IDbAddProductRepository {
@@ -14,6 +15,7 @@ export class DbAddProduct implements IDbAddProductRepository {
     private readonly categoryRepository: CategoryMongoRepository,
     private readonly snsProxy: ProxySendMessage,
     private readonly s3Upload: S3UploadImage,
+    private readonly configService: ConfigService,
   ) {}
 
   async create(
@@ -21,6 +23,7 @@ export class DbAddProduct implements IDbAddProductRepository {
     file: Express.Multer.File,
   ): Promise<ProductModel> {
     const product = await this.productRepository.findByTitle(payload.title);
+
     if (product) {
       throw new BadRequestException(
         `Already exists a product with ${payload.title} title.`,
@@ -33,7 +36,9 @@ export class DbAddProduct implements IDbAddProductRepository {
         `Category with ${payload.categoryId} id not found.`,
       );
     }
-    const objectUrl = await this.s3Upload.saveFile(file);
+
+    const bucket = this.configService.get<string>('AWS_PRODUCT_BUCKET');
+    const objectUrl = await this.s3Upload.saveFile(file, bucket);
 
     const created = await this.productRepository.create({
       ...payload,

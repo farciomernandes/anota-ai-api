@@ -12,7 +12,9 @@ import {
   Param,
   Post,
   Put,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -24,12 +26,14 @@ import {
 import { IDbAddStoreRepository } from '@/core/domain/protocols/db/store/add-store-repository';
 import { IDbListStoreRepository } from '@/core/domain/protocols/db/store/list-store-respository';
 import { CreatedStore } from '@/presentation/dtos/store/created-store';
-import { AddStoreModel } from '@/presentation/dtos/role/add-store.dto';
 import { RolesEnum } from '@/shared/enums/roles.enum';
 import { User } from '@/shared/decorators/user.decorator';
 import { Authenticated } from '@/presentation/dtos/auth/authenticated.dto';
 import { IDbDeleteStoreRepository } from '@/core/domain/protocols/db/store/delete-store-respository';
 import { IDbUpdateStoreRepository } from '@/core/domain/protocols/db/store/update-store-respository';
+import { AddStoreModel } from '@/presentation/dtos/store/add-store.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import multerConfig from '@/infra/config/multer';
 
 @ApiTags('Store')
 @Controller('api/v1/store')
@@ -41,18 +45,22 @@ export class StoreController {
     private readonly dbUpdateStore: IDbUpdateStoreRepository,
   ) {}
 
-  @ApiBody({
-    description: 'Create Store',
-    type: AddStoreModel,
-  })
-  @ApiCreatedResponse({ type: CreatedStore })
   @Post()
+  @UseInterceptors(FileInterceptor('file', multerConfig))
+  @ApiCreatedResponse({ type: CreatedStore })
   @HttpCode(HttpStatus.CREATED)
   @Roles(RolesEnum.ADMIN)
   @UseGuards(RolesGuard)
   @ApiBearerAuth()
-  async create(@Body() payload: AddStoreModel): Promise<CreatedStore> {
-    return await this.dbAddStore.create(payload);
+  @ApiBody({
+    description: 'Create Store',
+    type: AddStoreModel,
+  })
+  async create(
+    @Body() payload: Omit<AddStoreModel, 'file'>,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<CreatedStore> {
+    return await this.dbAddStore.create(payload, file);
   }
 
   @Get()

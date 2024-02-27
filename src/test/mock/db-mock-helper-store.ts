@@ -2,9 +2,9 @@ import { StoreModel } from '@/core/domain/models/store';
 import { makeFakeProduct } from './db-mock-helper-product';
 import { makeFakeCategory } from './db-mock-helper-category';
 import { StoreMongoRepository } from '@/infra/db/mongodb/store/store-mongo-repository';
-import { AddStoreModel } from '@/presentation/dtos/role/add-store.dto';
 import { CreatedStore } from '@/presentation/dtos/store/created-store';
 import { makeFakeRoles } from './db-mock-helper-role';
+import { AddStoreModel } from '@/presentation/dtos/store/add-store.dto';
 
 export const makeStoreMongoRepository = (): StoreMongoRepository => {
   class StoreRepositoryStub implements StoreMongoRepository {
@@ -45,7 +45,6 @@ export const makeStoreFakeRequest = (): AddStoreModel => ({
   address: 'Rua das Pizzas, Bairro Saboroso, N 12',
   cep: '12345-678',
   phone: '(11) 9876-5432',
-  profilePhoto: 'https://example.com/profile.jpg',
 });
 
 export const makeFakeUpdateStore = (): AddStoreModel => ({
@@ -56,7 +55,7 @@ export const makeFakeUpdateStore = (): AddStoreModel => ({
   address: 'Rua das Pizzas, Bairro Saboroso, N 12',
   cep: '12345-678',
   phone: '(11) 9876-5432',
-  profilePhoto: 'https://example.com/new_profile.jpg',
+  file: 'https://example.com/new_profile.jpg',
 });
 
 export const makeFakeStore = (): StoreModel => {
@@ -70,7 +69,7 @@ export const makeFakeStore = (): StoreModel => {
   store.phone = '(11) 9876-5432';
   store.categories = [makeFakeCategory()];
   store.products = [makeFakeProduct()];
-  store.profilePhoto = 'https://example.com/profile.jpg';
+  store.file = 'https://example.com/profile.jpg';
   store.role = makeFakeRoles();
 
   return store;
@@ -84,7 +83,7 @@ export const makeRequestAddStore = (): AddStoreModel => {
   store.address = 'Rua das Pizzas, Bairro Saboroso, N 12';
   store.cep = '12345-678';
   store.phone = '(11) 9876-5432';
-  store.profilePhoto = 'https://example.com/profile.jpg';
+  store.file = 'https://example.com/profile.jpg';
   store.roleId = makeFakeRoles().id;
 
   return store;

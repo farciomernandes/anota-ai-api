@@ -13,6 +13,7 @@ import {
 import { makeCategoryMongoRepository } from '@/test/mock/db-mock-helper-category';
 import { makeFile, makeS3UploadImageMock } from '@/test/mock/s3-mock-helper';
 import { ProxySendMessage } from '@/core/domain/protocols/aws/sns-send-message';
+import { makeConfigServiceMock } from '@/test/infra/config/configService';
 
 type SutTypes = {
   sut: DbAddProduct;
@@ -26,12 +27,14 @@ const makeSut = (): SutTypes => {
   const categoryRepositoryStub = makeCategoryMongoRepository();
   const snsProxyStub = makeSnsProxyMock({} as ConfigService);
   const S3Stub = makeS3UploadImageMock();
+  const configServiceMock = makeConfigServiceMock();
 
   const sut = new DbAddProduct(
     addProductRepositoryStub,
     categoryRepositoryStub,
     snsProxyStub,
     S3Stub,
+    configServiceMock,
   );
 
   return {

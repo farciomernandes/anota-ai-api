@@ -16,10 +16,13 @@ import { DbDeleteStore } from '@/core/application/store/db-delete-store';
 import { IDbDeleteStoreRepository } from '@/core/domain/protocols/db/store/delete-store-respository';
 import { IDbUpdateStoreRepository } from '@/core/domain/protocols/db/store/update-store-respository';
 import { DbUpdateStore } from '@/core/application/store/db-update-store';
+import { S3UploadImage } from '@/core/domain/protocols/aws/s3-upload-image';
+import { S3Storage } from '../proxy/s3-storage';
 
 @Module({
   imports: [],
   providers: [
+    S3Storage,
     StoreMongoRepository,
     DbAddStore,
     DbListStore,
@@ -27,6 +30,10 @@ import { DbUpdateStore } from '@/core/application/store/db-update-store';
     BcryptAdapter,
     JwtAdapter,
     AuthMiddleware,
+    {
+      provide: S3UploadImage,
+      useClass: S3Storage,
+    },
     {
       provide: Encrypter,
       useClass: JwtAdapter,
@@ -62,6 +69,7 @@ import { DbUpdateStore } from '@/core/application/store/db-update-store';
   ],
   controllers: [StoreController],
   exports: [
+    S3UploadImage,
     IDbAddStoreRepository,
     IDbListStoreRepository,
     IDbDeleteStoreRepository,

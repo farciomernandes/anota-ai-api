@@ -19,9 +19,7 @@ import {
 import { IDbAddRoleRepository } from '@/core/domain/protocols/db/role/add-role-repository';
 import { IDbListRoleRepository } from '@/core/domain/protocols/db/role/list-role-respository';
 import { RoleModel } from '@/core/domain/models/role';
-import { AddRole } from '@/presentation/dtos/store/add-store.dto';
-import { Roles } from '@/shared/decorators/roles.decorator';
-import { RolesEnum } from '@/shared/enums/roles.enum';
+import { AddRole } from '@/presentation/dtos/role/add-role.dto';
 
 @ApiTags('Role')
 @Controller('api/v1/role')

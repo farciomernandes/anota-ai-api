@@ -11,11 +11,11 @@ import { IDbFindStoreByEmailRepository } from '@/core/domain/protocols/db/store/
 import { IDbListStoreRepository } from '@/core/domain/protocols/db/store/list-store-respository';
 import { ObjectId } from 'mongodb';
 import { CreatedStore } from '@/presentation/dtos/store/created-store';
-import { AddStoreModel } from '@/presentation/dtos/role/add-store.dto';
 import { MessagesHelper } from '@/shared/helpers/messages.helper';
 import { IDbDeleteStoreRepository } from '@/core/domain/protocols/db/store/delete-store-respository';
 import { IDbFindStoreByIdRepository } from '@/core/domain/protocols/db/store/find-store-by-id-repository';
 import { IDbUpdateStoreRepository } from '@/core/domain/protocols/db/store/update-store-respository';
+import { AddStoreModel } from '@/presentation/dtos/store/add-store.dto';
 
 @Injectable()
 export class StoreMongoRepository

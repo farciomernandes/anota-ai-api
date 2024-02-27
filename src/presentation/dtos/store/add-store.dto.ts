@@ -1,29 +1,93 @@
-import { RolesEnum } from '@/shared/enums/roles.enum';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Expose, plainToInstance } from 'class-transformer';
-import { IsString } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsPhoneNumber,
+  IsPostalCode,
+  IsString,
+  IsUrl,
+  MinLength,
+} from 'class-validator';
 
-export class AddRole {
+export class AddStoreModel {
   @ApiProperty({
     type: String,
-    example: RolesEnum.ADMIN,
+    example: 'any@mail.com',
     required: true,
   })
-  @IsString()
+  @IsEmail()
   @Expose()
-  value: string;
+  email: string;
 
   @ApiProperty({
     type: String,
-    example: 'Role de acesso geral a todas as funcionalidades do sistema.',
+    example: 'John Doe',
     required: true,
+  })
+  @IsNotEmpty()
+  @Expose()
+  name: string;
+
+  @ApiProperty({
+    type: String,
+    example: 'Rua das Pizzas, Bairro Saboroso, N 12',
   })
   @Expose()
   @IsString()
-  label: string;
+  @IsNotEmpty()
+  address: string;
 
-  static toDto(payload: AddRole): AddRole {
-    return plainToInstance(AddRole, payload, {
+  @ApiProperty({
+    type: String,
+    example: '12345-678',
+  })
+  @Expose()
+  @IsString()
+  @IsNotEmpty()
+  @IsPostalCode('BR')
+  cep: string;
+
+  @ApiProperty({
+    type: String,
+    example: '(11) 9876-5432',
+  })
+  @Expose()
+  @IsString()
+  @IsNotEmpty()
+  @IsPhoneNumber('BR')
+  phone: string;
+
+  @ApiProperty({
+    type: 'string',
+    format: 'binary',
+    description: 'Image file',
+  })
+  @IsNotEmpty()
+  file?: any;
+
+  @ApiProperty({
+    type: String,
+    example: '65d771c9a1acf6d4b2aec923',
+    required: true,
+  })
+  @IsNotEmpty()
+  @Expose()
+  roleId: string;
+
+  @ApiProperty({
+    type: String,
+    required: true,
+    example: 'password',
+    description: 'Senha utilizada para fazer login no sistema',
+  })
+  @IsString()
+  @MinLength(8)
+  password: string;
+
+  static toDto(payload: AddStoreModel): AddStoreModel {
+    return plainToInstance(AddStoreModel, payload, {
       excludeExtraneousValues: true,
     });
   }

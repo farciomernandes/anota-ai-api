@@ -16,10 +16,9 @@ export class S3Storage implements S3UploadImage {
     });
   }
 
-  async saveFile(file: Express.Multer.File): Promise<string> {
+  async saveFile(file: Express.Multer.File, bucket: string): Promise<string> {
     try {
       const { filename, mimetype, path } = file;
-      const bucket = this.configService.get<string>('AWS_BUCKET');
 
       const fileContent = await fsPromises.readFile(path);
 

@@ -49,7 +49,7 @@ export class CreatedStore {
     example: 'https://example.com/profile.jpg',
   })
   @Expose()
-  profilePhoto?: string;
+  file?: string;
 
   @ApiProperty({
     type: String,
