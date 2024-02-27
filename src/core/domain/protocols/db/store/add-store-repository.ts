@@ -1,4 +1,4 @@
-import { AddStoreModel } from '@/presentation/dtos/role/add-role.dto';
+import { AddStoreModel } from '@/presentation/dtos/role/add-store.dto';
 import { CreatedStore } from '@/presentation/dtos/store/created-store';
 
 export abstract class IDbAddStoreRepository {

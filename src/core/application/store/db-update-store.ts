@@ -5,7 +5,7 @@ import { MessagesHelper } from '@/shared/helpers/messages.helper';
 import { RolesEnum } from '@/shared/enums/roles.enum';
 import { IDbUpdateStoreRepository } from '@/core/domain/protocols/db/store/update-store-respository';
 import { StoreMongoRepository } from '@/infra/db/mongodb/store/store-mongo-repository';
-import { AddStoreModel } from '@/presentation/dtos/role/add-role.dto';
+import { AddStoreModel } from '@/presentation/dtos/role/add-store.dto';
 import { StoreModel } from '@/core/domain/models/store';
 
 @Injectable()

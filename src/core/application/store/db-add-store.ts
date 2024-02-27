@@ -3,7 +3,7 @@ import { StoreMongoRepository } from '@/infra/db/mongodb/store/store-mongo-repos
 import { IDbAddStoreRepository } from '../../domain/protocols/db/store/add-store-repository';
 import { IHasher } from '../../domain/protocols/cryptography/hasher';
 import { CreatedStore } from '@/presentation/dtos/store/created-store';
-import { AddStoreModel } from '@/presentation/dtos/role/add-role.dto';
+import { AddStoreModel } from '@/presentation/dtos/role/add-store.dto';
 
 @Injectable()
 export class DbAddStore implements IDbAddStoreRepository {

@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Expose, plainToInstance } from 'class-transformer';
 import { CategoryModel } from './category';
 import { ProductModel } from './product';
@@ -25,6 +25,34 @@ export class StoreModel {
   })
   @Expose()
   name: string;
+
+  @ApiProperty({
+    type: String,
+    example: 'Rua das Pizzas, Bairro Saboroso, N 12',
+  })
+  @Expose()
+  address: string;
+
+  @ApiProperty({
+    type: String,
+    example: '12345-678',
+  })
+  @Expose()
+  cep: string;
+
+  @ApiProperty({
+    type: String,
+    example: '(11) 9876-5432',
+  })
+  @Expose()
+  phone: string;
+
+  @ApiPropertyOptional({
+    type: String,
+    example: 'https://example.com/profile.jpg',
+  })
+  @Expose()
+  profilePhoto?: string;
 
   @ApiProperty({
     type: String,

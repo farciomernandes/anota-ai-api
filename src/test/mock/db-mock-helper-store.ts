@@ -2,7 +2,7 @@ import { StoreModel } from '@/core/domain/models/store';
 import { makeFakeProduct } from './db-mock-helper-product';
 import { makeFakeCategory } from './db-mock-helper-category';
 import { StoreMongoRepository } from '@/infra/db/mongodb/store/store-mongo-repository';
-import { AddStoreModel } from '@/presentation/dtos/role/add-role.dto';
+import { AddStoreModel } from '@/presentation/dtos/role/add-store.dto';
 import { CreatedStore } from '@/presentation/dtos/store/created-store';
 import { makeFakeRoles } from './db-mock-helper-role';
 
@@ -37,17 +37,26 @@ export const makeStoreMongoRepository = (): StoreMongoRepository => {
   return new StoreRepositoryStub();
 };
 
-export const makeStoreFakeRequest = () => ({
-  name: 'John Doe',
+export const makeStoreFakeRequest = (): AddStoreModel => ({
   email: 'any_email@mail.com',
-  password: 'any_password',
+  name: 'John Doe',
+  password: 'new_password',
+  roleId: '65b9a4cd77e2de47acb5db37',
+  address: 'Rua das Pizzas, Bairro Saboroso, N 12',
+  cep: '12345-678',
+  phone: '(11) 9876-5432',
+  profilePhoto: 'https://example.com/profile.jpg',
 });
 
-export const makeFakeUpdateStore = () => ({
+export const makeFakeUpdateStore = (): AddStoreModel => ({
   email: 'invalid_mail@mail.com',
   name: 'new_name',
   password: 'new_password',
   roleId: 'valid_role_id',
+  address: 'Rua das Pizzas, Bairro Saboroso, N 12',
+  cep: '12345-678',
+  phone: '(11) 9876-5432',
+  profilePhoto: 'https://example.com/new_profile.jpg',
 });
 
 export const makeFakeStore = (): StoreModel => {
@@ -56,8 +65,12 @@ export const makeFakeStore = (): StoreModel => {
   store.email = 'any_email@mail.com';
   store.name = 'John Doe';
   store.password = 'hashed_password';
+  store.address = 'Rua das Pizzas, Bairro Saboroso, N 12';
+  store.cep = '12345-678';
+  store.phone = '(11) 9876-5432';
   store.categories = [makeFakeCategory()];
   store.products = [makeFakeProduct()];
+  store.profilePhoto = 'https://example.com/profile.jpg';
   store.role = makeFakeRoles();
 
   return store;
@@ -68,6 +81,10 @@ export const makeRequestAddStore = (): AddStoreModel => {
   store.email = 'any_email@mail.com';
   store.name = 'John Doe';
   store.password = 'hashed_password';
+  store.address = 'Rua das Pizzas, Bairro Saboroso, N 12';
+  store.cep = '12345-678';
+  store.phone = '(11) 9876-5432';
+  store.profilePhoto = 'https://example.com/profile.jpg';
   store.roleId = makeFakeRoles().id;
 
   return store;

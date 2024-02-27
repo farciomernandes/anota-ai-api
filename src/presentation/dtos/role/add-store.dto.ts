@@ -1,7 +1,15 @@
-import { RolesEnum } from '@/shared/enums/roles.enum';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Expose, plainToInstance } from 'class-transformer';
-import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsPhoneNumber,
+  IsPostalCode,
+  IsString,
+  IsUrl,
+  MinLength,
+} from 'class-validator';
 
 export class AddStoreModel {
   @ApiProperty({
@@ -21,6 +29,44 @@ export class AddStoreModel {
   @IsNotEmpty()
   @Expose()
   name: string;
+
+  @ApiProperty({
+    type: String,
+    example: 'Rua das Pizzas, Bairro Saboroso, N 12',
+  })
+  @Expose()
+  @IsString()
+  @IsNotEmpty()
+  address: string;
+
+  @ApiProperty({
+    type: String,
+    example: '12345-678',
+  })
+  @Expose()
+  @IsString()
+  @IsNotEmpty()
+  @IsPostalCode('BR')
+  cep: string;
+
+  @ApiProperty({
+    type: String,
+    example: '(11) 9876-5432',
+  })
+  @Expose()
+  @IsString()
+  @IsNotEmpty()
+  @IsPhoneNumber('BR')
+  phone: string;
+
+  @ApiPropertyOptional({
+    type: String,
+    example: 'https://example.com/profile.jpg',
+  })
+  @IsOptional()
+  @IsUrl()
+  @Expose()
+  profilePhoto?: string;
 
   @ApiProperty({
     type: String,
