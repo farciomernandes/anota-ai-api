@@ -1,16 +1,7 @@
 import { PaymentModel } from '@/core/domain/models/payment';
-import { WeekModel } from '@/core/domain/models/week';
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Type, plainToInstance } from 'class-transformer';
-import {
-  IsArray,
-  IsEmail,
-  IsNotEmpty,
-  IsPhoneNumber,
-  IsPostalCode,
-  IsString,
-  MinLength,
-} from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
 
 export class AddStoreModel {
   @ApiProperty({
@@ -73,7 +64,6 @@ export class AddStoreModel {
   @Expose()
   @IsString()
   @IsNotEmpty()
-  @IsPostalCode('BR')
   cep: string;
 
   @ApiProperty({
@@ -83,7 +73,6 @@ export class AddStoreModel {
   @Expose()
   @IsString()
   @IsNotEmpty()
-  @IsPhoneNumber('BR')
   phone: string;
 
   @ApiProperty({
@@ -91,7 +80,6 @@ export class AddStoreModel {
     format: 'binary',
     description: 'Image file',
   })
-  @IsNotEmpty()
   file?: any;
 
   @ApiProperty({
@@ -112,16 +100,6 @@ export class AddStoreModel {
   @IsString()
   @MinLength(8)
   password: string;
-
-  @ApiProperty({
-    type: WeekModel,
-    example: WeekModel,
-    isArray: true,
-  })
-  @Expose()
-  @IsArray()
-  @Type(() => WeekModel)
-  week: WeekModel[];
 
   @ApiProperty({
     type: PaymentModel,

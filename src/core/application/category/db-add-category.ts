@@ -4,6 +4,7 @@ import { AddCategoryModel } from '@/presentation/dtos/category/add-category.dto'
 import { CategoryMongoRepository } from '@/infra/db/mongodb/category/category-mongo-repository';
 import { ProxySendMessage } from '../../domain/protocols/aws/sns-send-message';
 import { IDbAddCategoryRepository } from '../../domain/protocols/db/category/add-category-respository';
+import { MessagesHelper } from '@/shared/helpers/messages.helper';
 
 @Injectable()
 export class DbAddCategory implements IDbAddCategoryRepository {
@@ -16,7 +17,7 @@ export class DbAddCategory implements IDbAddCategoryRepository {
     const category = await this.categoryRepository.findByTitle(payload.title);
     if (category) {
       throw new BadRequestException(
-        `Already exists a category with ${payload.title} title.`,
+        `${MessagesHelper.ALREADY_EXITS} category with ${payload.title}!`,
       );
     }
     const categoryCreated = await this.categoryRepository.create(payload);

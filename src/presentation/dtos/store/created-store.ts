@@ -1,6 +1,5 @@
 import { PaymentModel } from '@/core/domain/models/payment';
 import { RoleModel } from '@/core/domain/models/role';
-import { WeekModel } from '@/core/domain/models/week';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Expose, plainToInstance } from 'class-transformer';
 export class CreatedStore {
@@ -94,14 +93,6 @@ export class CreatedStore {
   })
   @Expose()
   role: RoleModel;
-
-  @ApiProperty({
-    type: WeekModel,
-    example: WeekModel,
-    isArray: true,
-  })
-  @Expose()
-  week: WeekModel[];
 
   @ApiProperty({
     type: PaymentModel,

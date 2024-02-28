@@ -14,6 +14,10 @@ export const makeConfigServiceMock = (): jest.Mocked<ConfigService> => {
           return 'mocked-api-version';
         case 'AWS_SNS_TOPIC_CATALOG_ARN':
           return 'mocked-topic-arn';
+        case 'AWS_PROFILE_BUCKET':
+          return 'any_profile_bucket';
+        case 'AWS_CATALOG_BUCKET':
+          return 'any_catalog_bucket';
         case 'AWS_BUCKET':
           return 'mocked-bucket';
       }

@@ -6,7 +6,6 @@ import { CategoryMongoRepository } from '@/infra/db/mongodb/category/category-mo
 import { S3UploadImage } from '../../domain/protocols/aws/s3-upload-image';
 import { ProxySendMessage } from '../../domain/protocols/aws/sns-send-message';
 import { IDbAddProductRepository } from '../../domain/protocols/db/product/add-product-respository';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class DbAddProduct implements IDbAddProductRepository {
@@ -15,7 +14,6 @@ export class DbAddProduct implements IDbAddProductRepository {
     private readonly categoryRepository: CategoryMongoRepository,
     private readonly snsProxy: ProxySendMessage,
     private readonly s3Upload: S3UploadImage,
-    private readonly configService: ConfigService,
   ) {}
 
   async create(
@@ -37,8 +35,7 @@ export class DbAddProduct implements IDbAddProductRepository {
       );
     }
 
-    const bucket = this.configService.get<string>('AWS_PRODUCT_BUCKET');
-    const objectUrl = await this.s3Upload.saveFile(file, bucket);
+    const objectUrl = await this.s3Upload.saveFile(file);
 
     const created = await this.productRepository.create({
       ...payload,

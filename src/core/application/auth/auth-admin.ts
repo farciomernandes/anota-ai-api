@@ -17,11 +17,6 @@ export class AuthAdmin {
   ): Promise<{ accessToken: string; name: string }> {
     const admin = await this.adminRepository.findByEmail(email);
 
-    /**
-     * 2 dominios diferentes ( 2 auth )
-     * 2 regras de dominio diferentes
-     */
-
     if (admin) {
       const isValid = await this.hashComparer.compare(password, admin.password);
       if (isValid) {

@@ -45,6 +45,7 @@ describe('Store Mongo Repository', () => {
 
     await storeCollection.deleteMany({});
     await roleCollection.deleteMany({});
+    jest.restoreAllMocks();
   });
 
   test('Should create Store on success', async () => {

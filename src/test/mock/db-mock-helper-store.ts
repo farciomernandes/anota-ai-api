@@ -15,42 +15,49 @@ export const makeFakeWeek = (): WeekModel[] => [
     start: '17:00',
     end: '23:00',
     opened: true,
+    ownerId: makeFakeStore().id,
   },
   {
     short_name: DaysEnum.TUESDAY,
     start: '17:00',
     end: '23:00',
     opened: true,
+    ownerId: makeFakeStore().id,
   },
   {
     short_name: DaysEnum.WEDNESDAY,
     start: '17:00',
     end: '23:00',
     opened: true,
+    ownerId: makeFakeStore().id,
   },
   {
     short_name: DaysEnum.THURSDAY,
     start: '17:00',
     end: '23:00',
     opened: true,
+    ownerId: makeFakeStore().id,
   },
   {
     short_name: DaysEnum.FRIDAY,
     start: '17:00',
     end: '23:00',
     opened: true,
+    ownerId: makeFakeStore().id,
   },
   {
     short_name: DaysEnum.SATURDAY,
     start: '17:00',
     end: '23:00',
     opened: true,
+    ownerId: makeFakeStore().id,
   },
   {
     short_name: DaysEnum.SUNDAY,
     start: '17:00',
     end: '23:00',
     opened: true,
+    ownerId: makeFakeStore().id,
   },
 ];
 
@@ -103,7 +110,6 @@ export const makeStoreFakeRequest = (): AddStoreModel => ({
   state: 'CE',
   cep: '12345-678',
   phone: '(11) 9876-5432',
-  week: makeFakeWeek(),
   payment_method: makeFakePaymentMethod(),
 });
 
@@ -120,7 +126,6 @@ export const makeFakeUpdateStore = (): AddStoreModel => ({
   cep: '12345-678',
   phone: '(11) 9876-5432',
   file: 'https://example.com/new_profile.jpg',
-  week: makeFakeWeek(),
   payment_method: makeFakePaymentMethod(),
 });
 
@@ -141,7 +146,6 @@ export const makeFakeStore = (): StoreModel => {
   store.products = [makeFakeProduct()];
   store.file = 'https://example.com/profile.jpg';
   store.role = makeFakeRoles();
-  store.week = makeFakeWeek();
   store.payment_method = makeFakePaymentMethod();
 
   return store;
@@ -162,7 +166,6 @@ export const makeRequestAddStore = (): AddStoreModel => {
   store.file = 'https://example.com/profile.jpg';
   store.roleId = makeFakeRoles().id;
   store.payment_method = makeFakePaymentMethod();
-  store.week = makeFakeWeek();
 
   return store;
 };

@@ -19,6 +19,7 @@ import {
 import {
   ApiBearerAuth,
   ApiBody,
+  ApiConsumes,
   ApiCreatedResponse,
   ApiOkResponse,
   ApiTags,
@@ -48,6 +49,7 @@ export class StoreController {
   @Post()
   @UseInterceptors(FileInterceptor('file', multerConfig))
   @ApiCreatedResponse({ type: CreatedStore })
+  @ApiConsumes('multipart/form-data')
   @HttpCode(HttpStatus.CREATED)
   @Roles(RolesEnum.ADMIN)
   @UseGuards(RolesGuard)
@@ -57,7 +59,7 @@ export class StoreController {
     type: AddStoreModel,
   })
   async create(
-    @Body() payload: Omit<AddStoreModel, 'file'>,
+    @Body() payload: AddStoreModel,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<CreatedStore> {
     return await this.dbAddStore.create(payload, file);
@@ -76,8 +78,6 @@ export class StoreController {
     try {
       return await this.dbListStore.getAll();
     } catch (error) {
-      console.log('saca');
-
       throw new HttpException(error.response, error.status);
     }
   }

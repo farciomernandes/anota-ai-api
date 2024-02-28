@@ -16,7 +16,7 @@ export class S3Storage implements S3UploadImage {
     });
   }
 
-  async saveFile(file: Express.Multer.File, bucket: string): Promise<string> {
+  async saveFile(file: Express.Multer.File, bucket?: string): Promise<string> {
     try {
       const { filename, mimetype, path } = file;
 
@@ -24,7 +24,9 @@ export class S3Storage implements S3UploadImage {
 
       await this.client
         .putObject({
-          Bucket: bucket,
+          Bucket: bucket
+            ? bucket
+            : this.configService.get<string>('AWS_CATALOG_BUCKET'),
           Key: filename,
           ACL: 'public-read',
           Body: fileContent,

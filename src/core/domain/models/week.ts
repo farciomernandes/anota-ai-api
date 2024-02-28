@@ -30,4 +30,11 @@ export class WeekModel {
   })
   @Expose()
   opened: boolean;
+
+  @ApiProperty({
+    type: String,
+    example: '65bb7e942d26288721fdbb32',
+  })
+  @Expose()
+  ownerId: string;
 }
