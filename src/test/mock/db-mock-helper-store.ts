@@ -42,7 +42,11 @@ export const makeStoreFakeRequest = (): AddStoreModel => ({
   name: 'John Doe',
   password: 'new_password',
   roleId: '65b9a4cd77e2de47acb5db37',
-  address: 'Rua das Pizzas, Bairro Saboroso, N 12',
+  neighborhood: 'Bairro Saboroso',
+  street: 'Rua das Pizzas',
+  number: 353,
+  city: 'Aurora',
+  state: 'CE',
   cep: '12345-678',
   phone: '(11) 9876-5432',
 });
@@ -52,7 +56,11 @@ export const makeFakeUpdateStore = (): AddStoreModel => ({
   name: 'new_name',
   password: 'new_password',
   roleId: 'valid_role_id',
-  address: 'Rua das Pizzas, Bairro Saboroso, N 12',
+  neighborhood: 'Bairro Saboroso',
+  street: 'Rua das Pizzas',
+  number: 353,
+  city: 'Aurora',
+  state: 'CE',
   cep: '12345-678',
   phone: '(11) 9876-5432',
   file: 'https://example.com/new_profile.jpg',
@@ -64,7 +72,11 @@ export const makeFakeStore = (): StoreModel => {
   store.email = 'any_email@mail.com';
   store.name = 'John Doe';
   store.password = 'hashed_password';
-  store.address = 'Rua das Pizzas, Bairro Saboroso, N 12';
+  store.neighborhood = 'Bairro Saboroso';
+  store.street = 'Rua das Pizzas';
+  store.number = 353;
+  store.city = 'Aurora';
+  store.state = 'CE';
   store.cep = '12345-678';
   store.phone = '(11) 9876-5432';
   store.categories = [makeFakeCategory()];
@@ -80,7 +92,11 @@ export const makeRequestAddStore = (): AddStoreModel => {
   store.email = 'any_email@mail.com';
   store.name = 'John Doe';
   store.password = 'hashed_password';
-  store.address = 'Rua das Pizzas, Bairro Saboroso, N 12';
+  store.neighborhood = 'Bairro Saboroso';
+  store.street = 'Rua das Pizzas';
+  store.number = 353;
+  store.city = 'Aurora';
+  store.state = 'CE';
   store.cep = '12345-678';
   store.phone = '(11) 9876-5432';
   store.file = 'https://example.com/profile.jpg';

@@ -25,10 +25,38 @@ export class CreatedStore {
 
   @ApiProperty({
     type: String,
-    example: 'Rua das Pizzas, Bairro Saboroso, N 12',
+    example: 'Bairro Saboroso',
   })
   @Expose()
-  address: string;
+  neighborhood: string;
+
+  @ApiProperty({
+    type: String,
+    example: 'Rua das Pizzas',
+  })
+  @Expose()
+  street: string;
+
+  @ApiProperty({
+    type: Number,
+    example: 352,
+  })
+  @Expose()
+  number: number;
+
+  @ApiProperty({
+    type: String,
+    example: 'Aurora',
+  })
+  @Expose()
+  city: string;
+
+  @ApiProperty({
+    type: String,
+    example: 'CE',
+  })
+  @Expose()
+  state: string;
 
   @ApiProperty({
     type: String,

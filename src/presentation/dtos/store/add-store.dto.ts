@@ -1,13 +1,11 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Expose, plainToInstance } from 'class-transformer';
 import {
   IsEmail,
   IsNotEmpty,
-  IsOptional,
   IsPhoneNumber,
   IsPostalCode,
   IsString,
-  IsUrl,
   MinLength,
 } from 'class-validator';
 
@@ -32,12 +30,38 @@ export class AddStoreModel {
 
   @ApiProperty({
     type: String,
-    example: 'Rua das Pizzas, Bairro Saboroso, N 12',
+    example: 'Bairro Saboroso',
   })
   @Expose()
-  @IsString()
-  @IsNotEmpty()
-  address: string;
+  neighborhood: string;
+
+  @ApiProperty({
+    type: String,
+    example: 'Rua das Pizzas',
+  })
+  @Expose()
+  street: string;
+
+  @ApiProperty({
+    type: Number,
+    example: 352,
+  })
+  @Expose()
+  number: number;
+
+  @ApiProperty({
+    type: String,
+    example: 'Aurora',
+  })
+  @Expose()
+  city: string;
+
+  @ApiProperty({
+    type: String,
+    example: 'CE',
+  })
+  @Expose()
+  state: string;
 
   @ApiProperty({
     type: String,
