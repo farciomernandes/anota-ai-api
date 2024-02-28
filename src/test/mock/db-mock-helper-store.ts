@@ -5,6 +5,60 @@ import { StoreMongoRepository } from '@/infra/db/mongodb/store/store-mongo-repos
 import { CreatedStore } from '@/presentation/dtos/store/created-store';
 import { makeFakeRoles } from './db-mock-helper-role';
 import { AddStoreModel } from '@/presentation/dtos/store/add-store.dto';
+import { WeekModel } from '@/core/domain/models/week';
+import { DaysEnum } from '@/shared/enums/days.enum';
+import { PaymentModel } from '@/core/domain/models/payment';
+
+export const makeFakeWeek = (): WeekModel[] => [
+  {
+    short_name: DaysEnum.MONDAY,
+    start: '17:00',
+    end: '23:00',
+    opened: true,
+  },
+  {
+    short_name: DaysEnum.TUESDAY,
+    start: '17:00',
+    end: '23:00',
+    opened: true,
+  },
+  {
+    short_name: DaysEnum.WEDNESDAY,
+    start: '17:00',
+    end: '23:00',
+    opened: true,
+  },
+  {
+    short_name: DaysEnum.THURSDAY,
+    start: '17:00',
+    end: '23:00',
+    opened: true,
+  },
+  {
+    short_name: DaysEnum.FRIDAY,
+    start: '17:00',
+    end: '23:00',
+    opened: true,
+  },
+  {
+    short_name: DaysEnum.SATURDAY,
+    start: '17:00',
+    end: '23:00',
+    opened: true,
+  },
+  {
+    short_name: DaysEnum.SUNDAY,
+    start: '17:00',
+    end: '23:00',
+    opened: true,
+  },
+];
+
+export const makeFakePaymentMethod = (): PaymentModel => ({
+  creditcard: false,
+  money: true,
+  pix: true,
+});
 
 export const makeStoreMongoRepository = (): StoreMongoRepository => {
   class StoreRepositoryStub implements StoreMongoRepository {
@@ -49,6 +103,8 @@ export const makeStoreFakeRequest = (): AddStoreModel => ({
   state: 'CE',
   cep: '12345-678',
   phone: '(11) 9876-5432',
+  week: makeFakeWeek(),
+  payment_method: makeFakePaymentMethod(),
 });
 
 export const makeFakeUpdateStore = (): AddStoreModel => ({
@@ -64,6 +120,8 @@ export const makeFakeUpdateStore = (): AddStoreModel => ({
   cep: '12345-678',
   phone: '(11) 9876-5432',
   file: 'https://example.com/new_profile.jpg',
+  week: makeFakeWeek(),
+  payment_method: makeFakePaymentMethod(),
 });
 
 export const makeFakeStore = (): StoreModel => {
@@ -83,6 +141,8 @@ export const makeFakeStore = (): StoreModel => {
   store.products = [makeFakeProduct()];
   store.file = 'https://example.com/profile.jpg';
   store.role = makeFakeRoles();
+  store.week = makeFakeWeek();
+  store.payment_method = makeFakePaymentMethod();
 
   return store;
 };
@@ -101,6 +161,8 @@ export const makeRequestAddStore = (): AddStoreModel => {
   store.phone = '(11) 9876-5432';
   store.file = 'https://example.com/profile.jpg';
   store.roleId = makeFakeRoles().id;
+  store.payment_method = makeFakePaymentMethod();
+  store.week = makeFakeWeek();
 
   return store;
 };

@@ -1,6 +1,9 @@
+import { PaymentModel } from '@/core/domain/models/payment';
+import { WeekModel } from '@/core/domain/models/week';
 import { ApiProperty } from '@nestjs/swagger';
-import { Expose, plainToInstance } from 'class-transformer';
+import { Expose, Type, plainToInstance } from 'class-transformer';
 import {
+  IsArray,
   IsEmail,
   IsNotEmpty,
   IsPhoneNumber,
@@ -109,6 +112,25 @@ export class AddStoreModel {
   @IsString()
   @MinLength(8)
   password: string;
+
+  @ApiProperty({
+    type: WeekModel,
+    example: WeekModel,
+    isArray: true,
+  })
+  @Expose()
+  @IsArray()
+  @Type(() => WeekModel)
+  week: WeekModel[];
+
+  @ApiProperty({
+    type: PaymentModel,
+    example: PaymentModel,
+  })
+  @Expose()
+  @IsNotEmpty()
+  @Type(() => PaymentModel)
+  payment_method: PaymentModel;
 
   static toDto(payload: AddStoreModel): AddStoreModel {
     return plainToInstance(AddStoreModel, payload, {

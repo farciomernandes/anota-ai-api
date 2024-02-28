@@ -3,6 +3,8 @@ import { Expose, plainToInstance } from 'class-transformer';
 import { CategoryModel } from './category';
 import { ProductModel } from './product';
 import { RoleModel } from './role';
+import { WeekModel } from './week';
+import { PaymentModel } from './payment';
 
 export class StoreModel {
   @ApiProperty({
@@ -111,6 +113,21 @@ export class StoreModel {
   })
   @Expose()
   products: ProductModel[];
+
+  @ApiProperty({
+    type: WeekModel,
+    example: WeekModel,
+    isArray: true,
+  })
+  @Expose()
+  week: WeekModel[];
+
+  @ApiProperty({
+    type: PaymentModel,
+    example: PaymentModel,
+  })
+  @Expose()
+  payment_method: PaymentModel;
 
   static toDto(payload: StoreModel): StoreModel {
     return plainToInstance(StoreModel, payload, {

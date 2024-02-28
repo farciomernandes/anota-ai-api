@@ -4,7 +4,9 @@ import { BcryptAdapter } from '@/infra/adapters/bcrypt-adapter';
 import { StoreMongoRepository } from '@/infra/db/mongodb/store/store-mongo-repository';
 import { makeConfigServiceMock } from '@/test/infra/config/configService';
 import {
+  makeFakePaymentMethod,
   makeFakeStore,
+  makeFakeWeek,
   makeRequestAddStore,
   makeStoreFakeRequest,
   makeStoreMongoRepository,
