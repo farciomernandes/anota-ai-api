@@ -1,18 +1,17 @@
-import { ProductMongoRepository } from '@/infra/db/mongodb/product/product-mongo-repository';
-
 import { DbListProduct } from '@/core/application/product/db-list-product';
 import {
   makeFakeProduct,
-  makeProductMongoRepository,
+  makeProductRepository,
 } from '@/test/mock/db-mock-helper-product';
+import { ProductRepository } from '@/core/domain/repositories/product-repository';
 
 type SutTypes = {
   sut: DbListProduct;
-  listProductRepositoryStub: ProductMongoRepository;
+  listProductRepositoryStub: ProductRepository;
 };
 
 const makeSut = (): SutTypes => {
-  const listProductRepositoryStub = makeProductMongoRepository();
+  const listProductRepositoryStub = makeProductRepository();
   const sut = new DbListProduct(listProductRepositoryStub);
 
   return {

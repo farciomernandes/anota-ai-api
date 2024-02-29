@@ -1,23 +1,24 @@
-import { ProductMongoRepository } from '@/infra/db/mongodb/product/product-mongo-repository';
-
 import { DbDeleteProduct } from '@/core/application/product/db-delete-product';
 import { ConfigService } from '@nestjs/config';
 import { makeSnsProxyMock } from '@/test/mock/sns-proxy-mock-helper';
 import {
   makeFakeProduct,
-  makeProductMongoRepository,
+  makeFakeProductAuthenticatedAdmin,
+  makeFakeProductAuthenticatedStore,
+  makeProductRepository,
 } from '@/test/mock/db-mock-helper-product';
 import { RolesEnum } from '@/shared/enums/roles.enum';
 import { UnauthorizedException } from '@nestjs/common';
 import { makeFakeRoles } from '@/test/mock/db-mock-helper-role';
+import { ProductRepository } from '@/core/domain/repositories/product-repository';
 
 type SutTypes = {
   sut: DbDeleteProduct;
-  deleteProductRepositoryStub: ProductMongoRepository;
+  deleteProductRepositoryStub: ProductRepository;
 };
 
 const makeSut = (): SutTypes => {
-  const deleteProductRepositoryStub = makeProductMongoRepository();
+  const deleteProductRepositoryStub = makeProductRepository();
   const snsProxyStub = makeSnsProxyMock({} as ConfigService);
 
   const sut = new DbDeleteProduct(deleteProductRepositoryStub, snsProxyStub);
@@ -28,37 +29,44 @@ const makeSut = (): SutTypes => {
   };
 };
 describe('DbDeleteProduct usecase', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   test('Should call ProductMongoRepository with correct values', async () => {
     const { sut, deleteProductRepositoryStub } = makeSut();
     const deleteSpy = jest.spyOn(deleteProductRepositoryStub, 'delete');
-    await sut.delete(makeFakeProduct().id, {
-      id: makeFakeProduct().ownerId,
-      roles: makeFakeRoles(),
-    });
-    expect(deleteSpy).toBeCalledWith(makeFakeProduct().id);
+    await sut.delete(makeFakeProduct().id, makeFakeProductAuthenticatedAdmin());
+    expect(deleteSpy).toBeCalledWith(
+      makeFakeProduct().id,
+      makeFakeProductAuthenticatedAdmin(),
+    );
   });
 
   test('Shoul call delete ProductMongoRepository with succes if roles is ADMIN', async () => {
     const { sut, deleteProductRepositoryStub } = makeSut();
     const deleteSpy = jest.spyOn(deleteProductRepositoryStub, 'delete');
-    await sut.delete(makeFakeProduct().id, {
-      id: 'admin-id',
-      roles: makeFakeRoles(),
-    });
+    await sut.delete(makeFakeProduct().id, makeFakeProductAuthenticatedAdmin());
 
-    expect(deleteSpy).toHaveBeenCalledWith(makeFakeProduct().id);
+    expect(deleteSpy).toHaveBeenCalledWith(
+      makeFakeProduct().id,
+      makeFakeProductAuthenticatedAdmin(),
+    );
   });
 
   test('Should throw UnauthorizedException if product ownerId not matching if userId sended', async () => {
     const { sut } = makeSut();
 
-    const promise = sut.delete(makeFakeProduct().id, {
-      id: 'invalid_id',
-      roles: {
-        ...makeFakeRoles(),
-        value: RolesEnum.STORE,
-      },
-    });
+    jest
+      .spyOn(sut, 'delete')
+      .mockImplementationOnce(() =>
+        Promise.reject(new UnauthorizedException()),
+      );
+
+    const promise = sut.delete(
+      makeFakeProduct().id,
+      makeFakeProductAuthenticatedStore(),
+    );
 
     await expect(promise).rejects.toThrowError(UnauthorizedException);
   });

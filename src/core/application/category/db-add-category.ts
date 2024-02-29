@@ -1,15 +1,15 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CategoryModel } from '@/core/domain/models/category';
 import { AddCategoryModel } from '@/presentation/dtos/category/add-category.dto';
-import { CategoryMongoRepository } from '@/infra/db/mongodb/category/category-mongo-repository';
 import { ProxySendMessage } from '../../domain/protocols/aws/sns-send-message';
 import { IDbAddCategoryRepository } from '../../domain/protocols/db/category/add-category-respository';
 import { MessagesHelper } from '@/shared/helpers/messages.helper';
+import { CategoryRepository } from '@/core/domain/repositories/category-repository';
 
 @Injectable()
 export class DbAddCategory implements IDbAddCategoryRepository {
   constructor(
-    private readonly categoryRepository: CategoryMongoRepository,
+    private readonly categoryRepository: CategoryRepository,
     private readonly snsProxy: ProxySendMessage,
   ) {}
 

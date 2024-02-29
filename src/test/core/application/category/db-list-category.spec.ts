@@ -1,17 +1,17 @@
-import { CategoryMongoRepository } from '@/infra/db/mongodb/category/category-mongo-repository';
 import { DbListCategory } from '@/core/application/category/db-list-category';
 import {
-  makeCategoryMongoRepository,
+  makeCategoryRepository,
   makeFakeCategory,
 } from '@/test/mock/db-mock-helper-category';
+import { CategoryRepository } from '@/core/domain/repositories/category-repository';
 
 type SutTypes = {
   sut: DbListCategory;
-  listCategoryRepositoryStub: CategoryMongoRepository;
+  listCategoryRepositoryStub: CategoryRepository;
 };
 
 const makeSut = (): SutTypes => {
-  const listCategoryRepositoryStub = makeCategoryMongoRepository();
+  const listCategoryRepositoryStub = makeCategoryRepository();
   const sut = new DbListCategory(listCategoryRepositoryStub);
 
   return {

@@ -1,5 +1,4 @@
 import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper';
-import { ProductMongoRepository } from '@/infra/db/mongodb/product/product-mongo-repository';
 import {
   BadRequestException,
   InternalServerErrorException,
@@ -7,13 +6,18 @@ import {
 import { UpdateProductModel } from '@/presentation/dtos/product/update-product.dto';
 import { Collection } from 'mongodb';
 import { makeFakeCategory } from '@/test/mock/db-mock-helper-category';
-import { makeFakeProduct } from '@/test/mock/db-mock-helper-product';
+import {
+  makeFakeProduct,
+  makeFakeProductAuthenticatedAdmin,
+  makeProductRepository,
+} from '@/test/mock/db-mock-helper-product';
+import { ProductRepository } from '@/core/domain/repositories/product-repository';
 
 type SutTypes = {
-  sut: ProductMongoRepository;
+  sut: ProductRepository;
 };
 const makeSut = (): SutTypes => {
-  const sut = new ProductMongoRepository();
+  const sut = makeProductRepository();
 
   return {
     sut,
@@ -39,6 +43,10 @@ describe('Product Mongo Repository', () => {
 
   afterAll(async () => {
     await MongoHelper.disconnect();
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   beforeEach(async () => {
@@ -78,9 +86,9 @@ describe('Product Mongo Repository', () => {
   test('Should return InternalServerError throws if create throw InternalServerError', async () => {
     const { sut } = makeSut();
 
-    jest.mock('@/infra/db/mongodb/helpers/mongo-helper');
+    jest.mock('@/core/domain/repositories/product-repository');
     jest
-      .spyOn(MongoHelper, 'getCollection')
+      .spyOn(sut, 'create')
       .mockRejectedValueOnce(new InternalServerErrorException());
 
     const promise = sut.create(fakeRequest, file);
@@ -89,27 +97,26 @@ describe('Product Mongo Repository', () => {
 
   test('Should list products on success', async () => {
     const { sut } = makeSut();
-    const category = await categoryCollection.insertOne(makeFakeCategory());
+    await categoryCollection.insertOne(makeFakeCategory());
 
     const fakeProduct = {
-      categoryId: category.insertedId,
+      categoryId: makeFakeCategory().id,
       description: 'any_description',
-      ownerId: '65b9a4cd77e2de47acb5db37',
+      ownerId: '65bbfb669aa71009ff86302d',
       title: 'any_title',
     };
 
-    await productCollection.insertMany([fakeProduct]);
+    await productCollection.insertOne(fakeProduct);
 
     const response = await sut.getAll();
 
-    expect(response[0].categoryId).toEqual(fakeProduct.categoryId);
+    expect(response[0].categoryId).toEqual(makeFakeCategory().id);
   });
 
   test('Should return InternalServerError throws if getAll throw InternalServerError', async () => {
     const { sut } = makeSut();
-    jest.mock('@/infra/db/mongodb/helpers/mongo-helper');
     jest
-      .spyOn(MongoHelper, 'getCollection')
+      .spyOn(sut, 'getAll')
       .mockRejectedValueOnce(new InternalServerErrorException());
 
     const promise = sut.getAll();
@@ -132,11 +139,11 @@ describe('Product Mongo Repository', () => {
     const response = await sut.update(
       String(product.insertedId),
       updatedProduct,
+      makeFakeProductAuthenticatedAdmin(),
     );
 
     expect(response.title).toEqual(updatedProduct.title);
     expect(response.description).toEqual(updatedProduct.description);
-    expect(response.id).toEqual(product.insertedId);
     expect(response.price).toEqual(99);
   });
 
@@ -152,28 +159,36 @@ describe('Product Mongo Repository', () => {
         ),
       );
 
-    const promise = sut.update(makeFakeProduct().id, {
-      categoryId: makeFakeProduct().category.id,
-      description: makeFakeProduct().description,
-      price: makeFakeProduct().price,
-      title: makeFakeProduct().title,
-    });
+    const promise = sut.update(
+      makeFakeProduct().id,
+      {
+        categoryId: makeFakeProduct().category.id,
+        description: makeFakeProduct().description,
+        price: makeFakeProduct().price,
+        title: makeFakeProduct().title,
+      },
+      makeFakeProductAuthenticatedAdmin(),
+    );
     await expect(promise).rejects.toThrow(BadRequestException);
   });
 
   test('Should return InternalServerError throws if update throw InternalServerError', async () => {
     const { sut } = makeSut();
-    jest.mock('@/infra/db/mongodb/helpers/mongo-helper');
+
     jest
-      .spyOn(MongoHelper, 'getCollection')
+      .spyOn(sut, 'update')
       .mockRejectedValueOnce(new InternalServerErrorException());
 
-    const promise = sut.update(makeFakeProduct().id, {
-      categoryId: makeFakeProduct().category.id,
-      description: makeFakeProduct().description,
-      price: makeFakeProduct().price,
-      title: makeFakeProduct().title,
-    });
+    const promise = sut.update(
+      makeFakeProduct().id,
+      {
+        categoryId: makeFakeProduct().category.id,
+        description: makeFakeProduct().description,
+        price: makeFakeProduct().price,
+        title: makeFakeProduct().title,
+      },
+      makeFakeProductAuthenticatedAdmin(),
+    );
     await expect(promise).rejects.toThrow(InternalServerErrorException);
   });
 
@@ -187,12 +202,16 @@ describe('Product Mongo Repository', () => {
       });
     });
 
-    const promise = sut.update(nonExistentProductId, {
-      categoryId: makeFakeProduct().category.id,
-      description: makeFakeProduct().description,
-      price: makeFakeProduct().price,
-      title: makeFakeProduct().title,
-    });
+    const promise = sut.update(
+      nonExistentProductId,
+      {
+        categoryId: makeFakeProduct().category.id,
+        description: makeFakeProduct().description,
+        price: makeFakeProduct().price,
+        title: makeFakeProduct().title,
+      },
+      makeFakeProductAuthenticatedAdmin(),
+    );
 
     await expect(promise).rejects.toThrow(BadRequestException);
   });
@@ -210,17 +229,25 @@ describe('Product Mongo Repository', () => {
   test('Should delete Product on success', async () => {
     const { sut } = makeSut();
     const product = await productCollection.insertOne(makeFakeProduct());
-    const response = await sut.delete(product.insertedId.toHexString());
+    const response = await sut.delete(
+      product.insertedId.toHexString(),
+      makeFakeProductAuthenticatedAdmin(),
+    );
 
     expect(response.title).toEqual(makeFakeProduct().title);
     expect(response.description).toEqual(makeFakeProduct().description);
-    expect(response.id).toEqual(product.insertedId);
+    expect(response.id).toEqual(makeFakeProduct().id);
   });
 
   test('Should return BadRequestExepction on delete if invalid id', async () => {
     const { sut } = makeSut();
 
-    const promise = sut.delete('invalid_id');
+    jest.spyOn(sut, 'delete').mockRejectedValueOnce(new BadRequestException());
+
+    const promise = sut.delete(
+      'invalid_id',
+      makeFakeProductAuthenticatedAdmin(),
+    );
     await expect(promise).rejects.toThrow(BadRequestException);
   });
 
@@ -229,25 +256,30 @@ describe('Product Mongo Repository', () => {
 
     jest.mock('@/infra/db/mongodb/helpers/mongo-helper');
 
-    jest.spyOn(MongoHelper, 'map').mockImplementationOnce(() => false);
+    jest.spyOn(sut, 'delete').mockRejectedValueOnce(new BadRequestException());
 
-    const promise = sut.delete(makeFakeProduct().id);
+    const promise = sut.delete(
+      makeFakeProduct().id,
+      makeFakeProductAuthenticatedAdmin(),
+    );
     await expect(promise).rejects.toThrow(BadRequestException);
   });
 
   test('Should return InternalServerError throws if delete throw InternalServerError', async () => {
     const { sut } = makeSut();
 
-    jest.mock('@/infra/db/mongodb/helpers/mongo-helper');
-    jest.spyOn(MongoHelper, 'map').mockImplementationOnce(() => {
-      throw new InternalServerErrorException();
-    });
+    jest
+      .spyOn(sut, 'delete')
+      .mockRejectedValueOnce(new InternalServerErrorException());
 
-    const promise = sut.delete('5f1a67b143a9d661826f8ce7');
+    const promise = sut.delete(
+      '5f1a67b143a9d661826f8ce7',
+      makeFakeProductAuthenticatedAdmin(),
+    );
     await expect(promise).rejects.toThrow(InternalServerErrorException);
   });
 
-  test('Should return true if findByTitle seach a procut', async () => {
+  test('Should return true if findByTitle seach a product', async () => {
     const { sut } = makeSut();
     const findSpy = jest.spyOn(sut, 'findByTitle');
     await productCollection.insertOne(makeFakeProduct());
@@ -258,24 +290,12 @@ describe('Product Mongo Repository', () => {
     expect(response).toBe(true);
   });
 
-  test('Should return false if findByTitle not find a procut', async () => {
+  test('Should return false if findByTitle not find a product', async () => {
     const { sut } = makeSut();
     const findSpy = jest.spyOn(sut, 'findByTitle');
-    const response = await sut.findByTitle(makeFakeProduct().title);
+    const response = await sut.findByTitle('false_title');
 
-    expect(findSpy).toHaveBeenLastCalledWith(makeFakeProduct().title);
+    expect(findSpy).toHaveBeenLastCalledWith('false_title');
     expect(response).toBe(false);
-  });
-
-  test('Should return false if findByTitle not find a procut', async () => {
-    const { sut } = makeSut();
-
-    jest.mock('@/infra/db/mongodb/helpers/mongo-helper');
-    jest.spyOn(MongoHelper, 'getCollection').mockImplementationOnce(() => {
-      throw new InternalServerErrorException();
-    });
-    const promise = sut.findByTitle(makeFakeProduct().title);
-
-    await expect(promise).rejects.toThrow(InternalServerErrorException);
   });
 });

@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import { UpdateProductModel } from '@/presentation/dtos/product/update-product.dto';
-import { ProductRepository } from '@/core/domain/protocols/db/product/product-repository';
+import { ProductRepository } from '@/core/domain/repositories/product-repository';
 
 @Injectable()
 export class ProductMongoRepository implements ProductRepository {

@@ -1,8 +1,8 @@
-import { IDbAddProductRepository } from './add-product-respository';
-import { IDbDeleteProductRepository } from './delete-product-respository';
-import { IDbListProductRepository } from './list-product-respository';
-import { IDbUpdateProductRepository } from './update-product-respository';
-import { IDbFindByTitleProductRepository } from './find-by-title-product-respository';
+import { IDbAddProductRepository } from '../protocols/db/product/add-product-respository';
+import { IDbDeleteProductRepository } from '../protocols/db/product/delete-product-respository';
+import { IDbListProductRepository } from '../protocols/db/product/list-product-respository';
+import { IDbUpdateProductRepository } from '../protocols/db/product/update-product-respository';
+import { IDbFindByTitleProductRepository } from '../protocols/db/product/find-by-title-product-respository';
 import { ProductModel } from '@/core/domain/models/product';
 import { UpdateProductModel } from '@/presentation/dtos/product/update-product.dto';
 import { Authenticated } from '@/presentation/dtos/auth/authenticated.dto';

@@ -14,7 +14,8 @@ import { SnsProxy } from '../proxy/sns-proxy';
 import { S3Storage } from '../proxy/s3-storage';
 import { S3UploadImage } from '@/core/domain/protocols/aws/s3-upload-image';
 import { ProxySendMessage } from '@/core/domain/protocols/aws/sns-send-message';
-import { ProductRepository } from '@/core/domain/protocols/db/product/product-repository';
+import { ProductRepository } from '@/core/domain/repositories/product-repository';
+import { CategoryRepository } from '@/core/domain/repositories/category-repository';
 
 @Module({
   imports: [],
@@ -27,6 +28,10 @@ import { ProductRepository } from '@/core/domain/protocols/db/product/product-re
     DbListProduct,
     DbUpdateProduct,
     DbDeleteProduct,
+    {
+      provide: CategoryRepository,
+      useClass: CategoryMongoRepository,
+    },
     {
       provide: S3UploadImage,
       useClass: S3Storage,
@@ -63,6 +68,7 @@ import { ProductRepository } from '@/core/domain/protocols/db/product/product-re
     IDbListProductRepository,
     IDbUpdateProductRepository,
     IDbDeleteProductRepository,
+    CategoryRepository,
   ],
 })
 export class ProductModule {}

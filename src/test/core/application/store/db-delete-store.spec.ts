@@ -4,7 +4,6 @@ import {
 } from '@/test/mock/db-mock-helper-store';
 import { makeFakeRoles } from '@/test/mock/db-mock-helper-role';
 import { RolesEnum } from '@/shared/enums/roles.enum';
-import { UnauthorizedException } from '@nestjs/common';
 import { DbDeleteStore } from '@/core/application/store/db-delete-store';
 import { StoreMongoRepository } from '@/infra/db/mongodb/store/store-mongo-repository';
 

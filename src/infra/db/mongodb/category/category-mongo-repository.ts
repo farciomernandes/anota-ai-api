@@ -1,5 +1,3 @@
-import { IDbListCategoryRepository } from '@/core/domain/protocols/db/category/list-category-respository';
-import { IDbAddCategoryRepository } from '@/core/domain/protocols/db/category/add-category-respository';
 import { CategoryModel } from '@/core/domain/models/category';
 import { AddCategoryModel } from '@/presentation/dtos/category/add-category.dto';
 import { MongoHelper } from '../helpers/mongo-helper';
@@ -8,18 +6,11 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { IDbUpdateCategoryRepository } from '@/core/domain/protocols/db/category/update-category-respository';
 import { ObjectId } from 'mongodb';
-import { IDbDeleteCategoryRepository } from '@/core/domain/protocols/db/category/delete-category-respository';
+import { CategoryRepository } from '@/core/domain/repositories/category-repository';
 
 @Injectable()
-export class CategoryMongoRepository
-  implements
-    IDbAddCategoryRepository,
-    IDbListCategoryRepository,
-    IDbUpdateCategoryRepository,
-    IDbDeleteCategoryRepository
-{
+export class CategoryMongoRepository implements CategoryRepository {
   async create(payload: AddCategoryModel): Promise<CategoryModel> {
     try {
       const categoryCollection = await MongoHelper.getCollection('categories');

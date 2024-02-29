@@ -1,4 +1,3 @@
-import { ProductMongoRepository } from '@/infra/db/mongodb/product/product-mongo-repository';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ProductModel } from '@/core/domain/models/product';
 import { UpdateProductModel } from '@/presentation/dtos/product/update-product.dto';
@@ -7,11 +6,12 @@ import { ProxySendMessage } from '../../domain/protocols/aws/sns-send-message';
 import { Authenticated } from '@/presentation/dtos/auth/authenticated.dto';
 import { MessagesHelper } from '@/shared/helpers/messages.helper';
 import { RolesEnum } from '@/shared/enums/roles.enum';
+import { ProductRepository } from '@/core/domain/repositories/product-repository';
 
 @Injectable()
 export class DbUpdateProduct implements IDbUpdateProductRepository {
   constructor(
-    private readonly productMongoRepository: ProductMongoRepository,
+    private readonly productMongoRepository: ProductRepository,
     private readonly snsProxy: ProxySendMessage,
   ) {}
   async update(
@@ -25,7 +25,7 @@ export class DbUpdateProduct implements IDbUpdateProductRepository {
       throw new UnauthorizedException(MessagesHelper.NOT_AUTHORIZATION);
     }
 
-    const updated = await this.productMongoRepository.update(id, payload);
+    const updated = await this.productMongoRepository.update(id, payload, user);
     await this.snsProxy.sendSnsMessage(updated, 'product');
     return updated;
   }

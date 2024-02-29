@@ -1,6 +1,6 @@
 import { AddCategoryModel } from '@/presentation/dtos/category/add-category.dto';
 import { CategoryModel } from '@/core/domain/models/category';
-import { CategoryMongoRepository } from '@/infra/db/mongodb/category/category-mongo-repository';
+import { CategoryRepository } from '@/core/domain/repositories/category-repository';
 
 export const makeFakeCategory = (): CategoryModel => {
   const category = new CategoryModel();
@@ -11,8 +11,8 @@ export const makeFakeCategory = (): CategoryModel => {
   return category;
 };
 
-export const makeCategoryMongoRepository = (): CategoryMongoRepository => {
-  class CategoryRepositoryStub implements CategoryMongoRepository {
+export const makeCategoryRepository = (): CategoryRepository => {
+  class CategoryRepositoryStub implements CategoryRepository {
     findById(id: string): Promise<CategoryModel> {
       return Promise.resolve(makeFakeCategory());
     }

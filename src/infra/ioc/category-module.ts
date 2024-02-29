@@ -11,6 +11,7 @@ import { DbDeleteCategory } from '@/core/application/category/db-delete-category
 import { IDbDeleteCategoryRepository } from '@/core/domain/protocols/db/category/delete-category-respository';
 import { SnsProxy } from '../proxy/sns-proxy';
 import { ProxySendMessage } from '@/core/domain/protocols/aws/sns-send-message';
+import { CategoryRepository } from '@/core/domain/repositories/category-repository';
 
 @Module({
   imports: [],
@@ -21,6 +22,10 @@ import { ProxySendMessage } from '@/core/domain/protocols/aws/sns-send-message';
     DbListCategory,
     DbUpdateCategory,
     DbDeleteCategory,
+    {
+      provide: CategoryRepository,
+      useClass: CategoryMongoRepository,
+    },
     {
       provide: ProxySendMessage,
       useClass: SnsProxy,
@@ -48,6 +53,7 @@ import { ProxySendMessage } from '@/core/domain/protocols/aws/sns-send-message';
     IDbListCategoryRepository,
     IDbUpdateCategoryRepository,
     IDbDeleteCategoryRepository,
+    CategoryRepository,
   ],
 })
 export class CategoryModule {}

@@ -1,29 +1,29 @@
-import { ProductMongoRepository } from '@/infra/db/mongodb/product/product-mongo-repository';
 import { DbAddProduct } from '@/core/application/product/db-add-product';
 
 import { AddProductModel } from '@/presentation/dtos/product/add-product.dto';
 import { BadRequestException } from '@nestjs/common';
-import { CategoryMongoRepository } from '@/infra/db/mongodb/category/category-mongo-repository';
 import { ConfigService } from '@nestjs/config';
 import { makeSnsProxyMock } from '@/test/mock/sns-proxy-mock-helper';
 import {
   makeFakeProduct,
-  makeProductMongoRepository,
+  makeProductRepository,
 } from '@/test/mock/db-mock-helper-product';
-import { makeCategoryMongoRepository } from '@/test/mock/db-mock-helper-category';
+import { makeCategoryRepository } from '@/test/mock/db-mock-helper-category';
 import { makeFile, makeS3UploadImageMock } from '@/test/mock/s3-mock-helper';
 import { ProxySendMessage } from '@/core/domain/protocols/aws/sns-send-message';
+import { ProductRepository } from '@/core/domain/repositories/product-repository';
+import { CategoryRepository } from '@/core/domain/repositories/category-repository';
 
 type SutTypes = {
   sut: DbAddProduct;
-  addProductRepositoryStub: ProductMongoRepository;
-  categoryRepositoryStub: CategoryMongoRepository;
+  addProductRepositoryStub: ProductRepository;
+  categoryRepositoryStub: CategoryRepository;
   snsProxyStub: ProxySendMessage;
 };
 
 const makeSut = (): SutTypes => {
-  const addProductRepositoryStub = makeProductMongoRepository();
-  const categoryRepositoryStub = makeCategoryMongoRepository();
+  const addProductRepositoryStub = makeProductRepository();
+  const categoryRepositoryStub = makeCategoryRepository();
   const snsProxyStub = makeSnsProxyMock({} as ConfigService);
   const S3Stub = makeS3UploadImageMock();
 
@@ -44,7 +44,7 @@ const makeSut = (): SutTypes => {
 
 describe('DbAddProduct usecase', () => {
   const fakeRequestData: AddProductModel = {
-    title: 'any_title',
+    title: 'new_title',
     description: 'any_description',
     ownerId: 'any_ownerId',
     price: 10,

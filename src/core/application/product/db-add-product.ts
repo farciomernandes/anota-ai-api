@@ -1,17 +1,17 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ProductModel } from '@/core/domain/models/product';
 import { AddProductModel } from '@/presentation/dtos/product/add-product.dto';
-import { CategoryMongoRepository } from '@/infra/db/mongodb/category/category-mongo-repository';
 import { S3UploadImage } from '../../domain/protocols/aws/s3-upload-image';
 import { ProxySendMessage } from '../../domain/protocols/aws/sns-send-message';
 import { IDbAddProductRepository } from '../../domain/protocols/db/product/add-product-respository';
-import { ProductRepository } from '@/core/domain/protocols/db/product/product-repository';
+import { ProductRepository } from '@/core/domain/repositories/product-repository';
+import { CategoryRepository } from '@/core/domain/repositories/category-repository';
 
 @Injectable()
 export class DbAddProduct implements IDbAddProductRepository {
   constructor(
     private readonly productRepository: ProductRepository,
-    private readonly categoryRepository: CategoryMongoRepository,
+    private readonly categoryRepository: CategoryRepository,
     private readonly snsProxy: ProxySendMessage,
     private readonly s3Upload: S3UploadImage,
   ) {}
