@@ -64,7 +64,6 @@ export class CategoryController {
     type: CategoryModel,
     isArray: true,
   })
-  @Roles(RolesEnum.ADMIN, RolesEnum.STORE)
   async getAll(): Promise<CategoryModel[]> {
     try {
       return await this.dbListCategory.getAll();

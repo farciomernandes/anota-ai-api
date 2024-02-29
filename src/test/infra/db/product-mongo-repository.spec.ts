@@ -30,8 +30,8 @@ describe('Product Mongo Repository', () => {
     ownerId: '65b55e87d161a296b867a4ce',
     price: 10,
     title: 'any_title',
-    file: 'any_file',
   };
+  const file = {} as Express.Multer.File;
 
   beforeAll(async () => {
     await MongoHelper.connect(process.env.MONGO_URL);
@@ -52,11 +52,13 @@ describe('Product Mongo Repository', () => {
 
     const fakeProduct = makeFakeProduct();
     const category = await categoryCollection.insertOne(makeFakeCategory());
-    const response = await sut.create({
-      ...fakeProduct,
-      categoryId: category.insertedId.toHexString(),
-      file: undefined,
-    });
+    const response = await sut.create(
+      {
+        ...fakeProduct,
+        categoryId: category.insertedId.toHexString(),
+      },
+      file,
+    );
 
     expect(response.title).toEqual(fakeProduct.title);
   });
@@ -68,7 +70,7 @@ describe('Product Mongo Repository', () => {
       .spyOn(sut, 'create')
       .mockReturnValueOnce(Promise.reject(new BadRequestException()));
 
-    const promise = sut.create(fakeRequest);
+    const promise = sut.create(fakeRequest, file);
 
     await expect(promise).rejects.toThrow(BadRequestException);
   });
@@ -81,7 +83,7 @@ describe('Product Mongo Repository', () => {
       .spyOn(MongoHelper, 'getCollection')
       .mockRejectedValueOnce(new InternalServerErrorException());
 
-    const promise = sut.create(fakeRequest);
+    const promise = sut.create(fakeRequest, file);
     await expect(promise).rejects.toThrow(InternalServerErrorException);
   });
 

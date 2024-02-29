@@ -56,7 +56,7 @@ describe('DbAddProduct usecase', () => {
     const { sut, addProductRepositoryStub } = makeSut();
     const addSpy = jest.spyOn(addProductRepositoryStub, 'create');
     await sut.create(fakeRequestData, makeFile());
-    expect(addSpy).toBeCalledWith(fakeRequestData);
+    expect(addSpy).toBeCalledWith(fakeRequestData, expect.any(Object));
   });
 
   test('Should throws if ProductMongoRepository throws', async () => {
