@@ -5,25 +5,14 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { MongoHelper } from '../helpers/mongo-helper';
-import { IDbAddAdminRepository } from '@/core/domain/protocols/db/admin/add-admin-repository';
 import { AdminModel } from '@/core/domain/models/admin';
 import { ObjectId } from 'mongodb';
-import { IDbFindAdminByEmailRepository } from '@/core/domain/protocols/db/admin/find-admin-by-email-repository';
-import { IDbListAdminRepository } from '@/core/domain/protocols/db/admin/list-admin-respository';
 import { AddAdmin } from '@/presentation/dtos/admin/add-admin';
 import { MessagesHelper } from '@/shared/helpers/messages.helper';
-import { IDbFindAdminByIdRepository } from '@/core/domain/protocols/db/admin/find-admin-by-id-repository';
-import { IDbDeleteAdminRepository } from '@/core/domain/protocols/db/admin/delete-admin-respository';
+import { AdminRepository } from '@/core/domain/repositories/admin-repository';
 
 @Injectable()
-export class AdminMongoRepository
-  implements
-    IDbAddAdminRepository,
-    IDbFindAdminByEmailRepository,
-    IDbListAdminRepository,
-    IDbFindAdminByIdRepository,
-    IDbDeleteAdminRepository
-{
+export class AdminMongoRepository implements AdminRepository {
   async findById(id: string): Promise<AdminModel> {
     try {
       const adminCollection = await MongoHelper.getCollection('admins');

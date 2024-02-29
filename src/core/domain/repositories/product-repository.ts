@@ -7,7 +7,9 @@ import { ProductModel } from '@/core/domain/models/product';
 import { UpdateProductModel } from '@/presentation/dtos/product/update-product.dto';
 import { Authenticated } from '@/presentation/dtos/auth/authenticated.dto';
 import { AddProductModel } from '@/presentation/dtos/product/add-product.dto';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export abstract class ProductRepository
   implements
     IDbAddProductRepository,

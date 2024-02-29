@@ -7,7 +7,9 @@ import { IDbFindByIdcategoryRepository } from '../protocols/db/category/find-by-
 import { AddCategoryModel } from '@/presentation/dtos/category/add-category.dto';
 import { CategoryModel } from '../models/category';
 import { Authenticated } from '@/presentation/dtos/auth/authenticated.dto';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export abstract class CategoryRepository
   implements
     IDbAddCategoryRepository,

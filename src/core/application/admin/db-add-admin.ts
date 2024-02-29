@@ -2,13 +2,13 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { IHasher } from '../../domain/protocols/cryptography/hasher';
 import { AdminModel } from '@/core/domain/models/admin';
 import { IDbAddAdminRepository } from '@/core/domain/protocols/db/admin/add-admin-repository';
-import { AdminMongoRepository } from '@/infra/db/mongodb/admin/admin-mongo-repository';
 import { AddAdmin } from '@/presentation/dtos/admin/add-admin';
+import { AdminRepository } from '@/core/domain/repositories/admin-repository';
 
 @Injectable()
 export class DbAddAdmin implements IDbAddAdminRepository {
   constructor(
-    private readonly adminRepository: AdminMongoRepository,
+    private readonly adminRepository: AdminRepository,
     private readonly hasher: IHasher,
   ) {}
 

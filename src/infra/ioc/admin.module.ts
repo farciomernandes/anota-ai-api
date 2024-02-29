@@ -13,6 +13,7 @@ import { IDbAddAdminRepository } from '@/core/domain/protocols/db/admin/add-admi
 import { AdminController } from '@/presentation/controllers/admin/admin-controller';
 import { DbDeleteAdmin } from '@/core/application/admin/db-delete-admin';
 import { IDbDeleteAdminRepository } from '@/core/domain/protocols/db/admin/delete-admin-respository';
+import { AdminRepository } from '@/core/domain/repositories/admin-repository';
 
 @Module({
   imports: [],
@@ -23,6 +24,10 @@ import { IDbDeleteAdminRepository } from '@/core/domain/protocols/db/admin/delet
     DbDeleteAdmin,
     BcryptAdapter,
     JwtAdapter,
+    {
+      provide: AdminRepository,
+      useClass: AdminMongoRepository,
+    },
     {
       provide: Encrypter,
       useClass: JwtAdapter,
@@ -54,6 +59,7 @@ import { IDbDeleteAdminRepository } from '@/core/domain/protocols/db/admin/delet
   ],
   controllers: [AdminController],
   exports: [
+    AdminRepository,
     IDbAddAdminRepository,
     IDbListAdminRepository,
     IDbDeleteAdminRepository,
