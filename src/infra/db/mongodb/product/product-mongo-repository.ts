@@ -1,4 +1,3 @@
-import { IDbAddProductRepository } from '@/core/domain/protocols/db/product/add-product-respository';
 import { ProductModel } from '@/core/domain/models/product';
 import { AddProductModel } from '@/presentation/dtos/product/add-product.dto';
 import { MongoHelper } from '../helpers/mongo-helper';
@@ -8,26 +7,22 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
-import { IDbListProductRepository } from '@/core/domain/protocols/db/product/list-product-respository';
-import { IDbUpdateProductRepository } from '@/core/domain/protocols/db/product/update-product-respository';
-import { IDbDeleteProductRepository } from '@/core/domain/protocols/db/product/delete-product-respository';
 import { UpdateProductModel } from '@/presentation/dtos/product/update-product.dto';
+import { ProductRepository } from '@/core/domain/protocols/db/product/product-repository';
 
 @Injectable()
-export class ProductMongoRepository
-  implements
-    IDbAddProductRepository,
-    IDbListProductRepository,
-    IDbUpdateProductRepository,
-    IDbDeleteProductRepository
-{
-  async create(payload: AddProductModel): Promise<ProductModel> {
+export class ProductMongoRepository implements ProductRepository {
+  async create(
+    payload: Omit<AddProductModel, 'file'>,
+    file: Express.Multer.File,
+  ): Promise<ProductModel> {
     try {
       const productCollection = await MongoHelper.getCollection('products');
       const categoryCollection = await MongoHelper.getCollection('categories');
 
       const result = await productCollection.insertOne({
         ...payload,
+        image_url: file.path,
         categoryId: new ObjectId(payload.categoryId),
       });
 

@@ -15,6 +15,7 @@ import {
 import {
   ApiBearerAuth,
   ApiBody,
+  ApiConsumes,
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -53,6 +54,7 @@ export class ProductController {
     status: HttpStatus.OK,
     type: ProductModel,
   })
+  @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('file', multerConfig))
   @Roles(RolesEnum.ADMIN, RolesEnum.STORE)
   @ApiBearerAuth()

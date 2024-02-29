@@ -14,6 +14,7 @@ import { SnsProxy } from '../proxy/sns-proxy';
 import { S3Storage } from '../proxy/s3-storage';
 import { S3UploadImage } from '@/core/domain/protocols/aws/s3-upload-image';
 import { ProxySendMessage } from '@/core/domain/protocols/aws/sns-send-message';
+import { ProductRepository } from '@/core/domain/protocols/db/product/product-repository';
 
 @Module({
   imports: [],
@@ -50,9 +51,14 @@ import { ProxySendMessage } from '@/core/domain/protocols/aws/sns-send-message';
       provide: IDbDeleteProductRepository,
       useClass: DbDeleteProduct,
     },
+    {
+      provide: ProductRepository,
+      useClass: ProductMongoRepository,
+    },
   ],
   controllers: [ProductController],
   exports: [
+    ProductRepository,
     IDbAddProductRepository,
     IDbListProductRepository,
     IDbUpdateProductRepository,
