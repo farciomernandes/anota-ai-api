@@ -1,17 +1,10 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { MongoHelper } from '../helpers/mongo-helper';
-import { IDbAddRoleRepository } from '@/core/domain/protocols/db/role/add-role-repository';
-import { IDbListRoleRepository } from '@/core/domain/protocols/db/role/list-role-respository';
 import { RoleModel } from '@/core/domain/models/role';
-import { IDbFindRoleByEmailRepository } from '@/core/domain/protocols/db/role/find-role-by-value-repository';
+import { RoleRepository } from '@/core/domain/repositories/role-repository';
 
 @Injectable()
-export class RoleMongoRepository
-  implements
-    IDbAddRoleRepository,
-    IDbListRoleRepository,
-    IDbFindRoleByEmailRepository
-{
+export class RoleMongoRepository implements RoleRepository {
   async create(payload: Omit<RoleModel, 'id'>): Promise<RoleModel> {
     try {
       const roleCollection = await MongoHelper.getCollection('roles');

@@ -5,6 +5,7 @@ import { IDbListRoleRepository } from '@/core/domain/protocols/db/role/list-role
 import { DbAddRole } from '@/core/application/role/db-add-role';
 import { DbListRole } from '@/core/application/role/db-list-role';
 import { RoleController } from '@/presentation/controllers/role/role-controller';
+import { RoleRepository } from '@/core/domain/repositories/role-repository';
 
 @Module({
   imports: [],
@@ -12,6 +13,10 @@ import { RoleController } from '@/presentation/controllers/role/role-controller'
     RoleMongoRepository,
     DbAddRole,
     DbListRole,
+    {
+      provide: RoleRepository,
+      useClass: RoleMongoRepository,
+    },
     {
       provide: IDbAddRoleRepository,
       useClass: DbAddRole,
@@ -22,6 +27,6 @@ import { RoleController } from '@/presentation/controllers/role/role-controller'
     },
   ],
   controllers: [RoleController],
-  exports: [IDbAddRoleRepository, IDbListRoleRepository],
+  exports: [IDbAddRoleRepository, IDbListRoleRepository, RoleRepository],
 })
 export class RoleModule {}
