@@ -8,7 +8,7 @@ export class WeekModel {
     example: DaysEnum.MONDAY,
   })
   @Expose()
-  short_name: string;
+  day: string;
 
   @ApiProperty({
     type: String,
