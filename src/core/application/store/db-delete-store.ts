@@ -1,14 +1,14 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Authenticated } from '@/presentation/dtos/auth/authenticated.dto';
 import { MessagesHelper } from '@/shared/helpers/messages.helper';
-import { StoreMongoRepository } from '@/infra/db/mongodb/store/store-mongo-repository';
 import { IDbDeleteStoreRepository } from '@/core/domain/protocols/db/store/delete-store-respository';
 import { StoreModel } from '@/core/domain/models/store';
 import { RolesEnum } from '@/shared/enums/roles.enum';
+import { StoreRepository } from '@/core/domain/repositories/store-repository';
 
 @Injectable()
 export class DbDeleteStore implements IDbDeleteStoreRepository {
-  constructor(private readonly storeMongoRepository: StoreMongoRepository) {}
+  constructor(private readonly storeMongoRepository: StoreRepository) {}
   async delete(id: string, user: Authenticated): Promise<StoreModel> {
     const store = await this.storeMongoRepository.findById(id);
 

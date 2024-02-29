@@ -1,16 +1,16 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { StoreMongoRepository } from '@/infra/db/mongodb/store/store-mongo-repository';
 import { IDbAddStoreRepository } from '../../domain/protocols/db/store/add-store-repository';
 import { IHasher } from '../../domain/protocols/cryptography/hasher';
 import { CreatedStore } from '@/presentation/dtos/store/created-store';
 import { S3UploadImage } from '@/core/domain/protocols/aws/s3-upload-image';
 import { ConfigService } from '@nestjs/config';
 import { AddStoreModel } from '@/presentation/dtos/store/add-store.dto';
+import { StoreRepository } from '@/core/domain/repositories/store-repository';
 
 @Injectable()
 export class DbAddStore implements IDbAddStoreRepository {
   constructor(
-    private readonly storeRepository: StoreMongoRepository,
+    private readonly storeRepository: StoreRepository,
     private readonly hasher: IHasher,
     private readonly s3Upload: S3UploadImage,
     private readonly configService: ConfigService,

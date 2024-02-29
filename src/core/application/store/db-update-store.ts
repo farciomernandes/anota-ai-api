@@ -3,13 +3,13 @@ import { Authenticated } from '@/presentation/dtos/auth/authenticated.dto';
 import { MessagesHelper } from '@/shared/helpers/messages.helper';
 import { RolesEnum } from '@/shared/enums/roles.enum';
 import { IDbUpdateStoreRepository } from '@/core/domain/protocols/db/store/update-store-respository';
-import { StoreMongoRepository } from '@/infra/db/mongodb/store/store-mongo-repository';
 import { StoreModel } from '@/core/domain/models/store';
 import { AddStoreModel } from '@/presentation/dtos/store/add-store.dto';
+import { StoreRepository } from '@/core/domain/repositories/store-repository';
 
 @Injectable()
 export class DbUpdateStore implements IDbUpdateStoreRepository {
-  constructor(private readonly storeMongoRepository: StoreMongoRepository) {}
+  constructor(private readonly storeMongoRepository: StoreRepository) {}
   async update(
     id: string,
     payload: AddStoreModel,

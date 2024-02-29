@@ -18,6 +18,7 @@ import { IDbUpdateStoreRepository } from '@/core/domain/protocols/db/store/updat
 import { DbUpdateStore } from '@/core/application/store/db-update-store';
 import { S3UploadImage } from '@/core/domain/protocols/aws/s3-upload-image';
 import { S3Storage } from '../proxy/s3-storage';
+import { StoreRepository } from '@/core/domain/repositories/store-repository';
 
 @Module({
   imports: [],
@@ -30,6 +31,10 @@ import { S3Storage } from '../proxy/s3-storage';
     BcryptAdapter,
     JwtAdapter,
     AuthMiddleware,
+    {
+      provide: StoreRepository,
+      useClass: StoreMongoRepository,
+    },
     {
       provide: S3UploadImage,
       useClass: S3Storage,
@@ -69,6 +74,7 @@ import { S3Storage } from '../proxy/s3-storage';
   ],
   controllers: [StoreController],
   exports: [
+    StoreRepository,
     S3UploadImage,
     IDbAddStoreRepository,
     IDbListStoreRepository,

@@ -6,27 +6,14 @@ import {
 } from '@nestjs/common';
 import { StoreModel } from '@/core/domain/models/store';
 import { MongoHelper } from '../helpers/mongo-helper';
-import { IDbAddStoreRepository } from '@/core/domain/protocols/db/store/add-store-repository';
-import { IDbFindStoreByEmailRepository } from '@/core/domain/protocols/db/store/find-store-by-email-repository';
-import { IDbListStoreRepository } from '@/core/domain/protocols/db/store/list-store-respository';
 import { ObjectId } from 'mongodb';
 import { CreatedStore } from '@/presentation/dtos/store/created-store';
 import { MessagesHelper } from '@/shared/helpers/messages.helper';
-import { IDbDeleteStoreRepository } from '@/core/domain/protocols/db/store/delete-store-respository';
-import { IDbFindStoreByIdRepository } from '@/core/domain/protocols/db/store/find-store-by-id-repository';
-import { IDbUpdateStoreRepository } from '@/core/domain/protocols/db/store/update-store-respository';
 import { AddStoreModel } from '@/presentation/dtos/store/add-store.dto';
+import { StoreRepository } from '@/core/domain/repositories/store-repository';
 
 @Injectable()
-export class StoreMongoRepository
-  implements
-    IDbAddStoreRepository,
-    IDbFindStoreByEmailRepository,
-    IDbListStoreRepository,
-    IDbDeleteStoreRepository,
-    IDbFindStoreByIdRepository,
-    IDbUpdateStoreRepository
-{
+export class StoreMongoRepository implements StoreRepository {
   async update(
     id: string,
     payload: Omit<AddStoreModel, 'ownerId'>,
