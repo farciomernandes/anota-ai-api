@@ -5,6 +5,7 @@ import { ProductRepository } from '@/core/domain/repositories/product-repository
 import { Authenticated } from '@/presentation/dtos/auth/authenticated.dto';
 import { makeFakeStore } from './db-mock-helper-store';
 import { RolesEnum } from '@/shared/enums/roles.enum';
+import { ProductMongoRepository } from '@/infra/db/mongodb/product/product-mongo-repository';
 
 export const makeFakeProduct = (): ProductModel => {
   const product = new ProductModel();
@@ -32,8 +33,8 @@ export const makeFakeProductAuthenticatedStore = (): Authenticated => ({
   },
 });
 
-export const makeProductRepository = (): ProductRepository => {
-  class ProductRepositoryStub implements ProductRepository {
+export const makeProductMongoRepository = (): ProductRepository => {
+  class ProductRepositoryStub implements ProductMongoRepository {
     findById(id: string): Promise<ProductModel> {
       return Promise.resolve(makeFakeProduct());
     }

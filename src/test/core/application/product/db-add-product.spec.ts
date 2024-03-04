@@ -6,7 +6,7 @@ import { ConfigService } from '@nestjs/config';
 import { makeSnsProxyMock } from '@/test/mock/sns-proxy-mock-helper';
 import {
   makeFakeProduct,
-  makeProductRepository,
+  makeProductMongoRepository,
 } from '@/test/mock/db-mock-helper-product';
 import { makeCategoryRepository } from '@/test/mock/db-mock-helper-category';
 import { makeFile, makeS3UploadImageMock } from '@/test/mock/s3-mock-helper';
@@ -22,7 +22,7 @@ type SutTypes = {
 };
 
 const makeSut = (): SutTypes => {
-  const addProductRepositoryStub = makeProductRepository();
+  const addProductRepositoryStub = makeProductMongoRepository();
   const categoryRepositoryStub = makeCategoryRepository();
   const snsProxyStub = makeSnsProxyMock({} as ConfigService);
   const S3Stub = makeS3UploadImageMock();

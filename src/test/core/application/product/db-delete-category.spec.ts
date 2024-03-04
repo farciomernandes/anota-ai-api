@@ -5,11 +5,9 @@ import {
   makeFakeProduct,
   makeFakeProductAuthenticatedAdmin,
   makeFakeProductAuthenticatedStore,
-  makeProductRepository,
+  makeProductMongoRepository,
 } from '@/test/mock/db-mock-helper-product';
-import { RolesEnum } from '@/shared/enums/roles.enum';
 import { UnauthorizedException } from '@nestjs/common';
-import { makeFakeRoles } from '@/test/mock/db-mock-helper-role';
 import { ProductRepository } from '@/core/domain/repositories/product-repository';
 
 type SutTypes = {
@@ -18,7 +16,7 @@ type SutTypes = {
 };
 
 const makeSut = (): SutTypes => {
-  const deleteProductRepositoryStub = makeProductRepository();
+  const deleteProductRepositoryStub = makeProductMongoRepository();
   const snsProxyStub = makeSnsProxyMock({} as ConfigService);
 
   const sut = new DbDeleteProduct(deleteProductRepositoryStub, snsProxyStub);

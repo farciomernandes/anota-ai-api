@@ -5,7 +5,7 @@ import {
   makeFakeProduct,
   makeFakeProductAuthenticatedAdmin,
   makeFakeProductAuthenticatedStore,
-  makeProductRepository,
+  makeProductMongoRepository,
 } from '@/test/mock/db-mock-helper-product';
 import { ProxySendMessage } from '@/core/domain/protocols/aws/sns-send-message';
 import { UnauthorizedException } from '@nestjs/common';
@@ -18,7 +18,7 @@ type SutTypes = {
 };
 
 const makeSut = (): SutTypes => {
-  const updateProductRepositoryStub = makeProductRepository();
+  const updateProductRepositoryStub = makeProductMongoRepository();
   const snsProxyStub = makeSnsProxyMock({} as ConfigService);
 
   const sut = new DbUpdateProduct(updateProductRepositoryStub, snsProxyStub);
