@@ -8,6 +8,8 @@ import { UpdateProductModel } from '@/presentation/dtos/product/update-product.d
 import { Authenticated } from '@/presentation/dtos/auth/authenticated.dto';
 import { AddProductModel } from '@/presentation/dtos/product/add-product.dto';
 import { Injectable } from '@nestjs/common';
+import { IDbFindByOwnerIdProductRepository } from '../protocols/db/product/find-by-owenrId-product-respository';
+import { IDbFindByIdProductRepository } from '../protocols/db/product/find-by-id-product-respository';
 
 @Injectable()
 export abstract class ProductRepository
@@ -16,10 +18,13 @@ export abstract class ProductRepository
     IDbListProductRepository,
     IDbUpdateProductRepository,
     IDbDeleteProductRepository,
-    IDbFindByTitleProductRepository
+    IDbFindByTitleProductRepository,
+    IDbFindByOwnerIdProductRepository,
+    IDbFindByIdProductRepository
 {
-  abstract findByTitle(title: string): Promise<boolean>;
   abstract findById(id: string): Promise<ProductModel>;
+  abstract findByOwnerId(id: string): Promise<ProductModel[]>;
+  abstract findByTitle(title: string): Promise<boolean>;
   abstract delete(id: string, user: Authenticated): Promise<ProductModel>;
   abstract update(
     id: string,

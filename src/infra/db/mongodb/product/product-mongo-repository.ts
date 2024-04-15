@@ -96,6 +96,36 @@ export class ProductMongoRepository implements ProductRepository {
     }
   }
 
+  async findByOwnerId(id: string): Promise<ProductModel[]> {
+    try {
+      const productCollection = await MongoHelper.getCollection('products');
+      const productsWithCategories = await productCollection
+        .aggregate([
+          {
+            $match: {
+              ownerId: id,
+            },
+          },
+          {
+            $lookup: {
+              from: 'categories',
+              localField: 'categoryId',
+              foreignField: '_id',
+              as: 'category',
+            },
+          },
+          {
+            $unwind: '$category',
+          },
+        ])
+        .toArray();
+
+      return productsWithCategories.map((product) => MongoHelper.map(product));
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
   async update(id: string, payload: UpdateProductModel): Promise<ProductModel> {
     try {
       const body: any = payload;
@@ -137,6 +167,9 @@ export class ProductMongoRepository implements ProductRepository {
         }),
       );
     } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw new BadRequestException(error.message);
+      }
       throw new InternalServerErrorException(error.message);
     }
   }

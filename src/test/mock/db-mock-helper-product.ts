@@ -35,7 +35,10 @@ export const makeFakeProductAuthenticatedStore = (): Authenticated => ({
 
 export const makeProductMongoRepository = (): ProductRepository => {
   class ProductRepositoryStub implements ProductMongoRepository {
-    findById(id: string): Promise<ProductModel> {
+    async findByOwnerId(id: string): Promise<ProductModel[]> {
+      return Promise.resolve([makeFakeProduct()]);
+    }
+    async findById(id: string): Promise<ProductModel> {
       return Promise.resolve(makeFakeProduct());
     }
     async findByTitle(title: string): Promise<boolean> {
